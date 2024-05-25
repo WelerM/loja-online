@@ -99,7 +99,7 @@ class Product
     public function make_question()
     {
 
-
+        
         try {
 
             //Inserts product into database
@@ -121,6 +121,7 @@ class Product
                     )",
                 $params
             );
+
         } catch (Exception $e) {
 
             echo $e;

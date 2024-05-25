@@ -5,6 +5,7 @@ namespace core\controllers;
 use core\models\User;
 use core\classes\Functions;
 use core\classes\SendEmail;
+use core\models\Product;
 
 class UserController
 {
@@ -63,14 +64,14 @@ class UserController
 
 
 
-        
-        
+
+
         //Validate login
         $users = new User();
-        
+
         $result = $users->validate_login($user_email, $user_password);
-        
-    
+
+
         if (is_string($result)) {
             $_SESSION['error'] = $result;
             Functions::redirect('signin_page');
@@ -339,9 +340,9 @@ class UserController
 
         //Get user data
         $user = new User();
-
-
         $data  = $user->get_user_personal_info($_SESSION['user_id']);
+
+
 
         Functions::Layout([
             'layouts/html_header',
@@ -351,7 +352,21 @@ class UserController
             'layouts/html_footer',
         ], $data);
     }
+
+
+
+
+
+  //===================================================================
+
+    public function get_all_user_questions_by_product(){
+        $user = new User();
+        $results  = $user->get_all_user_questions_by_product();
+
+    }
     //===================================================================
+
+
 
     public function delete_account()
     {

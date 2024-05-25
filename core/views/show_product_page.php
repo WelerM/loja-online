@@ -15,38 +15,35 @@
         </div>
 
         <div class="col-sm-12 col-md-6">
-            <h2>perguntas</h2>
+            <h2>perguntas(client view)</h2>
 
-            <div class="mt-3 ">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="mt-3 ">
 
-                <form class="flex-column px-0 mb-5 py-1  " action="?a=make_question&product_id=<?= $data[0][0]['id']; ?> " enctype="multipart/form-data" method="POST">
+                    <form class="flex-column px-0 mb-5 py-1  " action="?a=make_question&product_id=<?= $data[0][0]['id']; ?> " enctype="multipart/form-data" method="POST">
 
-
-                    <!-- Product description-->
-                    <div class="form-floating mb-3">
-                        <textarea class="form-control" name="question-text" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Fazer pergunta</label>
-                    </div>
-
-
-                    <button id="btn-form-submit" type="submit" name="submit" class="btn btn-success mx-0 d-flex align-items-center justify-content-center" style="width: fit-content;">
-
-                        Enviar</button>
+                        <!-- Product description-->
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" name="question-text" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                            <label for="floatingTextarea2">Fazer pergunta</label>
+                        </div>
 
 
-                </form>
+                        <button id="btn-form-submit" type="submit" name="submit" class="btn btn-success mx-0 d-flex align-items-center justify-content-center" style="width: fit-content;">
 
-            </div>
-            <?php
+                            Enviar</button>
 
-            //  print_r($data[1]);
-            ?>
+                    </form>
+
+                </div>
+            <?php endif; ?>
+
             <?php foreach ($data[1] as $questions) : ?>
 
-                <div class="border my-2 p-2">
-                    <p class="fw-bold"><?= $questions['name']; ?></p>
-                    <p><?= $questions['question']; ?></p>
-                    <p><?= $questions['created_at']; ?></p>
+                <div  class="border my-2 py-2 px-2 rounded-1 ">
+                    <p class="mb-1"><?= $questions['name']; ?></p>
+                    <p class="m-0"><?= $questions['question']; ?></p>
+                    <p style="" class="m-0 P-0 text-end"> <?= (new DateTime($questions['created_at']))->format('d-m-Y'); ?></p>
 
                 </div>
             <?php endforeach; ?>

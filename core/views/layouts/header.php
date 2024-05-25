@@ -21,6 +21,28 @@ use core\classes\Functions;
             <ul class="navbar-nav  mb-2 mb-lg-0 border-0  me-3">
 
 
+                <?php if (Functions::user_logged()) : ?>
+
+                    <?php if ($_SESSION['user_type'] === 'admin') : ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-center " href="?a=create_product_page">Criar produto</a>
+                        </li>
+
+                        <li class="nav-item me-5">
+                            <a class="nav-link text-center " href="?a=answer_questions_page">Responder</a>
+                        </li>
+
+
+                    <?php endif; ?>
+
+                <?php endif; ?>
+
+
+
+
+
+
                 <li class="nav-item">
                     <a class="nav-link text-center mb-2 " href="?a=product_page">Produtos</a>
                 </li>
@@ -38,26 +60,12 @@ use core\classes\Functions;
                         <a class="nav-link text-center mb-2 " href="?a=account_page">Minha conta</a>
                     </li>
 
+
+                    <li class="nav-item">
+                        <a class="nav-link text-center " href="?a=signout">Sair</a>
+                    </li>
                 <?php endif; ?>
 
-            
-
-                <?php if (Functions::user_logged()) : ?>
-
-                    <?php if ($_SESSION['user_type'] === 'admin') : ?>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-center " href="?a=create_product_page">Criar produto</a>
-                        </li>
-                      
-                        <li class="nav-item">
-                            <a class="nav-link text-center " href="?a=signout">Sair</a>
-                        </li>
-
-
-                    <?php endif; ?>
-
-                <?php endif; ?>
 
 
 

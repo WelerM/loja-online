@@ -10,14 +10,12 @@ $routes = [
     'reset_password_page' => 'main@reset_password_page',
     'email_sent_page' => 'main@email_sent_page',
     'account_page' => 'usercontroller@account_page',
-    'create_product_page' => 'productcontroller@create_product_page',
-    'product_page' => 'productcontroller@product_page',
-
-    //APIs
-    'weather_api' => 'main@weather_api',
-    'get_country_list' => 'main@get_country_list',
+    'create_product_page' => 'productcontroller@show_all_products_page',
+    'product_page' => 'productcontroller@show_all_products_page',
+    'answer_questions_page' => 'admincontroller@answer_questions_page',
 
 
+    
     //Product
     'create_product' => 'productcontroller@create_product',
     'show_product' => 'productcontroller@show_product',
@@ -32,6 +30,11 @@ $routes = [
     'confirm_email' => 'usercontroller@confirm_email',
     'is_user_logged' => 'usercontroller@is_user_logged',
     'delete_account' => 'usercontroller@delete_account',
+    
+    //Admin
+    'answer_question' => 'admincontroller@answer_question',
+    'get_user_questions' => 'admincontroller@get_user_questions',
+    'get_all_user_questions_by_product' => 'admincontroller@get_all_user_questions_by_product',
 
 
     //Image Crud

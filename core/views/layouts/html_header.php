@@ -11,7 +11,6 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/axios.min.js"></script>
     <script src="assets/js/sweetalert2@11.js" defer></script>
-    <script src="assets/js/classes/Layout.js" defer></script>
     <script src="assets/js/script.js" defer ></script>
 
 </head>

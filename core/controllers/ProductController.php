@@ -40,17 +40,18 @@ class ProductController
         ], $data);
     }
 
-    public function product_page()
+    public function show_all_products_page()
     {
 
         $product = new Product();
 
         $data = $product->list_product();
 
+    
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'products_page',
+            'show_all_products_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
@@ -69,13 +70,21 @@ class ProductController
 
     public function make_question()
     {
+        $product_id = $_GET['product_id'];
+
+        //checks if user is logged
+        if (!isset($_SESSION['user_id'])) {
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+        }
 
         if (!isset($_GET['product_id'])) {
-            //Functions::redirect("show_product");
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+            
             die('product id not found');
         }
 
-        $product_id = $_GET['product_id'];
 
         $product = new Product();
 

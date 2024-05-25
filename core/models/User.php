@@ -96,7 +96,7 @@ class User
         }
         //---------------------------------------------------
 
-   
+
         //User's email exists
         $user = $results[0];
 
@@ -248,14 +248,48 @@ class User
     {
         $db = new Database();
 
+        //Get user's personal data
         $params = [
             ':id' => $user_id
         ];
 
-        $result =  $db->select("SELECT * FROM users WHERE id = :id", $params);
+        $results =  $db->select(
+            "SELECT *  FROM users 
+             WHERE users.id = :id",
+            $params
+        );
 
-        return $result;
+        $test['user_data'] = $results[0];
+        //-----------------------------------------------------
+
+
+        //Get user's post questions
+        $results = null;
+        $results =  $db->select(
+            "SELECT client_questions.question, client_questions.created_at, products.id, products.img_src  FROM client_questions 
+            JOIN products
+            ON client_questions.product_id = products.id
+             WHERE client_id = :id
+             ORDER BY client_questions.id DESC",
+            $params
+        );
+        
+        $arr = [];
+        foreach ($results as $result[0]) {
+            $arr[] =  $result[0];
+        }
+        $test['user_questions'] = $arr;
+
+        //----------------------------------------------------------
+
+
+        $results = json_decode(json_encode($test), true);
+
+        return $results;
     }
+
+
+
 
     public static function delete_account($user_password)
     {
@@ -273,8 +307,8 @@ class User
             $params
         );
 
-   
-        
+
+
         //Verify if passwords match
         if (!password_verify($user_password, $result[0]->password)) {
 
@@ -287,25 +321,22 @@ class User
 
 
         //Delete all user's images from the system's folders and database
-        $images = new Image();
-        $images->delete_all_images();
- 
+
         //-----------------------------------------------------------------
 
-        
-        
+
+
         //Delete all user's information from the database
         $db->delete(
             "DELETE FROM users
             WHERE id = :id",
             $params
         );
-        
+
         session_unset();
-        session_destroy();        
+        session_destroy();
 
         //Redirect to the home page
         Functions::redirect();
-
     }
 }

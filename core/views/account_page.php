@@ -9,19 +9,27 @@
                 <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
 
                 <dl class="row">
-                    <?php foreach ($data as $user) : ?>
 
-                        <dt class="col-sm-3">Nome</dt>
-                        <dd class="col-sm-9"><?= $user->name ?></dd>
+                    <?php
 
-                        <dt class="col-sm-3">E-mail</dt>
-                        <dd class="col-sm-9"><?= $user->email ?></dd>
+                    //    echo $data['user_data']['id'];
+                    //    echo $data['user_data']['name'];
 
-                        <dt class="col-sm-3">Criado em</dt>
-                        <dd class="col-sm-9"><?= date('d/m/Y', strtotime($user->created_at)) ?></dd>
+                    // foreach ($data['user_data'] as $value) {
+                    //      echo $value . '<br>'; 
+                    // }
+                    ?>
+
+                    <dt class="col-sm-3">Nome</dt>
+                    <dd class="col-sm-9"><?= $data['user_data']['name'] ?></dd>
+
+                    <dt class="col-sm-3">E-mail</dt>
+                    <dd class="col-sm-9"><?= $data['user_data']['email'] ?></dd>
+
+                    <dt class="col-sm-3">Criado em</dt>
+                    <dd class="col-sm-9"><?= date('d/m/Y', strtotime($data['user_data']['created_at'])) ?></dd>
 
 
-                    <?php endforeach; ?>
 
                 </dl>
 
@@ -53,10 +61,33 @@
             </div>
 
 
-            <div class="col-md-6 col=sm-12">
-                <p class="fs-2">Minha perguntas</p>
-                
+            <!-- Minhas perguntas - client view -->
+            <div class="col-md-6 col=sm-12      ">
+                <p class="fs-2">Minha perguntas (apenas client)</p>
+
+                <?php foreach ($data['user_questions'] as $item) : ?>
+
+                    <div class="border m-1 p-2 rounded-1 d-flex gap-3">
+                        <div>
+
+                            <a href="?a=show_product/<?= $item['id'] ?>">
+                                <img style="max-width: 60px;" class="img-fluid" src="<?= $item['img_src'] ?>" alt="">
+                            </a>
+
+                        </div>
+
+                        <div>
+                            <p class="m-0"><?= $item['question'] ?></p>
+                            <p class="m-0"><?= $item['created_at'] ?></p>
+                        </div>
+                    </div>
+
+
+                <?php endforeach; ?>
+
             </div>
+
+
         </div>
     </div>
 
