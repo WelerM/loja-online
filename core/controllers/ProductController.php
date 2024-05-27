@@ -17,19 +17,7 @@ class ProductController
 
         $product = new Product();
 
-        $data[0] = $product->show_product($product_id);
-
-        $questions = $product->list_questions($product_id);
-
-        // print_r($questions);
-        // die();
-    
-        $data[1] = $questions;
-        
-
-        if ($id !== null) {
-        } else {
-        }
+        $data = $product->show_product($product_id);
 
         Functions::Layout([
             'layouts/html_header',
@@ -40,18 +28,18 @@ class ProductController
         ], $data);
     }
 
-    public function show_all_products_page()
+    public function products_page()
     {
 
         $product = new Product();
 
-        $data = $product->list_product();
+        $data = $product->list_products();
 
-    
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'show_all_products_page',
+            'list_products_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
@@ -81,7 +69,7 @@ class ProductController
         if (!isset($_GET['product_id'])) {
             Functions::redirect("show_product/" . $product_id);
             exit();
-            
+
             die('product id not found');
         }
 

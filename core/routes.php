@@ -10,8 +10,8 @@ $routes = [
     'reset_password_page' => 'main@reset_password_page',
     'email_sent_page' => 'main@email_sent_page',
     'account_page' => 'usercontroller@account_page',
+    'products' => 'productcontroller@products_page',
     'create_product_page' => 'productcontroller@show_all_products_page',
-    'product_page' => 'productcontroller@show_all_products_page',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
 
 

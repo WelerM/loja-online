@@ -15,8 +15,9 @@ class AdminController
     {
 
 
+
         $user = new Admin();
-        $results  = $user->get_user_questions();
+        $results = $user->get_user_questions();
 
         $data = json_decode(json_encode($results), true);
 
@@ -25,7 +26,7 @@ class AdminController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'answer_questions_page',
+            'admin/answer_questions_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
@@ -38,10 +39,10 @@ class AdminController
 
 
 
-        $answer =  $_POST['answer'];
-        $product_id =  $_POST['product_id'];
+        $answer = $_POST['answer'];
+        $product_id = $_POST['product_id'];
 
-    
+
         $admin = new Admin();
 
         $results = $admin->answer_question($product_id, $answer);
@@ -50,14 +51,16 @@ class AdminController
     }
 
 
-    public function get_all_user_questions_by_product(){
-  
-        $product_id =  $_GET['product_id'];
-        $client_id =  $_GET['client_id'];
+
+    public function get_all_user_questions_by_product()
+    {
+
+        $product_id = $_GET['product_id'];
+        $user_id = $_GET['user_id'];
 
         $admin = new Admin();
 
-        $results = $admin->get_all_user_questions_by_product($product_id, $client_id);
+        $results = $admin->get_all_user_questions_by_product($product_id, $user_id);
 
         $results = json_encode($results);
         print_r($results);

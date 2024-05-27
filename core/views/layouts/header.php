@@ -44,7 +44,7 @@ use core\classes\Functions;
 
 
                 <li class="nav-item">
-                    <a class="nav-link text-center mb-2 " href="?a=product_page">Produtos</a>
+                    <a class="nav-link text-center mb-2 " href="?a=products">Produtos</a>
                 </li>
 
                 <li class="nav-item">

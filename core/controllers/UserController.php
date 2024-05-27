@@ -360,9 +360,14 @@ class UserController
   //===================================================================
 
     public function get_all_user_questions_by_product(){
-        $user = new User();
-        $results  = $user->get_all_user_questions_by_product();
 
+        $product_id = $_GET['product_id'];
+        $user_id = $_GET['user_id'];
+
+        $user = new User();
+        $results  = $user->get_all_user_questions_by_product($product_id);
+
+        print_r($results);
     }
     //===================================================================
 

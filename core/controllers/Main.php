@@ -21,7 +21,7 @@ class Main
 
             $product = new Product();
 
-            $data = $product->list_product();
+            $data = $product->list_products();
 
             Functions::Layout([
                 'layouts/html_header',
@@ -34,7 +34,7 @@ class Main
 
             $product = new Product();
 
-            $data = $product->list_product();
+            $data = $product->list_products();
 
             Functions::Layout([
                 'layouts/html_header',

@@ -289,6 +289,60 @@ class User
     }
 
 
+    public function get_all_user_questions_by_product($product_id){
+        $db = new Database();
+
+        $params = [
+            ':id' => $product_id
+        ];
+
+        try {
+
+            $results = $db->select(
+                "SELECT 
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.description AS product_description,
+                    products.created_at AS product_created_at,
+                    GROUP_CONCAT(user_questions.question) AS user_questions
+                    FROM products
+                    JOIN user_questions
+                    ON products.id = user_questions.product_id 
+                    WHERE products.id = :id",
+                $params
+            );
+
+            // Assume $results is the array you want to modify
+            $userQuestionsArray = [];
+
+            foreach ($results as $row) {
+                // Explode the comma-separated string into an array and merge with existing questions
+                $userQuestionsArray = array_merge($userQuestionsArray, explode(',', $row->user_questions));
+            }
+
+            // Remove duplicates
+            $userQuestionsArray = array_unique($userQuestionsArray);
+
+            // Assign the combined array to the user_questions field in the first result
+            $results[0]->user_questions = $userQuestionsArray;
+
+            // Remove the user_questions field from other results
+            for ($i = 1; $i < count($results); $i++) {
+                unset($results[$i]->user_questions);
+            }
+
+            // Convert the modified array to JSON and send it as the response
+            
+
+            return $results;
+
+        } catch (Exception $th) {
+            return $th;
+        }
+
+
+    }
+
 
 
     public static function delete_account($user_password)

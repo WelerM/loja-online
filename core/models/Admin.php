@@ -48,10 +48,10 @@ class Admin
         ];
 
         $results =  $db->select(
-            "SELECT *  FROM client_questions
+            "SELECT *  FROM user_questions
             JOIN products
-            ON client_questions.product_id = products.id
-            WHERE client_questions.active = :active",
+            ON user_questions.product_id = products.id
+            WHERE user_questions.active = :active",
             $params
         );
 
@@ -70,11 +70,19 @@ class Admin
         ];
 
         $results =  $db->select(
-            "SELECT * FROM client_questions
+            "SELECT 
+             users.name AS user_name,
+             user_questions.question_id AS question_id,
+             user_questions.question AS user_question,
+             user_questions.answer AS store_answer,
+             user_questions.created_at AS question_created_at
+            
+            FROM user_questions
             JOIN users
-            ON client_questions.client_id = users.id
+            ON user_questions.client_id = users.id
             WHERE client_id = :client_id
-            AND product_id = :product_id", $params
+            AND product_id = :product_id
+            ORDER BY question_id DESC", $params//REsolver esse errro
         );
 
 
