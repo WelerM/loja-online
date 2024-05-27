@@ -13,8 +13,6 @@ use core\models\Product;
 class Main
 {
 
-    private $apiKey = API_KEY;
-
     public function home_page()
     {
 
