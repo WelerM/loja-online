@@ -10,7 +10,7 @@ use core\classes\Functions;
 class ProductController
 {
 
-    public function show_product_page($id = null)
+    public function product_details_page($id = null)
     {
 
         $product_id = $id;
@@ -24,7 +24,7 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'product/show_product_page',
+            'product/product_details_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);

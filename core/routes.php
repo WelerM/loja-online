@@ -18,9 +18,9 @@ $routes = [
     
     //Product
     'create_product' => 'productcontroller@create_product',
-    'show_product_page' => 'productcontroller@show_product_page',
+    'product_details_page' => 'productcontroller@product_details_page',
+    'list_products_page' => 'productcontroller@list_products_page',
     'make_question' => 'productcontroller@make_question',
-    'products' => 'productcontroller@list_products_page',
 
     //User controller
     'login' => 'usercontroller@signin',
