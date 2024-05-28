@@ -37,8 +37,6 @@ class AdminController
     public function answer_question()
     {
 
-
-
         $answer = $_POST['answer'];
         $product_id = $_POST['product_id'];
 
@@ -49,8 +47,5 @@ class AdminController
 
         print_r($results);
     }
-
-
-
 
 }

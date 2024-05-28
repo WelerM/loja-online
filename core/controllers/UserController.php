@@ -10,6 +10,135 @@ use core\models\Product;
 class UserController
 {
 
+    public function home_page()
+    {
+
+
+        $product = new Product();
+
+        $data = $product->list_products();
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'home_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+
+    }
+
+    public function account_page()
+    {
+
+        //Verifies if there's an open session
+        if (!Functions::user_logged()) {
+            Functions::redirect();
+            return;
+        }
+
+
+
+        //Get user data
+        $user = new User();
+        $data = $user->get_user_personal_info($_SESSION['user_id']);
+
+
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'account_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+    //===================================================================
+
+
+    public function register_page()
+    {
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'login/register_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+    //===================================================================
+
+    public function login_page()
+    {
+
+        //Verifies if there's an open session
+        if (Functions::user_logged()) {
+            Functions::redirect();
+            return;
+        }
+
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'login/login_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+    //===================================================================
+
+    public function email_sent_page()
+    {
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'email_sent_page',
+
+            'layouts/html_footer',
+        ]);
+    }
+    //===================================================================
+
+    public function reset_password_page()
+    {
+        if (!isset($_GET['token'])) {
+            $_SESSION['error'] = 'Invalid token';
+            Functions::redirect('send_recovery_email');
+            return;
+        }
+
+        $token = $_GET['token'];
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'login/reset_password_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $token);
+    }
+    //===================================================================
+
+    public function send_recovery_email_page()
+    {
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'login/send_recovery_email',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+    //===================================================================
+
+
+
+
+    //API
+
+
     //Being used in javascript
     public static function is_user_logged()
     {
@@ -26,7 +155,7 @@ class UserController
 
 
     //Sign In
-    public function signin()
+    public function login()
     {
 
 
@@ -88,7 +217,7 @@ class UserController
     }
     //===================================================================
 
-    public function signup()
+    public function register()
     {
 
 
@@ -157,7 +286,7 @@ class UserController
         }
 
 
-        
+
         //Register user on 'USERS' table & 'LOCATION' table
         //Personal URL is returned after registration
         $purl = $users->register_user();
@@ -199,7 +328,7 @@ class UserController
             return;
         }
 
-        $purl =  $_GET['purl'];
+        $purl = $_GET['purl'];
 
         //Verifies if purl is valid
         if (strlen($purl) != 12) {
@@ -242,13 +371,13 @@ class UserController
             return;
         }
 
-        if (!isset($_POST['email']) &&  trim($_POST['repeat-password']) === '') {
+        if (!isset($_POST['email']) && trim($_POST['repeat-password']) === '') {
             $_SESSION['error'] = 'Empty fields';
             Functions::redirect('send_recovery_email');
             return;
         }
 
-        $email =  trim($_POST['email']);
+        $email = trim($_POST['email']);
 
         //Check if email is valid
 
@@ -322,56 +451,12 @@ class UserController
         }
 
         //If exists, get user id and update its password
-        $user_id =  $result[0]->id;
+        $user_id = $result[0]->id;
 
         $users->update_user_password($user_id, $_POST['password']);
 
         $_SESSION['success'] = "Your password was redefined!";
         Functions::redirect('signin_page');
-    }
-
-
-    public function account_page()
-    {
-
-        //Verifies if there's an open session
-        if (!Functions::user_logged()) {
-            Functions::redirect();
-            return;
-        }
-
-
-
-        //Get user data
-        $user = new User();
-        $data  = $user->get_user_personal_info($_SESSION['user_id']);
-
-      
-
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'account_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ], $data);
-    }
-
-
-
-
-
-  //===================================================================
-
-    public function get_all_user_questions_by_product(){
-
-        $product_id = $_GET['product_id'];
-        $user_id = $_GET['user_id'];
-
-        $user = new User();
-        $results  = $user->get_all_user_questions_by_product($product_id);
-
-        print_r($results);
     }
     //===================================================================
 
@@ -385,7 +470,6 @@ class UserController
         $users = new User();
         $users->delete_account($user_password);
     }
-
     //===================================================================
 
 }

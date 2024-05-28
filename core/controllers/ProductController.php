@@ -24,13 +24,13 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'show_product_page',
+            'product/show_product_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
     }
 
-    public function products_page()
+    public function list_products_page()
     {
 
         $product = new Product();
@@ -41,10 +41,21 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'list_products_page',
+            'product/list_products_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
+    }
+
+    public function create_product_page()
+    {
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'product/create_product_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
     }
 
     public function create_product()
@@ -139,16 +150,6 @@ class ProductController
         Functions::redirect("home&data='imgsaved'&error=none");
         exit();
     }
-    public function create_product_page()
-    {
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'admin/create_product_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ]);
-    }
 
     public function make_question()
     {
@@ -177,8 +178,6 @@ class ProductController
         Functions::redirect("show_product/" . $product_id);
         exit();
     }
-
-
 
 
     public function list_products()

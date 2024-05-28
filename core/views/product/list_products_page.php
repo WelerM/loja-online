@@ -7,7 +7,7 @@
 
         <?php foreach ($data as $item) : ?>
 
-            <a href="?a=show_product_page/<?= $item['id']; ?>" class="">
+            <a href="?a=show_product_page/<?= $item['id']; ?>" class="text-dark">
 
                 <div style="height:fit-content;" class="card" style="width: 18rem;">
                     <img style="max-width:200px" src="<?php echo $item['img_src']; ?>" class="card-img-top img-fluid" alt="...">

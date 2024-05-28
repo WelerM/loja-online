@@ -3,14 +3,14 @@
 $routes = [
     
     //Views
-    'home' => 'main@home_page',
-    'signin_page' => 'main@signin_page',
-    'signup_page' => 'main@signup_page',
-    'send_recovery_email_page' => 'main@send_rC:\xampp\htdocs\lojaecovery_email_page',
-    'reset_password_page' => 'main@reset_password_page',
-    'email_sent_page' => 'main@email_sent_page',
+    'home_page' => 'usercontroller@home_page',
+    'login_page' => 'usercontroller@login_page',
+    'register_page' => 'usercontroller@register_page',
+    'send_recovery_email_page' => 'main@send_recovery_email_page',
+    'reset_password_page' => 'usercontroller@reset_password_page',
+    'email_sent_page' => 'usercontroller@email_sent_page',
     'account_page' => 'usercontroller@account_page',
-    'products' => 'productcontroller@products_page',
+ 
     'create_product_page' => 'productcontroller@create_product_page',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
 
@@ -20,10 +20,11 @@ $routes = [
     'create_product' => 'productcontroller@create_product',
     'show_product_page' => 'productcontroller@show_product_page',
     'make_question' => 'productcontroller@make_question',
+    'products' => 'productcontroller@list_products_page',
 
     //User controller
-    'signin' => 'usercontroller@signin',
-    'signup' => 'usercontroller@signup',
+    'login' => 'usercontroller@signin',
+    'register' => 'usercontroller@signup',
     'signout' => 'usercontroller@signout',
     'send_recovery_email' => 'usercontroller@send_recovery_email',
     'reset_password' => 'usercontroller@reset_password',
@@ -37,21 +38,21 @@ $routes = [
     'get_all_user_questions_by_product' => 'productcontroller@get_all_user_questions_by_product',
 
 
-    //Image Crud
-    'display_img' => 'imageController@display_img',
-    'search_img_by_name' => 'imageController@search_img_by_name',
-    'show_wearing_parts' => 'imageController@show_wearing_parts',
-    'show_suggestion' => 'imageController@show_suggestion',
-    'show_img_info' => 'imageController@show_img_info',
-    'save_image' => 'imageController@save_image',
-    'use_image' => 'imageController@use_image',
-    'edit_image' => 'imageController@edit_image',
-    'delete_image' => 'imageController@delete_image',
+    // //Image Crud
+    // 'display_img' => 'imageController@display_img',
+    // 'search_img_by_name' => 'imageController@search_img_by_name',
+    // 'show_wearing_parts' => 'imageController@show_wearing_parts',
+    // 'show_suggestion' => 'imageController@show_suggestion',
+    // 'show_img_info' => 'imageController@show_img_info',
+    // 'save_image' => 'imageController@save_image',
+    // 'use_image' => 'imageController@use_image',
+    // 'edit_image' => 'imageController@edit_image',
+    // 'delete_image' => 'imageController@delete_image',
 ];
 
 
 
-$action = 'home';
+$action = 'home_page';
 $id = null; // Initialize ID as null
 
 // Verifies if action exists on string query
@@ -68,7 +69,7 @@ if (isset($_GET['a'])) {
             $id = (int)$idPart; // Convert ID to integer
         }
     } else {
-        $action = 'home';
+        $action = 'home_page';
     }
 }
 

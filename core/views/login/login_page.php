@@ -49,9 +49,10 @@
 
             <?php endif; ?>
 
-            <div class="mb-3 ">
+            <div class="mb-3 d-flex justify-content-between">
                 <div class='d-none alert js-alert-error alert-danger text-center'></div>
                 <a class="text-dark fs-6    " href="?a=send_recovery_email_page">Forgot your password?</a>
+                <a class="text-dark fs-6    " href="?a=register_page">Create an account</a>
             </div>
 
 

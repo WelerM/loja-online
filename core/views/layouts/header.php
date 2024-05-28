@@ -24,13 +24,10 @@ use core\classes\Functions;
 
 
                 <li class="nav-item">
-                    <a class="nav-link text-center mb-2 " href="?a=products">Produtos</a>
+                    <a class="nav-link text-center mb-2 me-5" href="?a=products">Produtos</a>
                 </li>
 
-                <li class="nav-item me-5">
-                    <a class="nav-link text-center mb-2 " href="?a=account_page">Sobre Nós</a>
-                </li>
-
+           
 
 
                 <?php if (Functions::user_logged()): ?>
@@ -61,11 +58,11 @@ use core\classes\Functions;
                 <?php else: ?>
 
                     <li class="nav-item text-center mb-2">
-                        <a class="nav-link " href="?a=signin_page">Entrar</a>
+                        <a class="nav-link " href="?a=login_page">Entrar</a>
                     </li>
 
                     <li class="nav-item text-center">
-                        <a class="nav-link  " href="?a=signup_page">Registrar</a>
+                        <a class="nav-link  " href="?a=register_page">Registrar</a>
                     </li>
 
                 <?php endif; ?>
