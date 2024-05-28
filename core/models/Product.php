@@ -17,108 +17,64 @@ class Product
         $params = [
             ':id' => $product_id
         ];
-
-        try {
-
-            // $results = $db->select(
-            //     "SELECT 
-            //         products.name AS product_name,
-            //         products.price AS product_price,
-            //         products.description AS product_description,
-            //         products.link AS product_link,
-            //         products.img_src AS product_img_src,
-            //         products.created_at AS product_created_at,
-            //         GROUP_CONCAT(user_questions.question) AS user_questions
-            //         FROM products
-            //         JOIN user_questions
-            //         ON products.id = user_questions.product_id 
-            //         WHERE products.id = :id",
-            //     $params
-            // );
-
-            // Assume $results is the array you want to modify
-
-
-            // $userQuestionsArray = [];
-
-            // foreach ($results as $row) {
-            //     // Explode the comma-separated string into an array and merge with existing questions
-            //     $userQuestionsArray = array_merge($userQuestionsArray, explode(',', $row->user_questions));
-            // }
-
-            // // Remove duplicates
-            // $userQuestionsArray = array_unique($userQuestionsArray);
-
-            // // Assign the combined array to the user_questions field in the first result
-            // $results[0]->user_questions = $userQuestionsArray;
-
-            // // Remove the user_questions field from other results
-            // for ($i = 1; $i < count($results); $i++) {
-            //     unset($results[$i]->user_questions);
-            // }
-
-            // // Convert the modified array to JSON and send it as the response
-            // $results = json_decode(json_encode($results), true);
-
-
-            //2
+        //-----------------------------------------------------------
 
 
 
+        //Checks if there are user's questions on this product
+        $results = $db->select(
+            "SELECT * FROM user_questions
+            WHERE user_questions.product_id = :id"
+            ,
+            $params
+        );
 
-            // $results = $db->select(
-            //     "SELECT 
-            //         products.name AS product_name,
-            //         products.price AS product_price,
-            //         products.description AS product_description,
-            //         products.link AS product_link,
-            //         products.img_src AS product_img_src,
-            //         products.created_at AS product_created_at,
-            //         GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', users.email)) AS user_questions
-            //     FROM products
-            //     JOIN user_questions ON products.id = user_questions.product_id
-            //     JOIN users ON user_questions.client_id = users.id
-            //     WHERE products.id = :id",
-            //     $params
-            // );
+        if (count($results) === 0) {//No user's questions for this product
 
-
-            // // Assume $results is the array returned from the database query
-            // $result = $results[0]; // Assuming there is only one product for the given id
-            // // Split user_questions into an array
-            // $userQuestionsArray = explode(',', $result['user_questions']);
-            // $parsedQuestions = [];
-
-
-            // foreach ($userQuestionsArray as $question) {
-            //     list($questionText, $userName, $userEmail) = explode('::', $question);
-            //     $parsedQuestions[] = [
-            //         'question' => $questionText,
-            //         'user_name' => $userName,
-            //         'user_email' => $userEmail
-            //     ];
-
-            // }
-
-
-            // $result['user_questions'] = $parsedQuestions;
-
-
-
-            $results = $db->select(
-                "SELECT 
+            try {
+                $results = $db->select(
+                    "SELECT 
                     products.id AS product_id,
                     products.name AS product_name,
                     products.price AS product_price,
                     products.description AS product_description,
                     products.link AS product_link,
-                    products.img_src AS product_img_src,
-                    products.created_at AS product_created_at,
-                    GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', user_questions.created_at)) AS user_questions
-                    FROM products
-                    JOIN user_questions ON products.id = user_questions.product_id
-                    JOIN users ON user_questions.client_id = users.id
-                    WHERE products.id = :id",
+                    products.img_src AS product_img_src
+    
+                     FROM products
+                    WHERE products.id = :id"
+                    ,
+                    $params
+                );
+
+                $results = json_decode(json_encode($results[0]), true);
+
+                return $results;
+
+            } catch (Exception $e) {
+                echo $e;
+            }
+        }
+        //-----------------------------------------------------------
+
+
+        //User's questions exist for this project
+        try {
+
+            $results = $db->select(
+                "SELECT 
+                                products.id AS product_id,
+                                products.name AS product_name,
+                                products.price AS product_price,
+                                products.description AS product_description,
+                                products.link AS product_link,
+                                products.img_src AS product_img_src,
+                                products.created_at AS product_created_at,
+                                GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', user_questions.created_at)) AS user_questions
+                                FROM products
+                                JOIN user_questions ON products.id = user_questions.product_id
+                                JOIN users ON user_questions.user_id = users.id
+                                WHERE products.id = :id",
                 $params
             );
 
@@ -141,14 +97,12 @@ class Product
 
             $result['user_questions'] = $parsedQuestions;
 
-             return $result;
+            return $result;
 
-        } catch (Exception $th) {
-            return $th;
+        } catch (Exception $e) {
+            return $e;
         }
-
-
-
+        //-----------------------------------------------------------
 
     }
 
@@ -176,11 +130,12 @@ class Product
 
 
         //Inserts new image into system's folder
-        $root = $_SERVER["DOCUMENT_ROOT"] . '/loja/PHP-MVC-CRUD-Login-System/public';
+        $root = $_SERVER["DOCUMENT_ROOT"] . '/loja/public';
+
         $uniqueName = round(microtime(true) * 1000);
         $file_new_name = $product_name . "_" . $uniqueName . "." . $fileActualExt;
-        $fileDestination = $root . '/assets/images/' . $file_new_name;
-        $file_src = 'assets/images/' . $file_new_name;
+        $fileDestination = $root . '/assets/images/products/' . $file_new_name;
+        $file_src = 'assets/images/products/' . $file_new_name;
 
         move_uploaded_file($fileTmpName, $fileDestination);
         //===================================================================
@@ -232,20 +187,24 @@ class Product
 
             $params = [
                 ':product_id' => $_GET['product_id'],
-                ':client_id' => $_SESSION['user_id'],
+                ':user_id' => $_SESSION['user_id'],
                 ':question' => trim($_POST['question-text'])
             ];
 
             $db->insert(
-                "INSERT INTO client_questions VALUES(
+                "INSERT INTO user_questions VALUES(
                          0,
                         :product_id,
-                        :client_id,
+                        :user_id,
+                        DEFAULT,
                         :question,
+                        DEFAULT,
                         NOW()
                     )",
                 $params
             );
+
+            die('aqui');
 
         } catch (Exception $e) {
 
@@ -286,5 +245,36 @@ class Product
 
             die();
         }
+    }
+
+    public function get_all_user_questions_by_product($product_id, $client_id)
+    {
+        $db = new Database();
+
+        $params = [
+            ':client_id' => $client_id,
+            ':product_id' => $product_id,
+        ];
+
+        $results = $db->select(
+            "SELECT 
+             users.name AS user_name,
+             user_questions.id AS question_id,
+             user_questions.question AS user_question,
+             user_questions.answer AS store_answer,
+             user_questions.active AS question_active,
+             user_questions.created_at AS question_created_at
+            
+            FROM user_questions
+            JOIN users
+            ON user_questions.client_id = users.id
+            WHERE client_id = :client_id
+            AND product_id = :product_id
+            ORDER BY question_id DESC",
+            $params//REsolver esse errro
+        );
+
+
+        return $results;
     }
 }

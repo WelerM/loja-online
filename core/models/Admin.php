@@ -60,32 +60,5 @@ class Admin
     }
 
 
-    public function get_all_user_questions_by_product($product_id, $client_id)
-    {
-        $db = new Database();
 
-        $params = [
-            ':client_id' => $client_id,
-            ':product_id' => $product_id,
-        ];
-
-        $results =  $db->select(
-            "SELECT 
-             users.name AS user_name,
-             user_questions.question_id AS question_id,
-             user_questions.question AS user_question,
-             user_questions.answer AS store_answer,
-             user_questions.created_at AS question_created_at
-            
-            FROM user_questions
-            JOIN users
-            ON user_questions.client_id = users.id
-            WHERE client_id = :client_id
-            AND product_id = :product_id
-            ORDER BY question_id DESC", $params//REsolver esse errro
-        );
-
-
-        return $results;
-    }
 }

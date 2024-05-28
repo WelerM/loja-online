@@ -66,6 +66,7 @@ class UserController
 
 
 
+
         //Validate login
         $users = new User();
 
@@ -86,18 +87,7 @@ class UserController
         Functions::redirect('home');
     }
     //===================================================================
-    public function signout()
-    {
-        unset($_SESSION['user_id']);
-        unset($_SESSION['user_name']);
-        unset($_SESSION['user_email']);
-        unset($_SESSION['user_type']);
-        Functions::redirect();
-    }
-    //===================================================================
 
-
-    //Sign Up
     public function signup()
     {
 
@@ -167,7 +157,7 @@ class UserController
         }
 
 
-
+        
         //Register user on 'USERS' table & 'LOCATION' table
         //Personal URL is returned after registration
         $purl = $users->register_user();
@@ -178,6 +168,20 @@ class UserController
         $email->send_email($client_email, $purl);
     }
     //===================================================================
+
+
+    public function signout()
+    {
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_name']);
+        unset($_SESSION['user_email']);
+        unset($_SESSION['user_type']);
+        Functions::redirect();
+    }
+    //===================================================================
+
+
+    //Sign Up
 
 
     public function confirm_email()
@@ -238,7 +242,7 @@ class UserController
             return;
         }
 
-        if (!isset(($_POST['email'])) &&  trim($_POST['repeat-password']) === '') {
+        if (!isset($_POST['email']) &&  trim($_POST['repeat-password']) === '') {
             $_SESSION['error'] = 'Empty fields';
             Functions::redirect('send_recovery_email');
             return;
@@ -342,7 +346,7 @@ class UserController
         $user = new User();
         $data  = $user->get_user_personal_info($_SESSION['user_id']);
 
-
+      
 
         Functions::Layout([
             'layouts/html_header',

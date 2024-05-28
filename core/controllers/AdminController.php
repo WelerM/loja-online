@@ -52,19 +52,5 @@ class AdminController
 
 
 
-    public function get_all_user_questions_by_product()
-    {
-
-        $product_id = $_GET['product_id'];
-        $user_id = $_GET['user_id'];
-
-        $admin = new Admin();
-
-        $results = $admin->get_all_user_questions_by_product($product_id, $user_id);
-
-        $results = json_encode($results);
-        print_r($results);
-
-    }
 
 }

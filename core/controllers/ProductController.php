@@ -3,14 +3,14 @@
 
 namespace core\controllers;
 
-use core\models\Image;
+use core\models\Admin;
 use core\models\Product;
 use core\classes\Functions;
 
 class ProductController
 {
 
-    public function show_product($id = null)
+    public function show_product_page($id = null)
     {
 
         $product_id = $id;
@@ -19,6 +19,8 @@ class ProductController
 
         $data = $product->show_product($product_id);
 
+        // print_r($data);
+        // die();
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -45,48 +47,9 @@ class ProductController
         ], $data);
     }
 
-    public function create_product_page()
-    {
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'create_product_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ]);
-    }
-
-    public function make_question()
-    {
-        $product_id = $_GET['product_id'];
-
-        //checks if user is logged
-        if (!isset($_SESSION['user_id'])) {
-            Functions::redirect("show_product/" . $product_id);
-            exit();
-        }
-
-        if (!isset($_GET['product_id'])) {
-            Functions::redirect("show_product/" . $product_id);
-            exit();
-
-            die('product id not found');
-        }
-
-
-        $product = new Product();
-
-        $product->make_question();
-
-        //The variable "data" in the URL will be used inside the "start" function in the script.js file
-        Functions::redirect("show_product/" . $product_id);
-        exit();
-    }
-
-
-
     public function create_product()
     {
+
 
         //Verifies if there was a form submition
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -176,9 +139,68 @@ class ProductController
         Functions::redirect("home&data='imgsaved'&error=none");
         exit();
     }
+    public function create_product_page()
+    {
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/create_product_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ]);
+    }
+
+    public function make_question()
+    {
+        $product_id = $_GET['product_id'];
+
+        //checks if user is logged
+        if (!isset($_SESSION['user_id'])) {
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+        }
+
+        if (!isset($_GET['product_id'])) {
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+
+            die('product id not found');
+        }
+
+
+        $product = new Product();
+
+        $product->make_question();
+
+        die();
+        //The variable "data" in the URL will be used inside the "start" function in the script.js file
+        Functions::redirect("show_product/" . $product_id);
+        exit();
+    }
+
+
+
 
     public function list_products()
     {
         $products = new Product();
     }
+
+
+
+    public function get_all_user_questions_by_product()
+    {
+
+        $product_id = $_GET['product_id'];
+        $user_id = $_GET['user_id'];
+
+        $product = new Product();
+
+        $results = $product->get_all_user_questions_by_product($product_id, $user_id);
+
+        $results = json_encode($results);
+        print_r($results);
+
+    }
+
 }

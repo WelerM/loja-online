@@ -18,7 +18,7 @@ class User
         $params = [
             ':e' => strtolower(trim($email))
         ];
-        $results =  $db->select("SELECT * FROM users WHERE email = :e", $params);
+        $results = $db->select("SELECT * FROM users WHERE email = :e", $params);
 
         //Verifies if there is a username registered with the same name
         if (count($results) != 0) {
@@ -36,18 +36,18 @@ class User
             ':purl' => $purl
         ];
 
-        $result =  $db->select("SELECT * FROM users WHERE purl = :purl", $params);
+        $result = $db->select("SELECT * FROM users WHERE purl = :purl", $params);
 
         if (count($result) != 1) {
             return false;
         }
 
-        $client_id = $result[0]->id;
+        $user_id = $result[0]->id;
 
 
         //Update client's
         $params = [
-            ':id' => $client_id
+            ':id' => $user_id
         ];
         $db->update("UPDATE users SET purl = NULL, active = 1, updated_at = NOW() WHERE id = :id", $params);
 
@@ -71,7 +71,7 @@ class User
 
 
         //Verify if email exists
-        $results =  $db->select(
+        $results = $db->select(
             "SELECT * FROM users 
             WHERE email = :email",
             $params
@@ -84,7 +84,7 @@ class User
 
 
         //Verify if email is confirmed
-        $results =  $db->select(
+        $results = $db->select(
             "SELECT * FROM users 
             WHERE email = :email
             AND active = 1",
@@ -166,11 +166,14 @@ class User
                     :password,
                     :active,
                     :purl,
+                    DEFAULT,
                     NOW(),
                     NOW()
                 )",
             $params
         );
+
+  
         //----------------------------------------------------------------------
 
         return $purl;
@@ -201,7 +204,7 @@ class User
         $db = new Database();
 
         $params = [
-            ':email' =>  strtolower(trim($email)),
+            ':email' => strtolower(trim($email)),
             ':password_reset_token' => $token
         ];
 
@@ -253,7 +256,7 @@ class User
             ':id' => $user_id
         ];
 
-        $results =  $db->select(
+        $results = $db->select(
             "SELECT *  FROM users 
              WHERE users.id = :id",
             $params
@@ -265,18 +268,18 @@ class User
 
         //Get user's post questions
         $results = null;
-        $results =  $db->select(
-            "SELECT client_questions.question, client_questions.created_at, products.id, products.img_src  FROM client_questions 
+        $results = $db->select(
+            "SELECT user_questions.question, user_questions.created_at, products.id, products.img_src  FROM user_questions 
             JOIN products
-            ON client_questions.product_id = products.id
-             WHERE client_id = :id
-             ORDER BY client_questions.id DESC",
+            ON user_questions.product_id = products.id
+             WHERE user_id = :id
+             ORDER BY user_questions.id DESC",
             $params
         );
-        
+
         $arr = [];
         foreach ($results as $result[0]) {
-            $arr[] =  $result[0];
+            $arr[] = $results[0];
         }
         $test['user_questions'] = $arr;
 
@@ -285,11 +288,13 @@ class User
 
         $results = json_decode(json_encode($test), true);
 
+
         return $results;
     }
 
 
-    public function get_all_user_questions_by_product($product_id){
+    public function get_all_user_questions_by_product($product_id)
+    {
         $db = new Database();
 
         $params = [
@@ -332,7 +337,7 @@ class User
             }
 
             // Convert the modified array to JSON and send it as the response
-            
+
 
             return $results;
 

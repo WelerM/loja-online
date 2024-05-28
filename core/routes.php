@@ -11,14 +11,14 @@ $routes = [
     'email_sent_page' => 'main@email_sent_page',
     'account_page' => 'usercontroller@account_page',
     'products' => 'productcontroller@products_page',
-    'create_product_page' => 'productcontroller@show_all_products_page',
+    'create_product_page' => 'productcontroller@create_product_page',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
 
 
     
     //Product
     'create_product' => 'productcontroller@create_product',
-    'show_product' => 'productcontroller@show_product',
+    'show_product_page' => 'productcontroller@show_product_page',
     'make_question' => 'productcontroller@make_question',
 
     //User controller
@@ -34,7 +34,7 @@ $routes = [
     //Admin
     'answer_question' => 'admincontroller@answer_question',
     'get_user_questions' => 'admincontroller@get_user_questions',
-    'get_all_user_questions_by_product' => 'admincontroller@get_all_user_questions_by_product',
+    'get_all_user_questions_by_product' => 'productcontroller@get_all_user_questions_by_product',
 
 
     //Image Crud

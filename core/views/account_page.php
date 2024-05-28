@@ -10,15 +10,6 @@
 
                 <dl class="row">
 
-                    <?php
-
-                    //    echo $data['user_data']['id'];
-                    //    echo $data['user_data']['name'];
-
-                    // foreach ($data['user_data'] as $value) {
-                    //      echo $value . '<br>'; 
-                    // }
-                    ?>
 
                     <dt class="col-sm-3">Nome</dt>
                     <dd class="col-sm-9"><?= $data['user_data']['name'] ?></dd>

@@ -30,7 +30,7 @@
 
                 <label for="signup-password" class="form-label">Senha</label>
 
-                <input id="signup-password"  type="password" name="signup-password" class="form-control   ">
+                <input value="12345678" id="signup-password"  type="password" name="signup-password" class="form-control   ">
 
             </div>
 
@@ -40,7 +40,7 @@
 
                 <label for="signup-repeat-password" class="form-label">Repetir senha</label>
 
-                <input id="signup-repeat-password"  type="password" name="signup-repeat-password" class="form-control   ">
+                <input value="12345678" id="signup-repeat-password"  type="password" name="signup-repeat-password" class="form-control   ">
 
             </div>
 

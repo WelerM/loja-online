@@ -1,4 +1,4 @@
-<div class="container vh-100 d-flex flex-column pt-5 align-items-center">
+<div style="min-height: 100vh" class="container d-flex flex-column py-5 align-items-center">
 
     <h2>Adicionar produto</h2>
 
@@ -43,7 +43,6 @@
 
 
         </div>
-
 
         <!-- Img name input trigger SHOWN-->
         <button class="btn btn-add-img d-flex align-items-center border mb-3">

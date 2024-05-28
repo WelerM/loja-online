@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Maio-2024 às 21:39
+-- Tempo de geração: 28-Maio-2024 às 15:54
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -51,14 +51,6 @@ CREATE TABLE `products` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Extraindo dados da tabela `products`
---
-
-INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `link`, `updated_at`, `created_at`) VALUES
-(13, 'jaqueta', 200, 'cor laranja', 'assets/images/products/jaqueta_1716919630880.png', 'www.google.com', '2024-05-28 18:07:10', '2024-05-28 18:07:10'),
-(14, 'óculos', 200, 'cor preto', 'assets/images/products/óculos_1716919737530.png', 'www.google.com', '2024-05-28 18:08:57', '2024-05-28 18:08:57');
-
 -- --------------------------------------------------------
 
 --
@@ -77,13 +69,6 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Extraindo dados da tabela `users`
---
-
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `active`, `purl`, `user_type`, `updated_at`, `created_at`) VALUES
-(1, 'weler', 'welerson194@gmail.com', '$2y$10$Bglm0/mCu5imOsd25K0DmePgU0tWCuXsVxo0EvVyuMZ4/eQ2BImNm', 1, '', 'admin', '2024-05-28 14:15:46', '2024-05-28 14:11:17');
-
 -- --------------------------------------------------------
 
 --
@@ -93,19 +78,13 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `active`, `purl`, `user_
 CREATE TABLE `user_questions` (
   `id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `client_id` int(11) DEFAULT NULL,
   `answer_id` int(11) DEFAULT NULL,
   `question` varchar(200) DEFAULT NULL,
+  `answer` text DEFAULT NULL,
   `active` tinyint(4) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Extraindo dados da tabela `user_questions`
---
-
-INSERT INTO `user_questions` (`id`, `product_id`, `user_id`, `answer_id`, `question`, `active`, `created_at`) VALUES
-(1, 13, 1, NULL, 'gg', 1, '2024-05-28 19:09:53');
 
 --
 -- Índices para tabelas despejadas
@@ -136,7 +115,7 @@ ALTER TABLE `users`
 ALTER TABLE `user_questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `product_id` (`product_id`),
-  ADD KEY `client_id` (`user_id`),
+  ADD KEY `client_id` (`client_id`),
   ADD KEY `fk_answer_id` (`answer_id`);
 
 --
@@ -153,19 +132,19 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `user_questions`
 --
 ALTER TABLE `user_questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restrições para despejos de tabelas

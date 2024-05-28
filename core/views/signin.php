@@ -1,8 +1,8 @@
-<div class=" vh-100 " style="margin-top:100px">
+<div class="py-5" style=" min-height: 100vh;">
 
-    <div class="welcome-container  w-100">
+    <div class=" w-100">
 
-        <form class="login-form p-4  d-flez flex-column position-absolute " style="width:400px;top:50%;left:50%;transform: translate(-50%, -50%)" action="?a=signin" method="POST">
+        <form class="login-form p-4  d-flez flex-column mx-auto" style="width:400px;" action="?a=signin" method="POST">
 
 
             <p class="text-center text-success  fs-2 mb-4">Login</p>
@@ -16,7 +16,7 @@
 
                 <label for="login-email" class="form-label">Email</label>
 
-                <input required type="email" name="login-email" class="form-control" id="login-email" aria-describedby="emailHelp">
+                <input value="welerson194@gmail.com" required type="email" name="login-email" class="form-control" id="login-email" aria-describedby="emailHelp">
 
 
             </div>
@@ -26,7 +26,7 @@
 
                 <label for="login-password" class="form-label">Senha</label>
 
-                <input  required type="password" name="login-password" class="form-control  bg-transparent " id="login-password">
+                <input  required type="password" name="login-password" class="form-control bg-transparent " id="login-password">
 
             </div>
 

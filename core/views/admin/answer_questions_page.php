@@ -44,8 +44,9 @@
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
 
-            <div class="questions-header-display d-flex">
-
+            <div class="questions-header-display d-flex gap-1">
+                <img style="30px" class="user-img-icon" src="" alt="">
+                <span class="user-name fw-bold"></span>
             </div>
 
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
