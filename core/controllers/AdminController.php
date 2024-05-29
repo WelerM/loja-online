@@ -14,15 +14,14 @@ class AdminController
     public function answer_questions_page()
     {
 
+        $admin = new Admin();
 
-
-        $user = new Admin();
-        $results = $user->get_user_questions();
-
+        $results = $admin->list_users_with_active_questions();
         $data = json_decode(json_encode($results), true);
 
-        // print_r($data);
+        // print_r($results);
         // die();
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',

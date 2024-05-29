@@ -2,7 +2,7 @@
 
     <div style="height: 400px;" class="d-flex bg-success text-light py-5      w-100">
         <div class="container ">
-            <h1 style="font-size: 40px; max-width: 4-------------50px">Seleção de produtos personalizada para você</h1>
+            <h1 style="font-size: 40px; max-width: 450px">Seleção de produtos personalizada para você</h1>
 
             <img src="" alt="">
         </div>
@@ -14,22 +14,24 @@
 
         <div class="d-flex flex-wrap  gap-2 p-0">
 
-            <?php foreach ($data as $item) : ?>
+            <?php foreach ($data as $item): ?>
 
                 <a href="?a=product_details_page/<?= $item['id']; ?>" class="text-dark">
 
-                    <div style="height:fit-content;" class="card" style="width: 18rem;">
-                        <img style="max-width:200px" src="<?php echo $item['img_src']; ?>" class="card-img-top img-fluid" alt="...">
+                    <div class="card" style="">
 
-                        <div class="card-body ">
-                            <h5 class="card-title"><?php echo $item['name']; ?> </h5>
-                            <p class="card-title"><?= 'R$ ' .  $item['price']; ?> </p>
-                            <p class="card-text"> <?php echo $item['description']; ?></p>
-                            <a href="#" class=""><?php echo $item['link']; ?></a>
+                    <img style="height:200px; width:200px" src="<?= $item['img_src']; ?>" class="card-img-top">
+                        <div class="card-body p-3">
+
+                            <h5 class="card-title"><?= $item['name']; ?> </h5>
+                            <p class="card-title"><?= 'R$ ' . $item['price']; ?> </p>
+
                         </div>
+
                     </div>
                 </a>
-            <?php endforeach; ?>
+
+            <?php endforeach ?>
 
         </div>
     </div>

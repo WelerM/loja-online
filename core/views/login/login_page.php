@@ -2,7 +2,7 @@
 
     <div class=" w-100">
 
-        <form class="login-form p-4  d-flez flex-column mx-auto" style="width:400px;" action="?a=signin" method="POST">
+        <form class="login-form p-4  d-flez flex-column mx-auto" style="width:400px;" action="?a=login" method="POST">
 
 
             <p class="text-center text-success  fs-2 mb-4">Login</p>
@@ -19,7 +19,7 @@
                 <input value="welerson194@gmail.com" required type="email" name="login-email" class="form-control" id="login-email" aria-describedby="emailHelp">
 
 
-            </div>
+            </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
             <!-- Password -->
             <div class="mb-3">
@@ -51,8 +51,8 @@
 
             <div class="mb-3 d-flex justify-content-between">
                 <div class='d-none alert js-alert-error alert-danger text-center'></div>
-                <a class="text-dark fs-6    " href="?a=send_recovery_email_page">Forgot your password?</a>
-                <a class="text-dark fs-6    " href="?a=register_page">Create an account</a>
+                <a class="text-dark fs-6    " href="?a=send_recovery_email_page">Esqueceu sua senha?</a>
+                <a class="text-dark fs-6    " href="?a=register_page">Criar conta</a>
             </div>
 
 

@@ -171,11 +171,16 @@ class ProductController
 
         $product = new Product();
 
-        $product->make_question();
+        $result = $product->make_question();
 
-        die();
+        if (!$result) {
+            //The variable "data" in the URL will be used inside the "start" function in the script.js file
+            Functions::redirect("product_details_page/" . $product_id . '&error');
+            exit();
+        }
+
         //The variable "data" in the URL will be used inside the "start" function in the script.js file
-        Functions::redirect("show_product/" . $product_id);
+        Functions::redirect("product_details_page/" . $product_id);
         exit();
     }
 
@@ -186,6 +191,11 @@ class ProductController
     }
 
 
+
+    // public function list_users_with_active_questions()
+    // {
+
+    // }
 
     public function get_all_user_questions_by_product()
     {

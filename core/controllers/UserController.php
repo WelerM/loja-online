@@ -18,6 +18,11 @@ class UserController
 
         $data = $product->list_products();
 
+       // print_r($data);
+        // foreach ($data as $item) {
+        //     echo $item['id'];
+        // }
+        // die();
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -94,7 +99,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'email_sent_page',
+            'login/email_sent_page',
 
             'layouts/html_footer',
         ]);
@@ -182,7 +187,7 @@ class UserController
 
             $_SESSION['error'] = "Empty fields!";
 
-            Functions::redirect('signin_page');
+            Functions::redirect('login_page');
             return;
         }
 
@@ -204,7 +209,7 @@ class UserController
 
         if (is_string($result)) {
             $_SESSION['error'] = $result;
-            Functions::redirect('signin_page');
+            Functions::redirect('login_page');
             return;
         }
         //Valid login
@@ -291,6 +296,7 @@ class UserController
         //Personal URL is returned after registration
         $purl = $users->register_user();
 
+
         $email = new SendEmail();
 
         $client_email = strtolower(trim($_POST['signup-email']));
@@ -316,6 +322,7 @@ class UserController
     public function confirm_email()
     {
 
+
         //Verifies if there's an open session
         if (Functions::user_logged()) {
             Functions::redirect();
@@ -332,9 +339,11 @@ class UserController
 
         //Verifies if purl is valid
         if (strlen($purl) != 12) {
+            die('c');
             Functions::redirect();
             return;
         }
+
 
         $users = new User();
         $result = $users->validate_email($purl);
@@ -346,7 +355,7 @@ class UserController
             Functions::Layout([
                 'layouts/html_header',
                 'layouts/header',
-                'signin',
+                'login/login_page',
                 'layouts/html_footer',
             ]);
         } else {
@@ -356,7 +365,7 @@ class UserController
             Functions::Layout([
                 'layouts/html_header',
                 'layouts/header',
-                'signin',
+                'login/login_page',
                 'layouts/html_footer',
             ]);
         }
@@ -377,17 +386,14 @@ class UserController
             return;
         }
 
-        $email = trim($_POST['email']);
-
-        //Check if email is valid
-
+        $user_email = strtolower(trim($_POST['email']));
 
 
         //Checks if user email exists on database
         $users = new User();
         $email = new SendEmail();
 
-        if (!$users->check_email_exists($_POST['email'])) {
+        if (!$users->check_email_exists($user_email)) {
 
             $_SESSION['error'] = "This email doesn't exist on database";
             Functions::redirect('send_recovery_email_page');
@@ -399,11 +405,10 @@ class UserController
         //nearly created token above
         $token = bin2hex(random_bytes(32));
 
-        $users->update_token($_POST['email'], $token);
-
+        $users->update_token($user_email, $token);
 
         //Sends email to reset password
-        $email->send_email_reset_password($_POST['email'], $token);
+        $email->send_email_reset_password($user_email, $token);
 
         Functions::redirect('email_sent_page');
     }
@@ -438,6 +443,7 @@ class UserController
         }
 
 
+
         //asks  database if toek exists
         $users = new User();
 
@@ -445,18 +451,19 @@ class UserController
 
         if (count($result) === 0) {
             $_SESSION['error'] = "Invalid token";
-
             Functions::redirect("reset_password_page&token=$token");
             return;
         }
 
+
         //If exists, get user id and update its password
         $user_id = $result[0]->id;
+
 
         $users->update_user_password($user_id, $_POST['password']);
 
         $_SESSION['success'] = "Your password was redefined!";
-        Functions::redirect('signin_page');
+        Functions::redirect('login_page');
     }
     //===================================================================
 

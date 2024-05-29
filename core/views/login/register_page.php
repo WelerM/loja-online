@@ -2,26 +2,26 @@
 
     <div class="welcome-container  w-100">
 
-        <form class=" p-4 mx-auto mt-5" style="max-width:500px" action="?a=signup" method="POST">
+        <form class=" p-4 mx-auto mt-5" style="max-width:500px" action="?a=register" method="POST">
 
-            <p class="text-center text-success fs-2 mb-4">Create account</p>
+            <p class="text-center text-success fs-2 mb-4">Criar conta</p>
 
 
             <!-- Name -->
             <div class="mb-3">
-                <label for="signup-name" class="form-label">Name</label>
+                <label for="signup-name" class="form-label">Nome completo</label>
 
-                <input id="signup-name" type="text" name="signup-name" value="weler" class="form-control  " aria-describedby="emailHelp">
+                <input value="ana" id="signup-name" type="text" name="signup-name" placeholder="Nome completo" class="form-control  " aria-describedby="emailHelp">
             </div>
 
 
             <!-- Email -->
             <div class="mb-3">
-                <label for="signup-email" class="form-label">Email address</label>
+                <label for="signup-email" class="form-label">Seu melhor email</label>
 
-                <input  id="signup-email" type="email" name="signup-email" value="welerson194@gmail.com" class="form-control" aria-describedby="emailHelp">
+                <input value="welerson25@yahoo.com" id="signup-email" type="email" name="signup-email" placeholder="Seu melhor email" class="form-control" aria-describedby="emailHelp">
 
-                <div class="form-text ">We'll never share your email with anyone else.</div>
+                <div class="form-text ">Nós nunca iremos compartilhar seu email.</div>
             </div>
 
 
@@ -30,7 +30,7 @@
 
                 <label for="signup-password" class="form-label">Senha</label>
 
-                <input value="12345678" id="signup-password"  type="password" name="signup-password" class="form-control   ">
+                <input  id="signup-password"  placeholder="Senha" type="password" name="signup-password" class="form-control   ">
 
             </div>
 
@@ -40,7 +40,7 @@
 
                 <label for="signup-repeat-password" class="form-label">Repetir senha</label>
 
-                <input value="12345678" id="signup-repeat-password"  type="password" name="signup-repeat-password" class="form-control   ">
+                <input  id="signup-repeat-password" placeholder="Repetir senha"  type="password" name="signup-repeat-password" class="form-control   ">
 
             </div>
 

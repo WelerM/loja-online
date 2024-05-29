@@ -1,0 +1,3 @@
+Login ok
+Register ok
+Redefine password ok

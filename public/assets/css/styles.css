@@ -19,11 +19,8 @@ li {
 }
 
 li:hover {
-/*     background-color: rgb(201, 201, 201); */
 
     cursor: pointer;
-
-
 }
 
 a{
@@ -138,3 +135,13 @@ h1 {
 
 }
 
+
+
+
+
+
+.no-focus-border:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: none; /* or specify another color */
+}

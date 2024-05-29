@@ -49,7 +49,14 @@ class User
         $params = [
             ':id' => $user_id
         ];
-        $db->update("UPDATE users SET purl = NULL, active = 1, updated_at = NOW() WHERE id = :id", $params);
+        $db->update(
+            "UPDATE users
+            SET purl = NULL,
+            active = 1,
+            updated_at = NOW()
+            WHERE id = :id",
+            $params
+        );
 
         return true;
     }
@@ -137,7 +144,7 @@ class User
 
         if (count($result) != 0) {
             $_SESSION['error'] = "Email already exists!";
-            Functions::redirect('signup_page');
+            Functions::redirect('register_page');
             exit();
         }
 
@@ -152,31 +159,37 @@ class User
         $params = [
             ':name' => trim($_POST['signup-name']),
             ':email' => strtolower(trim($_POST['signup-email'])),
+            ':user_type' => 'client',
             ':password' => password_hash(trim($_POST['signup-password']), PASSWORD_DEFAULT),
             ':active' => 0,
             ':purl' => $purl
 
         ];
 
-        $db->insert(
-            "INSERT INTO users VALUES(
-                    0,
-                    :name,
-                    :email,
-                    :password,
-                    :active,
-                    :purl,
-                    DEFAULT,
-                    NOW(),
-                    NOW()
-                )",
-            $params
-        );
+        try {
 
-  
-        //----------------------------------------------------------------------
+            $result = $db->insert(
+                "INSERT INTO users VALUES(
+                                0,
+                                :name,
+                                :email,
+                                :user_type,
+                                :password,
+                                 NULL,
+                                :active,
+                                :purl,
+                                NOW(),
+                                NOW()
+                            )",
+                $params
+            );
 
-        return $purl;
+
+            return $purl;
+
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     //Recover password
@@ -185,7 +198,7 @@ class User
         $db = new Database();
 
         $params = [
-            ':email' => strtolower(trim($email))
+            ':email' => $email
         ];
 
         $result = $db->select("
@@ -204,14 +217,24 @@ class User
         $db = new Database();
 
         $params = [
-            ':email' => strtolower(trim($email)),
+            ':email' => $email,
             ':password_reset_token' => $token
         ];
 
-        $db->update("
-        UPDATE users 
-        SET password_reset_token = :password_reset_token
-        WHERE email = :email", $params);
+        try {
+
+            $db->update("
+            UPDATE users 
+            SET password_reset_token = :password_reset_token
+            WHERE email = :email", $params);
+
+
+
+        } catch (Exception $e) {
+            echo $e;
+        }
+
+
     }
     public function check_token_exists($token)
     {

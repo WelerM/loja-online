@@ -1,57 +1,57 @@
 document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
-    console.log('f');
+   
     btn.addEventListener('click', (e) => {
 
         let product_id = e.target.name
-        let client_id = document.querySelector('.client-id').value
+        let user_id = document.querySelector('.client-id').value
 
         let input_product_id = document.querySelector('.product-id')
         input_product_id.setAttribute('value', product_id)
 
-
+  
         axios.defaults.withCredentials = true;
-        axios.get('?a=get_all_user_questions_by_product&product_id=' + product_id + '&user_id=' + client_id)
+        axios.get('?a=get_all_user_questions_by_product&product_id=' + product_id + '&user_id=' + user_id)
             .then(function (response) {
 
-                let data = response.data
+                    let data = response.data
+                    console.log(data);
+           
+                    let questions_header_display = document.querySelector('.questions-header-display')
+                    let img = document.querySelector('.user-img-icon')
+                    img.setAttribute('src', 'assets/images/user.png')
 
-                console.log(data);
-                // let questions_header_display = document.querySelector('.questions-header-display')
-                let img = document.querySelector('.user-img-icon')
-                img.setAttribute('src', 'assets/images/user.png')
-
-                let client_name = document.querySelector('.user-name')
-                client_name.textContent = data[0].user_name
+                    let client_name = document.querySelector('.user-name')
+                    client_name.textContent = data[0].user_name
 
 
 
-                let ul = document.querySelector('.ul-questions')
+                    let ul = document.querySelector('.ul-questions')
 
-                ul.innerHTML = ''
+                    ul.innerHTML = ''
 
-                data.map(item => {
+                    data.map(item => {
 
-                    let li = document.createElement('li')
+                        let li = document.createElement('li')
 
-                    if (item.question_active === 1) {
-                        li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between', 'bg-warning')
-                    } else {
+                        if (item.question_active === 1) {
+                            li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between', 'bg-warning')
+                        } else {
 
-                        li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between')
-                    }
+                            li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between')
+                        }
 
-                    let client_text = document.createElement('span')
-                    client_text.textContent = item.user_question
+                        let client_text = document.createElement('span')
+                        client_text.textContent = item.user_question
 
-                    let client_text_time = document.createElement('span')
-                    client_text_time.style.fontSize = '12 px'
-                    client_text_time.textContent = item.question_created_at
+                        let client_text_time = document.createElement('span')
+                        client_text_time.style.fontSize = '12 px'
+                        client_text_time.textContent = item.question_created_at
 
-                    li.appendChild(client_text)
-                    li.appendChild(client_text_time)
-                    ul.appendChild(li)
+                        li.appendChild(client_text)
+                        li.appendChild(client_text_time)
+                        ul.appendChild(li)
 
-                })
+                    })
 
             }
             )

@@ -25,8 +25,7 @@
                 <div class="mt-3 ">
 
                     <form class="flex-column px-0 mb-5 py-1  "
-                        action="?a=make_question&product_id=<?= $data['product_id'];?>"
-                        method="POST">
+                        action="?a=make_question&product_id=<?= $data['product_id']; ?>" method="POST">
 
                         <!-- Product description-->
                         <div class="form-floating mb-3">
@@ -45,6 +44,13 @@
                     </form>
 
                 </div>
+
+            <?php else: ?>
+                <a href="?a=login_page">
+                    <div class="alert alert-light">
+                        Crie uma conta para fazer perguntas
+                    </div>
+                </a>
             <?php endif; ?>
 
 

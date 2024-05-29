@@ -63,18 +63,19 @@ class Product
 
             $results = $db->select(
                 "SELECT 
-                                products.id AS product_id,
-                                products.name AS product_name,
-                                products.price AS product_price,
-                                products.description AS product_description,
-                                products.link AS product_link,
-                                products.img_src AS product_img_src,
-                                products.created_at AS product_created_at,
-                                GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', user_questions.created_at)) AS user_questions
-                                FROM products
-                                JOIN user_questions ON products.id = user_questions.product_id
-                                JOIN users ON user_questions.user_id = users.id
-                                WHERE products.id = :id",
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.description AS product_description,
+                    products.link AS product_link,
+                    products.img_src AS product_img_src,
+                    products.created_at AS product_created_at,
+                    GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', user_questions.created_at) ORDER BY user_questions.id DESC) AS user_questions
+                FROM products
+                JOIN user_questions ON products.id = user_questions.product_id
+                JOIN users ON user_questions.user_id = users.id
+                WHERE products.id = :id
+                GROUP BY products.id, products.name, products.price, products.description, products.link, products.img_src, products.created_at",
                 $params
             );
 
@@ -204,15 +205,20 @@ class Product
                 $params
             );
 
-            die('aqui');
+            return true;
 
         } catch (Exception $e) {
-
-            echo $e;
-
-            die();
+            return false;
         }
     }
+
+
+
+
+
+
+
+
 
     public function list_questions($product_id)
     {
@@ -247,34 +253,40 @@ class Product
         }
     }
 
-    public function get_all_user_questions_by_product($product_id, $client_id)
+    public function get_all_user_questions_by_product($product_id, $user_id)
     {
         $db = new Database();
 
         $params = [
-            ':client_id' => $client_id,
-            ':product_id' => $product_id,
+            ':user_id' => $user_id,
+
         ];
 
-        $results = $db->select(
-            "SELECT 
-             users.name AS user_name,
-             user_questions.id AS question_id,
-             user_questions.question AS user_question,
-             user_questions.answer AS store_answer,
-             user_questions.active AS question_active,
-             user_questions.created_at AS question_created_at
-            
-            FROM user_questions
-            JOIN users
-            ON user_questions.client_id = users.id
-            WHERE client_id = :client_id
-            AND product_id = :product_id
-            ORDER BY question_id DESC",
-            $params//REsolver esse errro
-        );
+        try {
 
 
-        return $results;
+            $results = $db->select(
+                "SELECT 
+                 users.name AS user_name,
+                 user_questions.id AS question_id,
+                 user_questions.question AS user_question,
+                 user_questions.active AS question_active,
+                 user_questions.created_at AS question_created_at
+                
+                FROM user_questions
+                JOIN users
+                ON user_questions.user_id = users.id
+                WHERE users.id = :user_id",
+                $params
+            );
+
+            //    print_r($results);
+            //  die();
+
+            return $results;
+
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 }
