@@ -54,9 +54,9 @@
             <?php endif; ?>
 
 
-            <?php if (isset($data['user_questions']) && $data['user_questions'] != null): ?>
+            <?php if (isset($data['product_messages']) && $data['product_messages'] != null): ?>
 
-                <?php foreach ($data['user_questions'] as $questions): ?>
+                <?php foreach ($data['product_messages'] as $questions): ?>
 
                     <div class="border my-2 py-2 px-2 rounded-1 ">
                         <p class="mb-1"><?= $questions['user_name']; ?></p>

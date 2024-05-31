@@ -197,16 +197,18 @@ class ProductController
 
     // }
 
-    public function get_all_user_questions_by_product()
+    public function show_product_question_details()
     {
 
-        $product_id = $_GET['product_id'];
-        $user_id = $_GET['user_id'];
+
+        $product_message_id = $_GET['product_message_id'];
 
         $product = new Product();
 
-        $results = $product->get_all_user_questions_by_product($product_id, $user_id);
+        $results = $product->show_product_question_details($product_message_id);
 
+        // echo 'f';
+        // die();
         $results = json_encode($results);
         print_r($results);
 

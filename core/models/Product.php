@@ -23,8 +23,8 @@ class Product
 
         //Checks if there are user's questions on this product
         $results = $db->select(
-            "SELECT * FROM user_questions
-            WHERE user_questions.product_id = :id"
+            "SELECT * FROM product_messages    
+            WHERE product_messages.product_id = :id"
             ,
             $params
         );
@@ -70,10 +70,10 @@ class Product
                     products.link AS product_link,
                     products.img_src AS product_img_src,
                     products.created_at AS product_created_at,
-                    GROUP_CONCAT(CONCAT(user_questions.question, '::', users.name, '::', user_questions.created_at) ORDER BY user_questions.id DESC) AS user_questions
+                    GROUP_CONCAT(CONCAT(product_messages.question, '::', users.name, '::', product_messages.created_at) ORDER BY product_messages.id DESC) AS product_messages
                 FROM products
-                JOIN user_questions ON products.id = user_questions.product_id
-                JOIN users ON user_questions.user_id = users.id
+                JOIN product_messages ON products.id = product_messages.product_id
+                JOIN users ON product_messages.user_id = users.id
                 WHERE products.id = :id
                 GROUP BY products.id, products.name, products.price, products.description, products.link, products.img_src, products.created_at",
                 $params
@@ -83,8 +83,8 @@ class Product
             $resultsArray = json_decode(json_encode($results), true);
 
             $result = $resultsArray[0]; // Assuming there is only one product for the given id
-            // Split user_questions into an array
-            $userQuestionsArray = explode(',', $result['user_questions']);
+            // Split user_messages into an array
+            $userQuestionsArray = explode(',', $result['product_messages']);
             $parsedQuestions = [];
 
             foreach ($userQuestionsArray as $question) {
@@ -96,7 +96,7 @@ class Product
                 ];
             }
 
-            $result['user_questions'] = $parsedQuestions;
+            $result['product_messages'] = $parsedQuestions;
 
             return $result;
 
@@ -253,30 +253,33 @@ class Product
         }
     }
 
-    public function get_all_user_questions_by_product($product_id, $user_id)
+    public function show_product_question_details($product_message_id)
     {
         $db = new Database();
 
         $params = [
-            ':user_id' => $user_id,
-
+            ':product_message_id' => $product_message_id,
+            ':active' => 1
         ];
 
         try {
 
 
             $results = $db->select(
-                "SELECT 
-                 users.name AS user_name,
-                 user_questions.id AS question_id,
-                 user_questions.question AS user_question,
-                 user_questions.active AS question_active,
-                 user_questions.created_at AS question_created_at
-                
-                FROM user_questions
-                JOIN users
-                ON user_questions.user_id = users.id
-                WHERE users.id = :user_id",
+                "SELECT
+                    product_messages.question AS user_question,
+                    product_messages.created_at AS question_created_at,
+                    users.name AS user_name
+                FROM 
+                    product_messages
+                JOIN 
+                    users
+                ON 
+                    product_messages.user_id = users.id
+                WHERE 
+                    product_messages.id = :product_message_id
+                AND 
+                    product_messages.active = :active",
                 $params
             );
 

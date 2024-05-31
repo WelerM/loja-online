@@ -6,46 +6,51 @@
 
         <?php foreach ($data as $item): ?>
 
-            <div style="width: fit-content;" class="border d-flex flex-column gap-3 p-0 my-3 rounded-1 shadow">
+            <div style="width: w-100;" class="row border p-0 my-3 rounded shadow bg-body-tertiary">
 
-                <div class="d-flex ">
+                <div class="col-8 border-0 border-end p-3">
 
-                    <div class="border-0 border-end p-3">
-                        <div class="d-flex gap-1">
+                    <div class="d-flex justify-content-between">
+
+                        <div class="d-flex gap-3">
                             <img style="width:30px; height:30px" src="assets/images/user.png" alt="">
-
-                            <div class="d-flex justify-content-between gap-5">
-                                <p><?= $item['user_name'] ?> </p>
-                                <p><?= $item['last_active_question_date'] ?></p>
-                            </div>
-                        </div>
-                        <div class="bg-dark-subtle p-2">
-
-                            <p><?= $item['last_active_question'] ?></p>
+                            <p><?= $item['user_name'] ?> </p>
                         </div>
 
 
-                        <div style="height: fit-content;" class="d-flex gap-1 mt-2">
-
-                            <button name="<?= $item['user_id'] ?>" class="btn-ver-chat btn btn-success" type="button"
-                                data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-                                aria-controls="offcanvasExample">
-                                Responder
-                            </button>
-
-                            <button class="btn btn-danger btn-sm">Exclur</button>
-
-
-                        </div>
+                        <p style="font-size:13px">
+                            <?= date('d/m/Y', strtotime($item['question_created_at'])) . ' às ' . date('H:i', strtotime($item['question_created_at'])) . 'h' ?>
+                        </p>
 
                     </div>
 
-                    <div class="d-flex p-3">
-                        <img src="<?= $item['img_src'] ?>" class="img-fluid" style="max-width: 60px; height: 60px" alt="">
+                    <!-- User question text -->
+                    <div class="bg-white p-2 border rounded">
+
+                        <p><?= $item['product_question'] ?></p>
+                    </div>
+
+
+                    <div style="height: fit-content;" class="d-flex gap-1 mt-2  ">
+
+                        <button name="<?= $item['product_message_id'] ?>" class="btn-ver-chat btn btn-success" type="button"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            Responder
+                        </button>
+
+                        <button class="btn btn-danger btn-sm">Exclur</button>
+
+
                     </div>
 
                 </div>
 
+                <div class="col-auto p-3">
+                    <p>Produto</p>
+                    <img src="<?= $item['img_src'] ?>" class="img-fluid" style="max-width: 60px; height: 60px" alt="">
+                    <h5 class="card-title"><?= $item['product_name']; ?> </h5>
+                    <p class="card-title"><?= 'R$ ' . $item['product_price']; ?> </p>
+                </div>
 
             </div>
 
@@ -67,6 +72,7 @@
         </div>
 
         <div class="offcanvas-body">
+
             <div style="" class="d-flex flex-column gap-2">
 
                 <ul class="ul-questions p-0">
@@ -80,14 +86,15 @@
                         <textarea class="form-control" name="answer" id=""></textarea>
                         <button type="submit" class="btn btn-success btn-sm">Responder</button>
 
-                        <input class="product-id d-none" name="product_id" value="<?= $item['product_id'] ?>"
-                            type="text">
-                        <input class="client-id d-none" name="client_id" value="<?= $item['user_id'] ?>" type="text">
+                        <input class="product-id d-none" name="product_id" value="" type="text">
+                        <input class="client-id d-none" name="client_id" value="" type="text">
                     </form>
+
                 </div>
 
             </div>
 
         </div>
     </div>
+
 </div>

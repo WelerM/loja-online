@@ -1,57 +1,57 @@
 document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
-   
+
     btn.addEventListener('click', (e) => {
 
-        let product_id = e.target.name
-        let user_id = document.querySelector('.client-id').value
 
-        let input_product_id = document.querySelector('.product-id')
-        input_product_id.setAttribute('value', product_id)
+        let product_message_id = e.target.name
 
-  
+        // let product_id = document.querySelector('.product-id')
+        // product_id = product_id.getAttribute('name')
+
+        // let product_message_id = document.querySelector('.product-message-id')
+        // product_message_id = product_message_id.getAttribute('name')
+
+        console.log();
+
         axios.defaults.withCredentials = true;
-        axios.get('?a=get_all_user_questions_by_product&product_id=' + product_id + '&user_id=' + user_id)
+        axios.get('?a=show_product_question_details&product_message_id=' + product_message_id)
             .then(function (response) {
 
-                    let data = response.data
-                    console.log(data);
-           
-                    let questions_header_display = document.querySelector('.questions-header-display')
-                    let img = document.querySelector('.user-img-icon')
-                    img.setAttribute('src', 'assets/images/user.png')
+                let data = response.data
+                console.log(data);
+                let questions_header_display = document.querySelector('.questions-header-display')
+                let img = document.querySelector('.user-img-icon')
+                img.setAttribute('src', 'assets/images/user.png')
 
-                    let client_name = document.querySelector('.user-name')
-                    client_name.textContent = data[0].user_name
+                let client_name = document.querySelector('.user-name')
+                client_name.textContent = data[0].user_name
 
+                let ul = document.querySelector('.ul-questions')
+                ul.innerHTML = ''
 
+                data.map(item => {
 
-                    let ul = document.querySelector('.ul-questions')
+                    let li = document.createElement('li')
 
-                    ul.innerHTML = ''
+                    if (item.question_active === 1) {
+                        li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between', 'bg-warning')
+                    } else {
 
-                    data.map(item => {
+                        li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between')
+                    }
 
-                        let li = document.createElement('li')
+                    let client_text = document.createElement('span')
+                    client_text.textContent = item.user_question
 
-                        if (item.question_active === 1) {
-                            li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between', 'bg-warning')
-                        } else {
+                    let client_text_time = document.createElement('span')
+                    client_text_time.style.fontSize = '12 px'
+                    client_text_time.textContent = item.question_created_at
 
-                            li.classList.add('p-2', 'border', 'rounded-1', 'm-1', 'd-flex', 'justify-content-between')
-                        }
+                    li.appendChild(client_text)
+                    li.appendChild(client_text_time)
+                    ul.appendChild(li)
 
-                        let client_text = document.createElement('span')
-                        client_text.textContent = item.user_question
-
-                        let client_text_time = document.createElement('span')
-                        client_text_time.style.fontSize = '12 px'
-                        client_text_time.textContent = item.question_created_at
-
-                        li.appendChild(client_text)
-                        li.appendChild(client_text_time)
-                        ul.appendChild(li)
-
-                    })
+                })
 
             }
             )

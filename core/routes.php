@@ -26,12 +26,12 @@ $routes = [
     'product_details_page' => 'productcontroller@product_details_page',
     'list_products_page' => 'productcontroller@list_products_page',
     'make_question' => 'productcontroller@make_question',
+    'show_product_question_details' => 'productcontroller@show_product_question_details',
 
     
     //Admin
     'answer_question' => 'admincontroller@answer_question',
     'get_user_questions' => 'admincontroller@get_user_questions',
-    'get_all_user_questions_by_product' => 'productcontroller@get_all_user_questions_by_product',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
 
 ];

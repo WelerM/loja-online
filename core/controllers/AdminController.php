@@ -16,7 +16,7 @@ class AdminController
 
         $admin = new Admin();
 
-        $results = $admin->list_users_with_active_questions();
+        $results = $admin->list_active_product_questions();
         $data = json_decode(json_encode($results), true);
 
         // print_r($results);

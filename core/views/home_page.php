@@ -20,7 +20,7 @@
 
                     <div class="card" style="">
 
-                    <img style="height:200px; width:200px" src="<?= $item['img_src']; ?>" class="card-img-top">
+                        <img style="height:200px; width:200px" src="<?= $item['img_src']; ?>" class="card-img-top">
                         <div class="card-body p-3">
 
                             <h5 class="card-title"><?= $item['name']; ?> </h5>
@@ -35,5 +35,11 @@
 
         </div>
     </div>
+
+
+
+
+
+
 
 </div>
