@@ -1,3 +1,6 @@
 Login ok
 Register ok
 Redefine password ok
+
+
+Criar pagina de entrar em contato e mandar  menssagem chat

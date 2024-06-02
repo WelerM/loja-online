@@ -11,30 +11,54 @@ class Admin
 {
 
 
-    public function answer_question($product_id, $answer)
+    public function answer_question($product_message_id, $answer)
     {
 
         $db = new Database();
 
+        try {
 
-        //Criar registro na tabela 'answers'
+            //Criar registro na tabela 'products answers'
+            $params = [
+                ':answer' => $answer,
+            ];
+
+            $db->insert(
+                "INSERT INTO product_answers
+                VALUES(
+                    0,
+                    :answer,
+                    NOW()
+                )",
+                $params
+            );
 
 
-        //Dar update em 'active' para 'falso'no registro correto
-        //dentro da tabela client_questions
+            //Dar update em 'active' para 'falso'no registro correto
+            //dentro da tabela product_messages
+            $params = [
+                'id' => $product_message_id,
+                ':active' => 0,
+                ':answer_id' => $product_message_id
+            ];
+
+            $db->update(
+                "UPDATE
+                    product_messages
+                SET
+                    active = :active,
+                    answer_id = :answer_id
+                WHERE
+                    id = :id",
+                $params
+            );
 
 
-        $params = [
-            ':active' => 1
-        ];
+            return true;
 
-        $results = $db->select(
-            "SELECT *  FROM client_questions
-           JOIN products
-           ON client_questions.product_id = products.id
-           WHERE client_questions.active = :active",
-            $params
-        );
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
 
@@ -53,8 +77,8 @@ class Admin
             $results = $db->select(
                 "SELECT 
                     product_messages.id AS product_message_id,
-                    product_messages.question AS product_question,
-                    product_messages.created_at AS question_created_at,
+                    product_messages.message AS product_message,
+                    product_messages.created_at AS message_created_at,
 
                     users.id AS user_id,
                     users.name AS user_name,
@@ -74,52 +98,14 @@ class Admin
                 ON
                     product_messages.product_id = products.id
                 WHERE 
-                product_messages.active = :active
-                ORDER BY product_messages.id DESC",
+                    product_messages.active = :active",
                 $params
             );
 
-            // $results = $db->select(
-            //     "SELECT 
-            //         users.id AS user_id,
-            //         users.name AS user_name,
-            //         uq.question AS last_active_question,
-            //         uq.created_at AS last_active_question_date,
-            //         products.img_src,
-            //         products.id AS product_id
-            //     FROM users
-            //     JOIN (
-            //         SELECT 
-            //         user_id, 
-            //         question, 
-            //         created_at, 
-            //         product_id
-            //         FROM product_messages
-            //         WHERE active = :active
-            //         AND (user_id, created_at) IN (
-            //             SELECT user_id, MAX(created_at)
-            //             FROM product_messages
-            //             WHERE active = :active
-            //             GROUP BY user_id
-            //         )
-            //     ) AS uq
-            //     ON users.id = uq.user_id
-            //     JOIN products
-            //     ON uq.product_id = products.id",
-            //     $params
-            // );
-            // Remove the 'last_active_question_date' if you don't want to include it in the final results
-            // foreach ($results as &$user) {
-            //     unset($user->last_active_question_date);
-            // }
-
+            $results = json_decode(json_encode($results), true);
             return $results;
-
         } catch (Exception $e) {
             echo $e;
         }
     }
-
-
-
 }

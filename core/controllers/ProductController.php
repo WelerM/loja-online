@@ -19,8 +19,7 @@ class ProductController
 
         $data = $product->show_product($product_id);
 
-        // print_r($data);
-        // die();
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -134,7 +133,7 @@ class ProductController
         //Save image info into the database
         $product = new Product();
 
-        $product->save_product(
+        $product->create_product(
             //data for images table
 
             $product_name,
@@ -211,7 +210,118 @@ class ProductController
         // die();
         $results = json_encode($results);
         print_r($results);
-
     }
 
+    public function my_products_page()
+    {
+
+        $product = new Product();
+
+        $data = $product->list_my_products();
+
+
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/my_products_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+
+
+
+    public function edit_product_page($id = null)
+    {
+
+        $product = new Product();
+
+        $data = $product->show_product_details($id);
+
+
+        // print_r($data);
+        // die();
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/edit_product_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+
+    public function edit_product()
+    {
+
+        //Checar se parametros vem corretamente
+        // echo $_POST['product-name'] . '<br>';
+        // echo $_POST['product-description'] . '<br>';
+        // echo $_POST['product-link'] . '<br>';
+        // echo $_POST['product-name'] . '<br>';
+
+        $product = new Product();
+
+        $product_id = $_POST['product-id'];
+
+        //Checks whether or not a new image was choosen 
+        if ($_FILES['file']['size'] === 0) { //Will not update product image
+
+            $result = $product->edit_product($update_product_img = false);
+
+            if (!$result) {
+
+                Functions::redirect('edit_product_page/' . $product_id);
+                $_SESSION['error'] = 'Erro editar produto';
+
+                return;
+            } else {
+
+                Functions::redirect('edit_product_page/' . $product_id);
+                $_SESSION['success'] = 'Produto editado com sucesso';
+
+                return;
+            }
+        } else { //Will update product image
+            $result = $product->edit_product($update_product_img = true);
+
+            if (!$result) {
+
+                Functions::redirect('answer_questions_page');
+                $_SESSION['error'] = 'Erro ao responder pergunta';
+
+                return;
+            } else {
+
+                Functions::redirect('answer_questions_page');
+                $_SESSION['success'] = 'Pergunta respondida com sucesso';
+
+                return;
+            }
+        }
+    }
+
+    public function delete_product($id)
+
+    {
+
+        $product = new Product();
+
+        $result = $product->delete_product($id);
+
+        print_r($result);
+        // if (!$result) {
+
+        //     Functions::redirect('my_products_page');
+
+
+        //     return;
+        // }
+
+
+        // Functions::redirect('my_products_page');
+
+        // return;
+    }
 }

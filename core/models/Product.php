@@ -17,92 +17,47 @@ class Product
         $params = [
             ':id' => $product_id
         ];
-        //-----------------------------------------------------------
-
-
-
-        //Checks if there are user's questions on this product
-        $results = $db->select(
-            "SELECT * FROM product_messages    
-            WHERE product_messages.product_id = :id"
-            ,
+        $product_details = $db->select(
+            "SELECT
+                id, 
+                name,
+                price,
+                description,
+                img_src,
+                link
+            FROM
+                products
+            WHERE products.id = :id",
             $params
         );
 
-        if (count($results) === 0) {//No user's questions for this product
-
-            try {
-                $results = $db->select(
-                    "SELECT 
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.description AS product_description,
-                    products.link AS product_link,
-                    products.img_src AS product_img_src
-    
-                     FROM products
-                    WHERE products.id = :id"
-                    ,
-                    $params
-                );
-
-                $results = json_decode(json_encode($results[0]), true);
-
-                return $results;
-
-            } catch (Exception $e) {
-                echo $e;
-            }
-        }
-        //-----------------------------------------------------------
+        $result['product_details'] = json_decode(json_encode($product_details[0]), true);
 
 
-        //User's questions exist for this project
-        try {
+        $product_messages = $db->select(
+            "SELECT
+                message,
+                name,
+                product_messages.created_at AS message_created_at
+            FROM
+                product_messages
+            JOIN
+                users
+            ON
+                product_messages.user_id = users.id
+            WHERE 
+                product_messages.product_id = :id
+            ORDER BY product_messages.id DESC",
+            $params
+        );
 
-            $results = $db->select(
-                "SELECT 
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.description AS product_description,
-                    products.link AS product_link,
-                    products.img_src AS product_img_src,
-                    products.created_at AS product_created_at,
-                    GROUP_CONCAT(CONCAT(product_messages.question, '::', users.name, '::', product_messages.created_at) ORDER BY product_messages.id DESC) AS product_messages
-                FROM products
-                JOIN product_messages ON products.id = product_messages.product_id
-                JOIN users ON product_messages.user_id = users.id
-                WHERE products.id = :id
-                GROUP BY products.id, products.name, products.price, products.description, products.link, products.img_src, products.created_at",
-                $params
-            );
 
-            // Convert the result object to an array
-            $resultsArray = json_decode(json_encode($results), true);
+        $result['product_messages'] =   json_decode(json_encode($product_messages), true);
 
-            $result = $resultsArray[0]; // Assuming there is only one product for the given id
-            // Split user_messages into an array
-            $userQuestionsArray = explode(',', $result['product_messages']);
-            $parsedQuestions = [];
 
-            foreach ($userQuestionsArray as $question) {
-                list($questionText, $userName, $questionCreated_at) = explode('::', $question);
-                $parsedQuestions[] = [
-                    'user_question' => $questionText,
-                    'user_name' => $userName,
-                    'question_created_at' => $questionCreated_at,
-                ];
-            }
+        return $result;
 
-            $result['product_messages'] = $parsedQuestions;
 
-            return $result;
-
-        } catch (Exception $e) {
-            return $e;
-        }
         //-----------------------------------------------------------
 
     }
@@ -120,7 +75,7 @@ class Product
         return $results;
     }
 
-    public function save_product(
+    public function create_product(
 
         $product_name,
         $product_price,
@@ -154,6 +109,7 @@ class Product
                 ':price' => $product_price,
                 ':description' => strtolower(trim($_POST['product-description'])),
                 ':img_src' => $file_src,
+                ':img_file_name' => $file_new_name,
                 ':link' => $product_link
             ];
             $db->insert(
@@ -163,6 +119,7 @@ class Product
                         :price,
                         :description,
                         :img_src,
+                        :img_file_name,
                         :link,
                         NOW(),
                         NOW()
@@ -189,16 +146,16 @@ class Product
             $params = [
                 ':product_id' => $_GET['product_id'],
                 ':user_id' => $_SESSION['user_id'],
-                ':question' => trim($_POST['question-text'])
+                ':message' => trim($_POST['question-text'])
             ];
 
             $db->insert(
-                "INSERT INTO user_questions VALUES(
+                "INSERT INTO product_messages VALUES(
                          0,
                         :product_id,
                         :user_id,
                         DEFAULT,
-                        :question,
+                        :message,
                         DEFAULT,
                         NOW()
                     )",
@@ -206,19 +163,10 @@ class Product
             );
 
             return true;
-
         } catch (Exception $e) {
             return false;
         }
     }
-
-
-
-
-
-
-
-
 
     public function list_questions($product_id)
     {
@@ -267,7 +215,8 @@ class Product
 
             $results = $db->select(
                 "SELECT
-                    product_messages.question AS user_question,
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS user_question,
                     product_messages.created_at AS question_created_at,
                     users.name AS user_name
                 FROM 
@@ -287,9 +236,161 @@ class Product
             //  die();
 
             return $results;
-
         } catch (Exception $e) {
             echo $e;
         }
+    }
+
+
+
+    public function list_my_products()
+    {
+        $db = new Database();
+
+        $results = $db->select("SELECT * FROM products");
+
+        $results = json_decode(json_encode($results), true);
+
+        return $results;
+    }
+
+    public function show_product_details($id)
+    {
+        $db = new Database();
+
+        $params = [
+            ':id' => $id
+        ];
+        $results = $db->select("SELECT * FROM products WHERE id = :id", $params);
+
+        $results = json_decode(json_encode($results), true);
+
+        return $results;
+    }
+
+
+    public function edit_product($update_product_img)
+    {
+
+        $db = new Database();
+
+        if (!$update_product_img) { //Will not update product image
+
+            $params = [
+                ':id' => $_POST['product-id'],
+                ':product_name' => $_POST['product-name'],
+                ':product_price' => $_POST['product-price'],
+                ':product_description' => $_POST['product-description'],
+                ':product_link' => $_POST['product-link'],
+            ];
+
+            try {
+
+                $db->update(
+                    "UPDATE 
+                                            products
+                                         SET
+                                            name = :product_name,
+                                            price = :product_price,
+                                            description = :product_description,
+                                            link = :product_link,
+                                            updated_at = NOW()
+                                         WHERE
+                                            id = :id",
+                    $params
+                );
+
+                return true;
+            } catch (Exception $e) {
+                return false;
+            }
+        } else { //Will update product image
+            echo ' not kk';
+        }
+    }
+
+
+    public function delete_product($id)
+    {
+
+        $db = new Database();
+
+        $params = [
+            ':id' => $id
+        ];
+
+        // //Deletar de
+        //  products,
+        //  products_messages,
+        //  products_answers
+
+
+
+
+        //Delete register from products_answers table
+        try {
+
+            $db->delete(
+                "DELETE FROM
+                            product_answers
+                        WHERE
+                            answer_id = :product_message_id?????",
+                $params
+            );
+        } catch (Exception $e) {
+            echo $e;
+            die();
+            $_SESSION['error'] = 'Falha ao deletar de products_answersar';
+            return false;
+        }
+        //-------------------------------------------------------------
+
+
+        //Delete register from products_messages table
+        try {
+
+            $db->delete(
+                "DELETE FROM
+                            product_messages
+                        WHERE
+                            answer_id = :id",
+                $params
+            );
+        } catch (Exception $e) {
+            echo $e;
+            die();
+            $_SESSION['error'] = 'Falha ao deletar de products_messages';
+            return false;
+        }
+        //-------------------------------------------------------------
+
+
+
+        //Delete register from products table
+        try {
+            $db->delete(
+                "DELETE FROM
+                    products
+                WHERE
+                    id = :id",
+                $params
+            );
+        } catch (Exception $e) {
+            echo $e;
+            die();
+            $_SESSION['error'] = 'Falha ao deletar de products';
+            return false;
+        }
+        //-------------------------------------------------------------
+
+
+
+
+        $_SESSION['success'] = 'Pergunta respondida com sucesso';
+
+        return true;
+        //-------------------------------------------------------------
+
+
     }
 }

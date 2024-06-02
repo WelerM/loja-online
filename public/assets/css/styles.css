@@ -9,7 +9,8 @@ ul {
     margin-bottom: 0px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
-a{
+
+a {
     text-decoration: none;
 }
 
@@ -23,22 +24,22 @@ li:hover {
     cursor: pointer;
 }
 
-a{
+a {
     text-decoration: none;
 }
-.btn-user{
+
+.btn-user {
     display: flex;
 }
-.custom-ul{
- 
 
-}
+.custom-ul {}
 
 @media(max-width: 991px) {
-    .btn-user{
+    .btn-user {
         display: none;
     }
-    .custom-ul{
+
+    .custom-ul {
         display: flex
     }
 
@@ -56,9 +57,7 @@ a{
     cursor: pointer;
 }
 
-h1 {
-
-}
+h1 {}
 
 
 
@@ -131,7 +130,7 @@ h1 {
 
 .img-suggestion {
     max-width: 150px;
-    max-height:127px;
+    max-height: 127px;
 
 }
 
@@ -143,5 +142,15 @@ h1 {
 .no-focus-border:focus {
     outline: none;
     box-shadow: none;
-    border-color: none; /* or specify another color */
+    border-color: none;
+    /* or specify another color */
+}
+
+
+
+.container-background-img {
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position:50%;
 }

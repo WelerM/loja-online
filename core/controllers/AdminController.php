@@ -37,14 +37,26 @@ class AdminController
     {
 
         $answer = $_POST['answer'];
-        $product_id = $_POST['product_id'];
+        $product_message_id = $_POST['product_message_id'];
 
+        //  $prod
 
         $admin = new Admin();
 
-        $results = $admin->answer_question($product_id, $answer);
+        $results = $admin->answer_question($product_message_id, $answer);
 
-        print_r($results);
+        if (!$results) {
+
+            Functions::redirect('answer_questions_page');
+            $_SESSION['error'] = 'Erro ao responder pergunta';
+
+            return;
+        }
+
+
+            Functions::redirect('answer_questions_page');
+            $_SESSION['success'] = 'Pergunta respondida com sucesso';
+
+            return;
     }
-
 }

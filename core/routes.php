@@ -27,6 +27,10 @@ $routes = [
     'list_products_page' => 'productcontroller@list_products_page',
     'make_question' => 'productcontroller@make_question',
     'show_product_question_details' => 'productcontroller@show_product_question_details',
+    'my_products_page' => 'productcontroller@my_products_page',
+    'edit_product_page' => 'productcontroller@edit_product_page',
+    'edit_product' => 'productcontroller@edit_product',
+    'delete_product' => 'productcontroller@delete_product',
 
     
     //Admin

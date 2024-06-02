@@ -47,6 +47,11 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                     client_text_time.style.fontSize = '12 px'
                     client_text_time.textContent = item.question_created_at
 
+                    //Hidden
+                    let input_product_message_id = document.querySelector('.product-id')
+                    input_product_message_id.setAttribute('value', item.product_message_id)
+
+                    console.log(item.product_message_id);
                     li.appendChild(client_text)
                     li.appendChild(client_text_time)
                     ul.appendChild(li)
@@ -64,7 +69,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
 if (document.querySelector('.btn-add-img')) {
     document.querySelector('.btn-add-img').addEventListener('click', (e) => {
         e.preventDefault();
-        // layout.btn_choose_img();
+
         document.querySelector('#form-input').click();
 
         if (document.querySelector("#form-input")) {
@@ -96,8 +101,36 @@ if (document.querySelector('.btn-add-img')) {
 
 
 
+//Triigers input file in order to choose an image from the system
+if (document.querySelector('.btn-edit-img')) {
+    document.querySelector('.btn-edit-img').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        document.querySelector('#form-input').click();
+
+        if (document.querySelector("#form-input")) {
+
+            document.querySelector("#form-input").addEventListener('change', () => {
+                let img_file = document.querySelector('#form-input')
+
+                if ((img_file.files) && (img_file.files[0])) {
+
+                    var reader = new FileReader()
+
+                    reader.onload = function (e) {
+
+                        //Shows image
+                        document.querySelector('.img-edit-preview').setAttribute('src', e.target.result)
 
 
+                    }
+                    reader.readAsDataURL(img_file.files[0])
+                }
+            })
+        }
+    })
+
+}
 
 
 
