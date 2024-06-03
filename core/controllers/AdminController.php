@@ -37,14 +37,19 @@ class AdminController
     {
 
         $answer = $_POST['answer'];
+        $product_id = $_POST['product_id'];
         $product_message_id = $_POST['product_message_id'];
 
         //  $prod
 
         $admin = new Admin();
 
-        $results = $admin->answer_question($product_message_id, $answer);
+        $results = $admin->answer_question($product_id,$product_message_id, $answer);
 
+        // print_r($results);
+        // die('aaa');
+        
+        
         if (!$results) {
 
             Functions::redirect('answer_questions_page');

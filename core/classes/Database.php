@@ -115,6 +115,9 @@ class Database
             if (!empty($params)) {
                 $execute = $this->conn->prepare($sql);
                 $execute->execute($params);
+                $lastInsertId = $this->conn->lastInsertId();
+
+                
             } else {
                 $execute = $this->conn->prepare($sql);
                 $execute->execute();
@@ -125,6 +128,9 @@ class Database
 
 
         $this->turn_off();
+
+        return $lastInsertId;
+
     }
 
     public function update($sql, $params = null)

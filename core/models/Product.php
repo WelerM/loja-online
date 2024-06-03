@@ -52,7 +52,7 @@ class Product
         );
 
 
-        $result['product_messages'] =   json_decode(json_encode($product_messages), true);
+        $result['product_messages'] = json_decode(json_encode($product_messages), true);
 
 
         return $result;
@@ -216,11 +216,16 @@ class Product
             $results = $db->select(
                 "SELECT
                     product_messages.id AS product_message_id,
+                    products.id AS product_id,
                     product_messages.message AS user_question,
                     product_messages.created_at AS question_created_at,
                     users.name AS user_name
                 FROM 
                     product_messages
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
                 JOIN 
                     users
                 ON 
@@ -310,87 +315,83 @@ class Product
     }
 
 
-    public function delete_product($id)
+    public function delete_product($product_id)
     {
-
         $db = new Database();
 
         $params = [
-            ':id' => $id
+            ':id' => $product_id
         ];
 
-        // //Deletar de
-        //  products,
-        //  products_messages,
-        //  products_answers
+        $result = null;
+        $handle_deletion_result = false;
 
 
 
 
-        //Delete register from products_answers table
+        //Checks if produc exists on database
         try {
-
-            $db->delete(
-                "DELETE FROM
-                            product_answers
-                        WHERE
-                            answer_id = :product_message_id?????",
-                $params
-            );
-        } catch (Exception $e) {
-            echo $e;
-            die();
-            $_SESSION['error'] = 'Falha ao deletar de products_answersar';
-            return false;
-        }
-        //-------------------------------------------------------------
-
-
-        //Delete register from products_messages table
-        try {
-
-            $db->delete(
-                "DELETE FROM
-                            product_messages
-                        WHERE
-                            answer_id = :id",
-                $params
-            );
-        } catch (Exception $e) {
-            echo $e;
-            die();
-            $_SESSION['error'] = 'Falha ao deletar de products_messages';
-            return false;
-        }
-        //-------------------------------------------------------------
-
-
-
-        //Delete register from products table
-        try {
-            $db->delete(
-                "DELETE FROM
+            $result = $db->select(
+                "SELECT  * FROM
                     products
                 WHERE
                     id = :id",
                 $params
             );
+
         } catch (Exception $e) {
             echo $e;
-            die();
-            $_SESSION['error'] = 'Falha ao deletar de products';
             return false;
         }
-        //-------------------------------------------------------------
+
+        if (count($result) === 0) {
+            return false;
+        }
+
+        $img_file_name = $result[0]->img_file_name;
+        //---------------------------------------
 
 
+        //Proceeds to delete product on database
+        try {
+            $db->delete(
+                "DELETE FROM
+                    products
+                 WHERE
+                    id = :id",
+                $params
+            );
+
+            $handle_deletion_result = true;
+
+        } catch (Exception $e) {
+            $handle_deletion_result = false;
+
+        }
+
+        //Checks if product was deleted
+        if (!$handle_deletion_result) {
+            return false;
+        }
+        //---------------------------------------
 
 
-        $_SESSION['success'] = 'Pergunta respondida com sucesso';
+        //Proceeds to delete product from server's folder
+        $path_to_delete_img = APP_DOCUMENT_ROOT . '/public/assets/images/products/' . $img_file_name;
+
+
+        //Verifies if file  exists on server's folder
+        if (!file_exists($path_to_delete_img)) {
+
+          return false;
+        }
+
+        //Delete on server folder
+        if (!unlink($path_to_delete_img)) {
+return false;
+        }
 
         return true;
-        //-------------------------------------------------------------
-
 
     }
 }

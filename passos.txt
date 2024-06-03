@@ -1,6 +1,10 @@
 Login ok
 Register ok
 Redefine password ok
+Deletar produto Ok
 
+Bug ao cirar produto, se abro o file explorer
+para add imagem mas dou um ESC antes de selecionar a imagem,
+fechando assim o file explorer, o programa dara um erro
 
 Criar pagina de entrar em contato e mandar  menssagem chat

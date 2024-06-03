@@ -115,8 +115,8 @@
                         <textarea class="form-control" name="answer" id=""></textarea>
                         <button type="submit" class="btn btn-success btn-sm">Responder</button>
 
-                        <input class="product-id d-none" name="product_message_id" type="text">
-                        <input class="client-id d-none" name="client_id" value="" type="text">
+                        <input class="product-message-id d-none" name="product_message_id" type="text">
+                        <input class="product-id d-none" name="product_id" value="" type="text">
                     </form>
 
                 </div>

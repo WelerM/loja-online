@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02/06/2024 às 23:19
+-- Tempo de geração: 03-Jun-2024 às 21:40
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.0.30
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `admin_chat_messages`
+-- Estrutura da tabela `admin_chat_messages`
 --
 
 CREATE TABLE `admin_chat_messages` (
@@ -36,7 +36,7 @@ CREATE TABLE `admin_chat_messages` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `products`
+-- Estrutura da tabela `products`
 --
 
 CREATE TABLE `products` (
@@ -52,43 +52,33 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `products`
+-- Extraindo dados da tabela `products`
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_file_name`, `link`, `updated_at`, `created_at`) VALUES
-(13, 'jaqueta', 200, 'cor laranja', 'assets/images/products/jaqueta_1716919630880.png', 'jaqueta_1716919630880.png', 'www.google.com', '2024-06-02 20:43:43', '2024-05-28 18:07:10'),
-(14, 'óculos', 200, 'cor preto', 'assets/images/products/óculos_1716919737530.png', 'óculos_1716919737530.png', 'www.google.com', '2024-05-28 18:08:57', '2024-05-28 18:08:57'),
-(15, 'cargo pants used', 90, 'second hand', 'assets/images/products/cargo pants_1717003367482.png', 'cargo pants_1717003367482.png', 'www.google.com', '2024-06-02 20:31:03', '2024-05-29 17:22:47'),
-(16, 'snears', 240, 'beautiful', 'assets/images/products/snears_1717249708812.png', 'snears_1717249708812.png', 'wwww.google.com', '2024-06-01 13:48:28', '2024-06-01 13:48:28'),
-(17, 'hat', 100, 'warm', 'assets/images/products/hat_1717257861158.png', 'hat_1717257861158.png', 'www.google.com', '2024-06-01 16:04:21', '2024-06-01 16:04:21');
+(23, 'jaqueta', 200, 'boa', 'assets/images/products/jaqueta_1717443410563.png', 'jaqueta_1717443410563.png', 'http://localhost/loja/public/', '2024-06-03 19:36:50', '2024-06-03 19:36:50'),
+(24, 'Boné', 100, 'novo', 'assets/images/products/Boné_1717443438482.png', 'Boné_1717443438482.png', 'http://localhost/loja/public/?a=home', '2024-06-03 19:37:18', '2024-06-03 19:37:18'),
+(25, 'calça sarja', 150, 'usada', 'assets/images/products/calça sarja_1717443542018.png', 'calça sarja_1717443542018.png', 'http://localhost/loja/public/', '2024-06-03 19:39:02', '2024-06-03 19:39:02'),
+(26, 'Botas', 210, 'lindas', 'assets/images/products/Botas_1717443587161.png', 'Botas_1717443587161.png', 'http://localhost/loja/public/', '2024-06-03 19:39:47', '2024-06-03 19:39:47'),
+(27, 'Tênis branco', 290, 'originais', 'assets/images/products/Tênis branco_1717443619200.png', 'Tênis branco_1717443619200.png', 'http://localhost/loja/public/', '2024-06-03 19:40:19', '2024-06-03 19:40:19');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `product_answers`
+-- Estrutura da tabela `product_answers`
 --
 
 CREATE TABLE `product_answers` (
   `id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
   `answer` varchar(300) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `product_answers`
---
-
-INSERT INTO `product_answers` (`id`, `answer`, `created_at`) VALUES
-(1, 'oii', '2024-06-02 20:11:42'),
-(2, 'cdfgdf', '2024-06-02 20:14:15'),
-(3, 'fdfdf', '2024-06-02 20:15:23'),
-(4, 'fdfd', '2024-06-02 20:27:12'),
-(5, 'fdfd', '2024-06-02 20:27:23');
-
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `product_messages`
+-- Estrutura da tabela `product_messages`
 --
 
 CREATE TABLE `product_messages` (
@@ -101,21 +91,10 @@ CREATE TABLE `product_messages` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `product_messages`
---
-
-INSERT INTO `product_messages` (`id`, `product_id`, `user_id`, `answer_id`, `message`, `active`, `created_at`) VALUES
-(1, 13, 1, 1, 'ola', 0, '2024-06-02 20:11:42'),
-(7, 15, 1, 7, 'oi', 0, '2024-06-02 20:14:15'),
-(8, 14, 1, 8, 'ola', 0, '2024-06-02 20:15:23'),
-(9, 13, 1, 9, 'sdsdsd', 0, '2024-06-02 20:27:12'),
-(10, 13, 1, 10, 'sdsdsd', 0, '2024-06-02 20:27:23');
-
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `users`
+-- Estrutura da tabela `users`
 --
 
 CREATE TABLE `users` (
@@ -132,7 +111,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `users`
+-- Extraindo dados da tabela `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`) VALUES
@@ -142,7 +121,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_r
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `user_chat_messages`
+-- Estrutura da tabela `user_chat_messages`
 --
 
 CREATE TABLE `user_chat_messages` (
@@ -156,46 +135,47 @@ CREATE TABLE `user_chat_messages` (
 --
 
 --
--- Índices de tabela `admin_chat_messages`
+-- Índices para tabela `admin_chat_messages`
 --
 ALTER TABLE `admin_chat_messages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `products`
+-- Índices para tabela `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `product_answers`
+-- Índices para tabela `product_answers`
 --
 ALTER TABLE `product_answers`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
--- Índices de tabela `product_messages`
+-- Índices para tabela `product_messages`
 --
 ALTER TABLE `product_messages`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_msg_product_id` (`product_id`);
 
 --
--- Índices de tabela `users`
+-- Índices para tabela `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices de tabela `user_chat_messages`
+-- Índices para tabela `user_chat_messages`
 --
 ALTER TABLE `user_chat_messages`
   ADD PRIMARY KEY (`id`),
   ADD KEY `admin_answer_id` (`admin_answer_id`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
@@ -208,19 +188,19 @@ ALTER TABLE `admin_chat_messages`
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de tabela `product_answers`
 --
 ALTER TABLE `product_answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `users`
@@ -235,18 +215,24 @@ ALTER TABLE `user_chat_messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Restrições para tabelas despejadas
+-- Restrições para despejos de tabelas
 --
 
 --
--- Restrições para tabelas `product_messages`
+-- Limitadores para a tabela `product_answers`
+--
+ALTER TABLE `product_answers`
+  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Limitadores para a tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  ADD CONSTRAINT `product_messages_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
-  ADD CONSTRAINT `product_messages_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `product_messages_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `product_msg_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
--- Restrições para tabelas `user_chat_messages`
+-- Limitadores para a tabela `user_chat_messages`
 --
 ALTER TABLE `user_chat_messages`
   ADD CONSTRAINT `user_chat_messages_ibfk_1` FOREIGN KEY (`admin_answer_id`) REFERENCES `admin_chat_messages` (`id`);

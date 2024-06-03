@@ -57,6 +57,47 @@ class ProductController
         ]);
     }
 
+    public function my_products_page()
+    {
+
+        $product = new Product();
+
+        $data = $product->list_my_products();
+
+
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/my_products_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+
+    public function edit_product_page($id = null)
+    {
+
+        $product = new Product();
+
+        $data = $product->show_product_details($id);
+
+
+        // print_r($data);
+        // die();
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/edit_product_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+
+
+
+
     public function create_product()
     {
 
@@ -149,109 +190,6 @@ class ProductController
         Functions::redirect("home&data='imgsaved'&error=none");
         exit();
     }
-
-    public function make_question()
-    {
-        $product_id = $_GET['product_id'];
-
-        //checks if user is logged
-        if (!isset($_SESSION['user_id'])) {
-            Functions::redirect("show_product/" . $product_id);
-            exit();
-        }
-
-        if (!isset($_GET['product_id'])) {
-            Functions::redirect("show_product/" . $product_id);
-            exit();
-
-            die('product id not found');
-        }
-
-
-        $product = new Product();
-
-        $result = $product->make_question();
-
-        if (!$result) {
-            //The variable "data" in the URL will be used inside the "start" function in the script.js file
-            Functions::redirect("product_details_page/" . $product_id . '&error');
-            exit();
-        }
-
-        //The variable "data" in the URL will be used inside the "start" function in the script.js file
-        Functions::redirect("product_details_page/" . $product_id);
-        exit();
-    }
-
-
-    public function list_products()
-    {
-        $products = new Product();
-    }
-
-
-
-    // public function list_users_with_active_questions()
-    // {
-
-    // }
-
-    public function show_product_question_details()
-    {
-
-
-        $product_message_id = $_GET['product_message_id'];
-
-        $product = new Product();
-
-        $results = $product->show_product_question_details($product_message_id);
-
-        // echo 'f';
-        // die();
-        $results = json_encode($results);
-        print_r($results);
-    }
-
-    public function my_products_page()
-    {
-
-        $product = new Product();
-
-        $data = $product->list_my_products();
-
-
-
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'admin/my_products_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ], $data);
-    }
-
-
-
-    public function edit_product_page($id = null)
-    {
-
-        $product = new Product();
-
-        $data = $product->show_product_details($id);
-
-
-        // print_r($data);
-        // die();
-
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'admin/edit_product_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ], $data);
-    }
-
     public function edit_product()
     {
 
@@ -302,26 +240,85 @@ class ProductController
         }
     }
 
-    public function delete_product($id)
-
+    public function delete_product($product_id)
     {
+
 
         $product = new Product();
 
-        $result = $product->delete_product($id);
-
-        print_r($result);
-        // if (!$result) {
-
-        //     Functions::redirect('my_products_page');
+        $result = $product->delete_product($product_id);
 
 
-        //     return;
-        // }
+        if (!$result) {
+            $_SESSION['error'] = 'Falha ao deletar de produto';
+            Functions::redirect('my_products_page');
+            return;
+        }
 
-
-        // Functions::redirect('my_products_page');
-
-        // return;
+        $_SESSION['success'] = 'Pergunta respondida com sucesso';
+        Functions::redirect('my_products_page');
+        return;
     }
+
+    public function make_question()
+    {
+        $product_id = $_GET['product_id'];
+
+        //checks if user is logged
+        if (!isset($_SESSION['user_id'])) {
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+        }
+
+        if (!isset($_GET['product_id'])) {
+            Functions::redirect("show_product/" . $product_id);
+            exit();
+
+            die('product id not found');
+        }
+
+
+        $product = new Product();
+
+        $result = $product->make_question();
+
+        if (!$result) {
+            //The variable "data" in the URL will be used inside the "start" function in the script.js file
+            Functions::redirect("product_details_page/" . $product_id . '&error');
+            exit();
+        }
+
+        //The variable "data" in the URL will be used inside the "start" function in the script.js file
+        Functions::redirect("product_details_page/" . $product_id);
+        exit();
+    }
+
+
+    public function list_products()
+    {
+        $products = new Product();
+    }
+
+    // public function list_users_with_active_questions()
+    // {
+
+    // }
+
+    public function show_product_question_details()
+    {
+
+
+        $product_message_id = $_GET['product_message_id'];
+
+        $product = new Product();
+
+        $results = $product->show_product_question_details($product_message_id);
+
+        // echo 'f';
+        // die();
+        $results = json_encode($results);
+        print_r($results);
+    }
+
+
 }

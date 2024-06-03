@@ -11,48 +11,52 @@ class Admin
 {
 
 
-    public function answer_question($product_message_id, $answer)
+    public function answer_question($product_id, $product_message_id, $answer)
     {
 
         $db = new Database();
+        $last_inserted_answer_id = null;
 
         try {
 
-            //Criar registro na tabela 'products answers'
+            //Create registry on table 'products answers'
             $params = [
                 ':answer' => $answer,
+                ':product_id' => $product_id,
             ];
 
-            $db->insert(
-                "INSERT INTO product_answers
-                VALUES(
+            $last_inserted_answer_id = $db->insert(
+                "INSERT INTO 
+                    product_answers
+                 VALUES(
                     0,
+                    :product_id,
                     :answer,
                     NOW()
                 )",
                 $params
             );
 
+            //------------------------------------
 
-            //Dar update em 'active' para 'falso'no registro correto
-            //dentro da tabela product_messages
+
+            //Update table product_messages answer_id & active 
             $params = [
-                'id' => $product_message_id,
+                ':last_inserted_answer_id' => $last_inserted_answer_id,
                 ':active' => 0,
-                ':answer_id' => $product_message_id
+                ':id' => $product_message_id
             ];
 
             $db->update(
                 "UPDATE
                     product_messages
                 SET
-                    active = :active,
-                    answer_id = :answer_id
+                    answer_id = :last_inserted_answer_id,
+                    active = :active
                 WHERE
                     id = :id",
                 $params
             );
-
 
             return true;
 

@@ -30,6 +30,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                 ul.innerHTML = ''
 
                 data.map(item => {
+                    console.log(item);
 
                     let li = document.createElement('li')
 
@@ -48,10 +49,13 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                     client_text_time.textContent = item.question_created_at
 
                     //Hidden
-                    let input_product_message_id = document.querySelector('.product-id')
+                    let input_product_message_id = document.querySelector('.product-message-id')
                     input_product_message_id.setAttribute('value', item.product_message_id)
 
-                    console.log(item.product_message_id);
+                    let input_product_id = document.querySelector('.product-id')
+                    input_product_id.setAttribute('value', item.product_id)
+
+     
                     li.appendChild(client_text)
                     li.appendChild(client_text_time)
                     ul.appendChild(li)
