@@ -24,33 +24,40 @@ class Product
                 price,
                 description,
                 img_src,
-                link
+                link,
+                created_at
             FROM
                 products
-            WHERE products.id = :id",
+            WHERE 
+                products.id = :id",
             $params
         );
 
         $result['product_details'] = json_decode(json_encode($product_details[0]), true);
+        //-
+
 
 
         $product_messages = $db->select(
             "SELECT
-                message,
                 name,
-                product_messages.created_at AS message_created_at
+                message,
+                product_messages.created_at AS message_created_at,
+                answer,
+                product_answers.created_at AS answer_created_at
             FROM
-                product_messages
+                product_messages 
+            LEFT JOIN
+                product_answers  ON product_messages.answer_id = product_answers.id
             JOIN
-                users
-            ON
-                product_messages.user_id = users.id
+                users ON product_messages.user_id = users.id
             WHERE 
                 product_messages.product_id = :id
-            ORDER BY product_messages.id DESC",
+            ORDER BY 
+                product_messages.id
+            DESC",
             $params
         );
-
 
         $result['product_messages'] = json_decode(json_encode($product_messages), true);
 
@@ -252,7 +259,13 @@ class Product
     {
         $db = new Database();
 
-        $results = $db->select("SELECT * FROM products");
+        $results = $db->select(
+            "SELECT * FROM 
+                products
+            ORDER BY
+                products.id
+            DESC"
+        );
 
         $results = json_decode(json_encode($results), true);
 
@@ -274,34 +287,35 @@ class Product
     }
 
 
-    public function edit_product($update_product_img)
+    public function edit_product()
     {
 
         $db = new Database();
 
-        if (!$update_product_img) { //Will not update product image
-
-            $params = [
-                ':id' => $_POST['product-id'],
-                ':product_name' => $_POST['product-name'],
-                ':product_price' => $_POST['product-price'],
-                ':product_description' => $_POST['product-description'],
-                ':product_link' => $_POST['product-link'],
-            ];
+        //Will not update product image
+        if ($_FILES['file']['size'] === 0) {
 
             try {
 
+                $params = [
+                    ':id' => $_POST['product-id'],
+                    ':product_name' => $_POST['product-name'],
+                    ':product_price' => $_POST['product-price'],
+                    ':product_description' => $_POST['product-description'],
+                    ':product_link' => $_POST['product-link'],
+                ];
+
                 $db->update(
                     "UPDATE 
-                                            products
-                                         SET
-                                            name = :product_name,
-                                            price = :product_price,
-                                            description = :product_description,
-                                            link = :product_link,
-                                            updated_at = NOW()
-                                         WHERE
-                                            id = :id",
+                        products
+                    SET
+                        name = :product_name,
+                        price = :product_price,
+                        description = :product_description,
+                        link = :product_link,
+                        updated_at = NOW()
+                    WHERE
+                        id = :id",
                     $params
                 );
 
@@ -309,9 +323,134 @@ class Product
             } catch (Exception $e) {
                 return false;
             }
-        } else { //Will update product image
-            echo ' not kk';
         }
+        //--------------------------------------------
+
+
+
+
+        //Will update image file
+
+        //Update database
+        //Update file system
+        //Deletar img file from system
+        //Add new file into system
+
+        $update_result = false;
+        $product_name = trim($_POST['product-name']);
+        $file = $_FILES['file'];
+        $fileName = $file['name'];
+        $fileTmpName = $file['tmp_name'];
+        $fileExt = explode('.', $fileName);
+        $fileActualExt = strtolower(end($fileExt));
+
+        $root = APP_DOCUMENT_ROOT . '/public';
+        $uniqueName = round(microtime(true) * 1000);
+        $file_new_name = $product_name . "_" . $uniqueName . "." . $fileActualExt;
+        $fileDestination = $root . '/assets/images/products/' . $file_new_name;
+        $file_src = 'assets/images/products/' . $file_new_name;
+        //-----------------------------------------
+
+
+        //Gets img_file_name from database
+        //To delete old img file in the sytem
+
+        $select_result = null;
+
+        try {
+            $params = [
+                'product_id' => $_POST['product-id']
+            ];
+
+            $select_result = $db->select(
+                "SELECT
+                    img_src
+                FROM 
+                    products
+                WHERE
+                    id = :product_id",
+                $params
+            );
+
+        } catch (Exception $e) {
+            //    echo $e;
+            //return false;
+        }
+
+        if (count($select_result) === 0) {
+            //    echo 'count failed';
+            //return false;
+        }
+        //-----------------------------------------
+
+
+        //Delete img from system
+        $path_to_delete_img = APP_DOCUMENT_ROOT . '/public/' . $select_result[0]->img_src;
+
+        //Verifies if file  exists on server's folder
+        if (!file_exists($path_to_delete_img)) {
+            //   echo 'file does not exists';
+            //return false;
+        }
+
+        //Delete on server folder
+        if (!unlink($path_to_delete_img)) {
+            //      echo 'failed to delete path';
+            //return false;
+        }
+
+
+
+        //Update database
+
+        try {
+
+            $params = [
+                ':id' => $_POST['product-id'],
+                ':product_name' => $_POST['product-name'],
+                ':product_price' => $_POST['product-price'],
+                ':product_description' => $_POST['product-description'],
+
+                ':img_src' => $file_src,
+                ':img_file_name' => $file_new_name,
+
+                ':product_link' => $_POST['product-link']
+            ];
+
+            $update_result = $db->update(
+                "UPDATE 
+                    products
+                SET
+                    name = :product_name,
+                    price = :product_price,
+                    description = :product_description,
+                    img_src = :img_src,
+                    img_file_name = :img_file_name,
+                    link = :product_link,
+                    updated_at = NOW()
+                WHERE
+                    id = :id",
+                $params
+            );
+
+        } catch (Exception $e) {
+            //     echo $e;
+            //return false;
+        }
+        //  ------------------------------------------------------
+
+
+        //Checks if update failed
+        if (!$update_result) {
+            echo 'update result failed';
+            die('');
+            //   return false;
+        }
+
+
+        move_uploaded_file($fileTmpName, $fileDestination);
+
+        return true;
     }
 
 
@@ -383,12 +522,12 @@ class Product
         //Verifies if file  exists on server's folder
         if (!file_exists($path_to_delete_img)) {
 
-          return false;
+            return false;
         }
 
         //Delete on server folder
         if (!unlink($path_to_delete_img)) {
-return false;
+            return false;
         }
 
         return true;

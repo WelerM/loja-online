@@ -30,6 +30,7 @@ a {
 
 .btn-user {
     display: flex;
+    color: #909090;
 }
 
 .custom-ul {}

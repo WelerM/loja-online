@@ -10,7 +10,7 @@ use core\classes\Functions;
 class ProductController
 {
 
-    public function product_details_page($id = null)
+    public function product_details_page($id)
     {
 
         $product_id = $id;
@@ -19,6 +19,8 @@ class ProductController
 
         $data = $product->show_product($product_id);
 
+        // print_r($data);
+        // die('aqui');
 
         Functions::Layout([
             'layouts/html_header',
@@ -112,8 +114,6 @@ class ProductController
         //Image file data
         $file = $_FILES['file'];
         $fileName = $file['name'];
-
-
         $fileTmpName = $file['tmp_name'];
         $fileSize = $file['size'];
         $fileError = $file['error'];
@@ -125,25 +125,20 @@ class ProductController
         $product_name = $_POST['product-name'];
         $product_price = $_POST['product-price'];
         $product_link = $_POST['product-link'];
-
-        //Gets instruction on which table will be processed. Ex. top, torso, legs, feet
-
-
-
         //-------------------------------------------------------------------
-
 
 
 
         //Checks if user chose a name for the image
         if (!isset($_POST['product-name'])) {
-
-            Functions::redirect("home&data=&error=noimgname");
-            exit();
+            $_SESSION['error'] = "Nome do arquivo não informado";
+            Functions::redirect("my_products_page");
+            return;
         }
         if (empty(trim($_POST['product-name']))) {
-            Functions::redirect("home&data=&error=noimgname");
-            exit();
+            $_SESSION['error'] = "Nome do arquivo não pode estar vazio";
+            Functions::redirect("my_products_page");
+            return;
         }
 
         //-------------------------------------------------------------------
@@ -153,20 +148,23 @@ class ProductController
 
         //Checks if img extension is valid
         if (!in_array($fileActualExt, $allowed)) {
-            Functions::redirect("home&&error=filenotsupported");
-            exit();
+            $_SESSION['error'] = "Arquivo não suportado";
+            Functions::redirect("my_products_page");
+            return;
         }
 
         //Checks if there was an error uploading the img
         if ($fileError !== 0) {
-            Functions::redirect("home&error=uploaderror");
-            exit();
+            $_SESSION['error'] = "Erro ao fazer upload do arquivo";
+            Functions::redirect("my_products_page");
+            return;
         }
 
         //Checks if img size is under the specific value
         if ($fileSize >= 1000000) {
-            Functions::redirect("home&error=filetoobig");
-            exit();
+            $_SESSION['error'] = "O arquivo é grande demais";
+            Functions::redirect("my_products_page");
+            return;
         }
 
 
@@ -185,59 +183,90 @@ class ProductController
 
         );
 
-
-        //The variable "data" in the URL will be used inside the "start" function in the script.js file
-        Functions::redirect("home&data='imgsaved'&error=none");
-        exit();
+        $_SESSION['success'] = "Produto inserido com sucesso";
+        Functions::redirect("my_products_page");
+        return;
     }
     public function edit_product()
     {
 
-        //Checar se parametros vem corretamente
-        // echo $_POST['product-name'] . '<br>';
-        // echo $_POST['product-description'] . '<br>';
-        // echo $_POST['product-link'] . '<br>';
-        // echo $_POST['product-name'] . '<br>';
+        $product_id = $_POST['product-id'];
+    
+        
+        //Check if params come correctly
+        //Product name
+        if (!isset($_POST['product-name']) || empty(trim($_POST['product-name']))) {
+            $_SESSION['error'] = 'É necessário adicionar um nome para o produto';
+            Functions::redirect('edit_product_page/' . $product_id);
+            return;
+        }
+        //Produt price
+        if (!isset($_POST['product-price']) || empty(trim($_POST['product-price']))) {
+            $_SESSION['error'] = 'É necessário adicionar um preço para o produto';
+            Functions::redirect('edit_product_page/' . $product_id);
+            return;
+        }
+        //Produt description
+        if (!isset($_POST['product-description']) || empty(trim($_POST['product-description']))) {
+            $_SESSION['error'] = 'É necessário adicionar uma descrição para o produto';
+            Functions::redirect('edit_product_page/' . $product_id);
+            return;
+        }
+        //Produt link
+        if (!isset($_POST['product-link']) || empty(trim($_POST['product-link']))) {
+            $_SESSION['error'] = 'É necessário adicionar um link para o produto';
+            Functions::redirect('edit_product_page/' . $product_id);
+            return;
+        }
+        //--------------------------------------------------------------------
+
 
         $product = new Product();
 
-        $product_id = $_POST['product-id'];
+        //Checks whether or not a new image was choosen:
+        if ($_FILES['file']['size'] === 0) {//Will not update product image
 
-        //Checks whether or not a new image was choosen 
-        if ($_FILES['file']['size'] === 0) { //Will not update product image
-
-            $result = $product->edit_product($update_product_img = false);
+            $result = $product->edit_product();
 
             if (!$result) {
 
-                Functions::redirect('edit_product_page/' . $product_id);
                 $_SESSION['error'] = 'Erro editar produto';
-
-                return;
-            } else {
-
-                Functions::redirect('edit_product_page/' . $product_id);
-                $_SESSION['success'] = 'Produto editado com sucesso';
-
+                Functions::redirect('my_products_page');
                 return;
             }
-        } else { //Will update product image
-            $result = $product->edit_product($update_product_img = true);
+
+            $_SESSION['success'] = 'Produto editado com sucesso';
+            Functions::redirect('my_products_page');
+            return;
+
+        }
+        ;
+        //---------------------------------------------------------------
+
+
+
+        //Checks whether or not a new image was choosen:
+        if ($_FILES['file']['size'] != 0) {//Will update product image
+
+            //Checks if an image file was choosen by the user
+
+            $result = $product->edit_product();
 
             if (!$result) {
 
-                Functions::redirect('answer_questions_page');
                 $_SESSION['error'] = 'Erro ao responder pergunta';
-
-                return;
-            } else {
-
-                Functions::redirect('answer_questions_page');
-                $_SESSION['success'] = 'Pergunta respondida com sucesso';
-
+                Functions::redirect('my_products_page');
                 return;
             }
+
+
+            $_SESSION['success'] = 'Pergunta respondida com sucesso';
+            Functions::redirect('my_products_page');
+            return;
         }
+        ;
+
+
     }
 
     public function delete_product($product_id)

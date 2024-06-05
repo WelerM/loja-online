@@ -15,9 +15,9 @@ class Database
     {
         $this->conn = new PDO(
             'mysql:' .
-                'host=' . MYSQL_SERVER . ';' .
-                'dbname=' . MYSQL_DATABASE . ';' .
-                'charset=' . MYSQL_CHARSET,
+            'host=' . MYSQL_SERVER . ';' .
+            'dbname=' . MYSQL_DATABASE . ';' .
+            'charset=' . MYSQL_CHARSET,
             MYSQL_USER,
             MYSQL_PASS,
             array(PDO::ATTR_PERSISTENT => true)
@@ -117,7 +117,7 @@ class Database
                 $execute->execute($params);
                 $lastInsertId = $this->conn->lastInsertId();
 
-                
+
             } else {
                 $execute = $this->conn->prepare($sql);
                 $execute->execute();
@@ -143,15 +143,15 @@ class Database
 
         $this->turn_on();
 
-        $results = null;
+        $results = false;
 
         try {
             if (!empty($params)) {
                 $execute = $this->conn->prepare($sql);
-                $execute->execute($params);
+                $results = $execute->execute($params);
             } else {
                 $execute = $this->conn->prepare($sql);
-                $execute->execute();
+                $results = $execute->execute();
             }
         } catch (PDOException $e) {
             return false;
@@ -159,6 +159,7 @@ class Database
 
 
         $this->turn_off();
+        return $results;
     }
 
     public function delete($sql, $params = null)

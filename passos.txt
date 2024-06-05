@@ -1,10 +1,15 @@
-Login ok
-Register ok
-Redefine password ok
-Deletar produto Ok
+# Login ok
+# Register ok
+# Redefine password ok
+# Deletar produto Ok
 
-Bug ao cirar produto, se abro o file explorer
+# Enviar email ao admin quando um usuario fizer pergunta
+do produto
+
+# Bug ao cirar produto, se abro o file explorer
 para add imagem mas dou um ESC antes de selecionar a imagem,
 fechando assim o file explorer, o programa dara um erro
+
+# Update da imagem em si do produto nao esta implementado
 
 Criar pagina de entrar em contato e mandar  menssagem chat

@@ -421,4 +421,29 @@ class User
         //Redirect to the home page
         Functions::redirect();
     }
+    //===================================================================
+
+
+    public function list_user_messages($user_id)
+    {
+        $db = new Database();
+
+        $params = [
+            ':id' => $user_id
+        ];
+
+        $result = $db->select(
+            "SELECT * FROM
+                chat
+            WHERE 
+                sender_id = :id",
+            $params
+        );
+
+        $result = json_decode(json_encode($result), true);
+
+        return $result;
+    }
+    //===================================================================
+
 }

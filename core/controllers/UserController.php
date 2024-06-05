@@ -18,7 +18,7 @@ class UserController
 
         $data = $product->list_products();
 
-       // print_r($data);
+        // print_r($data);
         // foreach ($data as $item) {
         //     echo $item['id'];
         // }
@@ -125,6 +125,31 @@ class UserController
         ], $token);
     }
     //===================================================================
+
+
+    public function my_messages_page()
+    {
+
+        $user_id = $_SESSION['user_id'];
+        
+        $user = new User();
+
+        $data = $user->list_user_messages($user_id);
+        
+
+        // print_r($result);
+        // die();
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'my_messages_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+    //===================================================================
+
 
     public function send_recovery_email_page()
     {
@@ -478,5 +503,7 @@ class UserController
         $users->delete_account($user_password);
     }
     //===================================================================
+
+
 
 }

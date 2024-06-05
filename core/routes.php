@@ -10,6 +10,8 @@ $routes = [
     'reset_password_page' => 'usercontroller@reset_password_page',
     'email_sent_page' => 'usercontroller@email_sent_page',
     'account_page' => 'usercontroller@account_page',
+    'my_messages_page' => 'usercontroller@my_messages_page',
+
     'login' => 'usercontroller@login',
     'register' => 'usercontroller@register',
     'signout' => 'usercontroller@signout',
@@ -37,6 +39,8 @@ $routes = [
     'answer_question' => 'admincontroller@answer_question',
     'get_user_questions' => 'admincontroller@get_user_questions',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
+    'contact_store_page' => 'admincontroller@contact_store_page',
+    'contact_store' => 'admincontroller@contact_store',
 
 ];
 

@@ -125,7 +125,7 @@
             <!-- Product link-->
             <div class="mb-3">
 
-                <label for="product-link" class="form-label fw-bold ">Nome do produto</label>
+                <label for="product-link" class="form-label fw-bold ">Link do produto</label>
 
                 <input value="<?= $item['link']; ?>" id="product-link" type="text" class="form-control" name="product-link" placeholder="Link do produto">
 

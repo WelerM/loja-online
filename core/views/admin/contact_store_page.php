@@ -1,6 +1,7 @@
-<div style="min-height: 100vh;" class="container px-1 py-5 mx-auto row">
+<div style="min-height: 100vh;" class="">
 
-    <div class="col-md-6 col-sm-12 p-0">
+    <div class="container py-5">
+
 
         <?php if (isset($_SESSION['error'])): ?>
 
@@ -35,36 +36,44 @@
         <?php endif; ?>
 
 
-        <h2 class="mb-5">Meus produtos</h2>
+        <h1 class="mb-4">Entre em contato conosco</h1>
 
-        <!-- Products loop -->
-        <?php foreach ($data as $product): ?>
+        <h5>Produto selecionado:</h5>
 
-            <div class="d-flex justify-content-between border w-100 my-3 p-2 rounded shadow ">
+        <div style="height:fit-content;" class="border d-flex gap-2 p-2 rounded mb-4">
 
-                <div style="height: 100px;" class=" d-flex flex-row gap-3 border-0">
+            <img class="img-fluid " style="height:90px" src="<?= $data['product_details']['img_src']; ?>" alt="...">
 
-                    <img style="width:100px" src="<?= $product['img_src']; ?>" class=" img-fluid m-0 p-0" alt="...">
 
-                    <div class="  p-0 ps-2">
-                        <h5 class="card-title p-0 m-0"><?= $product['name']; ?> </h5>
-                        <p class="card-title p-0 m-0"><?= 'R$ ' . $product['price']; ?> </p>
-                        <p class="card-text p-0 m-0"> <?= $product['description']; ?></p>
-                        <a href="#" class="p-0 m-0"><?= $product['link']; ?></a>
-                    </div>
-
-                </div>
-
-                <!-- Crud BTN container  -->
-                <div class="d-flex flex-column justify-content-between py-2">
-                    <a class="btn btn-warning btn-sm " href="?a=edit_product_page/<?= $product['id']; ?>">Editar</a>
-                    <a class="btn btn-danger btn-sm " href="?a=delete_product/<?= $product['id'] ?>">Excluir</a>
-                </div>
-
+            <div class="d-flex flex-column ">
+                <p class="m-0"><?= $data['product_details']['name']; ?> </p>
+                <p class="m-0"><?= $data['product_details']['price']; ?> </p>
+                <p class="m-0"> <?= $data['product_details']['description']; ?></p>
+                <p class="m-0"><?= $data['product_details']['link']; ?></p>
             </div>
 
-        <?php endforeach; ?>
+        </div>
+
+        <h5>Escreva sua mensagem</h5>
+
+        <form action="?a=contact_store" method="POST">
+
+            <div class="form-floating">
+                <textarea name="user-message" class="form-control" placeholder="Leave a comment here"
+                    id="floatingTextarea2" style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Mensagem</label>
+            </div>
+
+            <!-- Hidden ( product id ) -->
+            <input class="d-none" name="product-id" value="<?= $data['product_details']['id']; ?>" type="text">
+       
+            <input class="d-none" name="user-id" value="<?= $_SESSION['user_id']; ?>" type="text">
+
+            <button class="btn btn-success btn-sm my-2" type="submit">Enviar </button>
+
+        </form>
 
 
     </div>
+
 </div>

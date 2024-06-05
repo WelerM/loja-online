@@ -40,28 +40,81 @@ class AdminController
         $product_id = $_POST['product_id'];
         $product_message_id = $_POST['product_message_id'];
 
-        //  $prod
-
+     
         $admin = new Admin();
 
-        $results = $admin->answer_question($product_id,$product_message_id, $answer);
+        $results = $admin->answer_question($product_id, $product_message_id, $answer);
 
-        // print_r($results);
-        // die('aaa');
-        
-        
+
         if (!$results) {
 
-            Functions::redirect('answer_questions_page');
             $_SESSION['error'] = 'Erro ao responder pergunta';
-
+            Functions::redirect('answer_questions_page');
             return;
         }
 
 
-            Functions::redirect('answer_questions_page');
-            $_SESSION['success'] = 'Pergunta respondida com sucesso';
+        $_SESSION['success'] = 'Pergunta respondida com sucesso';
+        Functions::redirect('answer_questions_page');
+        return;
+    }
+
+    public function contact_store_page($id)
+    {
+        //Checks if user is logged
+        if (!Functions::user_logged()) {
+            $_SESSION['error'] = "É necessário fazer login para entrar em contato";
+            Functions::redirect('product_details_page/' . $id);
+            return;
+        }
+
+        $product_id = $id;
+
+        $product = new Product();
+
+        //Show prodcut preview 
+        $data = $product->show_product($product_id);
+
+
+        // print_r($data);
+        // die();
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'admin/contact_store_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+
+    public function contact_store()
+    {
+
+
+        //Store message into database
+        //Sends email to store's admin
+
+        $user_message = $_POST['user-message'];
+        $user_id = $_POST['user-id'];
+        $product_id = $_POST['product-id'];
+
+        $admin = new Admin();
+        $result = $admin->contact_store($user_message, $user_id, $product_id);
+
+
+        if (!$result) {
+
+            Functions::redirect('contact_store_page/' . $product_id);
+            $_SESSION['error'] = 'Erro ao enviar mensagem';
 
             return;
+        }
+        ;
+
+        Functions::redirect('contact_store_page/' . $product_id);
+        $_SESSION['success'] = 'Mensagem enviada com sucesso!';
+
+        return;
     }
 }
