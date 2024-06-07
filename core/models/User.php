@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\classes\Database;
 use core\classes\Functions;
+use core\classes\SendEmail;
 use core\models\Image;
 use Exception;
 
@@ -285,31 +286,7 @@ class User
             $params
         );
 
-        $test['user_data'] = $results[0];
-        //-----------------------------------------------------
-
-
-        //Get user's post questions
-        $results = null;
-        $results = $db->select(
-            "SELECT user_questions.question, user_questions.created_at, products.id, products.img_src  FROM user_questions 
-            JOIN products
-            ON user_questions.product_id = products.id
-             WHERE user_id = :id
-             ORDER BY user_questions.id DESC",
-            $params
-        );
-
-        $arr = [];
-        foreach ($results as $result[0]) {
-            $arr[] = $results[0];
-        }
-        $test['user_questions'] = $arr;
-
-        //----------------------------------------------------------
-
-
-        $results = json_decode(json_encode($test), true);
+        $results = json_decode(json_encode($results[0]), true);
 
 
         return $results;
@@ -433,17 +410,211 @@ class User
         ];
 
         $result = $db->select(
-            "SELECT * FROM
+            "SELECT 
+                name,
+                message,
+                chat.created_at
+            FROM
                 chat
+            JOIN
+                users
+            ON
+                chat.sender_id = users.id
             WHERE 
                 sender_id = :id",
             $params
         );
 
-        $result = json_decode(json_encode($result), true);
+        $result = json_decode(json_encode($result[0]), true);
 
         return $result;
     }
     //===================================================================
 
+
+
+    public function contact_store($user_message, $user_id, $product_id)
+    {
+
+        //Store message into database
+        //Sends email to store's admin
+
+        $db = new Database();
+
+
+        // Store message into database
+        $params = [
+            ':user_id' => $user_id,
+            ':receiver_id' => 1,
+            ':product_id' => $product_id,
+            ':user_message' => $user_message
+        ];
+
+        $insert_result = $db->insert(
+            "INSERT INTO
+                chat
+             VALUES(
+                0,
+                :user_id,
+                :receiver_id,
+                :product_id,
+                :user_message,
+                DEFAULT,
+                NOW()
+             )",
+            $params
+        );
+
+        if (!$insert_result) {
+            return false;
+        }
+        //---------------------------------------
+
+
+
+
+        //Sends email to store's admin
+
+        //Gets user information
+        $params = [
+            ':user_id' => $user_id
+        ];
+
+        $select_result = $db->select(
+            "SELECT
+                name,
+                email
+            FROM
+                users
+            WHERE 
+                id = :user_id",
+            $params
+        );
+
+        $user_name = $select_result[0]->name;
+        $user_email = $select_result[0]->email;
+
+        //Sends email to admin
+        $email = new SendEmail();
+        $result = $email->send_email_to_admin($user_message, $user_name, $user_email, $product_id);
+
+        return $result;
+    }
+    //===================================================================
+
+
+    public function list_user_chat_messages($product_id)
+    {
+
+
+        $db = new Database();
+
+
+        //First select to get details of the product
+        $params = [
+            ':product_id' => $product_id
+        ];
+
+        $product_results = $db->select(
+            "SELECT * FROM
+                products
+            WHERE
+                id = :product_id",
+            $params
+        );
+
+        // if (count($results) === 0) {
+        //     return false;
+        // }
+
+        //$results['product_details'] = $results;
+        $results['product_details'] = json_decode(json_encode($product_results[0]), true);
+        //-------------------------------------------------------------
+
+
+
+
+
+        // // Store message into database
+        $params = [
+            ':sender_id' => $_SESSION['user_id'],
+            ':receiver_id' => 1,
+            ':product_id' => $product_id,
+        ];
+        $chat_results = $db->select(
+            "SELECT 
+                users.id AS user_id,
+                users.name AS user_name,
+                message,
+                chat.created_at AS message_created_at
+             FROM
+                chat
+            JOIN
+                users
+            ON 
+                chat.sender_id = users.id
+            WHERE
+                product_id = :product_id
+            AND
+                (sender_id = :sender_id OR sender_id = :receiver_id)
+            ORDER BY
+                chat.created_at ASC",
+            $params
+        );
+
+
+
+        $results['user_chat_messages'] = '';
+
+        if (count($chat_results) != 0) {
+            $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
+        }
+
+
+        $results = json_decode(json_encode($results), true);
+        //------------------------------------------------------
+
+
+
+
+
+        //Checks if user can send a new message
+        $params = [
+            ':sender_id' => $_SESSION['user_id'],
+            ':product_id' => $product_id,
+        ];
+
+        $result = $db->select(
+            "SELECT 
+                is_responded
+            FROM
+                chat
+            WHERE
+                sender_id = :sender_id
+            AND
+                product_id = :product_id
+            ORDER BY(id)
+            DESC
+            LIMIT 1",
+            $params
+        );
+
+        $results['send_new_message'] = true;
+
+        if (count($result) !== 0) {
+
+            if (!$result[0]->is_responded) {
+
+                $results['send_new_message'] = false;
+            }
+        }
+
+
+        return $results;
+    }
+
+    //===================================================================
+
 }
+
+

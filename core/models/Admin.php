@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\classes\Database;
 use core\classes\Functions;
+use core\classes\Logger;
 use core\classes\SendEmail;
 use core\models\Image;
 use Exception;
@@ -114,70 +115,235 @@ class Admin
         }
     }
 
-    public function contact_store($user_message, $user_id, $product_id)
+    public function list_active_user_messasges()
     {
-
-        //Store message into database
-        //Sends email to store's admin
 
         $db = new Database();
 
-
-        // Store message into database
         $params = [
-            ':user_id' => $user_id,
-            ':receiver_id' => 1,
-            ':product_id' => $product_id,
-            ':user_message' => $user_message
+            ':is_responded' => 0,
+            ':sender_id' => $_SESSION['user_id']
         ];
 
-        $insert_result = $db->insert(
-            "INSERT INTO
+        $results = $db->select(
+            "SELECT
+                users.id AS user_id,
+                users.name AS user_name,
+                
+                chat.id AS chat_message_id,
+                chat.message AS user_message,
+                chat.created_at AS chat_created_at,
+                chat.created_at AS chat_created_at,
+
+                products.id AS product_id,
+                products.name AS product_name,
+                products.price AS product_price,
+                products.img_src AS product_img_src
+            
+            FROM
                 chat
-             VALUES(
-                0,
-                :user_id,
-                :receiver_id,
-                :product_id,
-                :user_message,
-                NOW()
-             )",
+            JOIN
+                users
+            ON
+                chat.sender_id = users.id
+            JOIN
+                products
+            ON 
+                chat.product_id = products.id
+            WHERE
+                is_responded = :is_responded
+            AND 
+                sender_id != :sender_id",
             $params
         );
 
-        if (!$insert_result) {
+
+
+        $results = json_decode(json_encode($results), true);
+
+        return $results;
+    }
+
+    public function get_user_message_information()
+    {
+        $db = new Database();
+
+        // $params = [
+        //     ':chat_id' => $chat_message_id
+        // ];
+
+        // $results = $db->select(
+        //     "SELECT
+        //         users.id AS user_id,
+        //         users.name AS user_name,
+
+        //         chat.id AS chat_message_id,
+        //         chat.message AS user_message,
+        //         chat.created_at AS chat_created_at,
+                
+        //         products.id AS product_id,
+        //         products.name AS product_name,
+        //         products.price AS product_price,
+        //         products.img_src AS product_img_src
+            
+        //     FROM
+        //         chat
+        //     JOIN
+        //         users
+        //     ON
+        //         chat.sender_id = users.id
+        //     JOIN
+        //         products
+        //     ON 
+        //         chat.product_id = products.id
+        //     WHERE
+        //         chat.id = :chat_id",
+        //     $params
+        // );
+
+
+        //Admin is responding....
+        $params = [
+            ':sender_id' => $_SESSION['user_id'],
+            ':receiver_id' => trim($_GET['user-id']),
+            ':product_id' => trim($_GET['product-id'])
+        ];
+        $chat_results = $db->select(
+            "SELECT 
+                users.id AS user_id,
+                users.name AS user_name,
+                message,
+                chat.created_at AS message_created_at
+             FROM
+                chat    
+            JOIN
+                users
+            ON 
+                chat.sender_id = users.id
+            WHERE
+                product_id = :product_id
+            AND
+                (sender_id = :sender_id OR sender_id = :receiver_id)
+            ORDER BY
+                chat.created_at ASC",
+            $params
+        );
+
+
+
+        $results['user_chat_messages'] = '';
+
+        if (count($chat_results) != 0) {
+            $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
+        }
+
+
+        $results = json_decode(json_encode($results), true);
+
+        return $results;
+
+
+
+
+    }
+
+    public function answer_user_message()
+    {
+
+        // #1 create a new register in Chat table, responsible for being
+        //  The admin answer
+        $db = new Database();
+
+        $result_admn_answer = false;
+        $result_update_is_responded = false;
+
+        try {
+
+            $params = [
+                ':sender_id' => $_SESSION['user_id'],
+                ':receiver_id' => $_POST['user-id'],
+                ':product_id' => $_POST['product-id'],
+                ':message' => $_POST['answer']
+            ];
+
+
+            $db->insert(
+                "INSERT INTO
+                    chat
+                VALUES(
+                    0,
+                    :sender_id,
+                    :receiver_id,
+                    :product_id,
+                    :message,
+                    DEFAULT,
+                    NOW()
+                )",
+                $params
+            );
+
+            $result_admn_answer = true;
+
+        } catch (Exception $e) {
+
+            $log = new Logger('error');
+            $log = $log->create_log();
+            $log->warning('Error when creating admin chat message: ' . $e->getMessage());
+
+            $result_admn_answer = false;
+        }
+        //------------------------------------------------------------------------------
+
+
+        if (!$result_admn_answer) {
+
             return false;
         }
-        //---------------------------------------
+        //------------------------------------------------------------------------------
 
 
 
+        // #2 Update user message as is_responded' = 0
 
-        //Sends email to store's admin
+        try {
+            $params = [
+                ':is_responded' => 1,
+                ':chat_message_id' => $_POST['chat-message-id']
+            ];
 
-        //Gets user information
-        $params = [
-            ':user_id' => $user_id
-        ];
+            $result = $db->update(
+                "UPDATE 
+                    chat
+                SET
+                    is_responded = :is_responded
+                WHERE
+                    id = :chat_message_id
+                ",
+                $params
+            );
 
-        $select_result = $db->select(
-            "SELECT
-                name,
-                email
-            FROM
-                users
-            WHERE 
-                id = :user_id",
-            $params
-        );
+            $result_update_is_responded = true;
 
-        $user_name = $select_result[0]->name;
-        $user_email = $select_result[0]->email;
 
-        //Sends email to admin
-        $email = new SendEmail();
-        $result = $email->send_email_to_admin($user_message, $user_name, $user_email, $product_id);
+        
 
-        return $result;
+        } catch (Exception $e) {
+
+            $log = new Logger('error');
+            $log = $log->create_log();
+            $log->warning('Error when updating user chat table is_responded = 1: ' . $e->getMessage());
+
+            $result_update_is_responded = false;
+        }
+        //------------------------------------------------------------------------------
+
+        if (!$result_admn_answer || !$result_update_is_responded) {
+            return false;
+        }
+
+        return true;
+
+
+
     }
 }

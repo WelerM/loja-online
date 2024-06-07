@@ -114,58 +114,83 @@ use core\classes\Functions;
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
-    <div class="offcanvas-body">
+    <div class="offcanvas-body p-0">
 
-        <ul class="d-flex flex-column gap-3 align-items-start p-0">
+        <ul class="d-flex flex-column align-items-start p-0 w-100">
 
             <?php if (Functions::user_logged()): ?>
 
 
                 <?php if ($_SESSION['user_type'] === 'admin'): ?>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-center " href="?a=create_product_page">
+                    <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path
-                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd"
-                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg>
+                        <a class="nav-link d-flex justify-content-between " href="?a=create_product_page">
 
-                            Criar produto
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                </svg>
+                                Criar produto
+                            </div>
+
+                            <span class="badge text-bg-danger mb-1">Admin</span>
+
+                        </a>
+
+
+                    </li>
+
+                    <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
+                        <a class="nav-link d-flex justify-content-between " href="?a=my_products_page">
+                            <div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-box-seam-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
+                                </svg>
+
+                                Meus produtos
+                            </div>
 
                             <span class="badge text-bg-danger mb-1">Admin</span>
 
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-center " href="?a=my_products_page">
+                    <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-box-seam-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
-                            </svg>
-
-                            Meus produtos
-
-                            <span class="badge text-bg-danger mb-1">Admin</span>
-
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-center " href="?a=answer_questions_page">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-reply-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
-                            </svg>
-                            Responder
+                        <a class="nav-link d-flex justify-content-between " href="?a=answer_questions_page">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-box-seam-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
+                                </svg>
+                                Perguntas em produtos
+                            </div>
                             <span class="badge text-bg-danger">Admin</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
+
+                        <a class="nav-link d-flex justify-content-between " href="?a=list_user_messages_page">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg>
+                                Mensagens de usuários
+                            </div>
+                            <span class="badge text-bg-danger">Admin</span>
+
                         </a>
                     </li>
 
@@ -173,10 +198,10 @@ use core\classes\Functions;
                     <!-- Colocar "mensagens" LI aqui -->
                 <?php endif; ?>
 
-                <li class="nav-item d-flex gap-1">
+                <li class="nav-item  py-2 px-2 w-100">
 
 
-                    <a class="nav-link text-center mb-2 " href="?a=my_messages_page">
+                    <a class="nav-link  d-flex gap-2 align-items-center" href="?a=my_messages_page">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-envelope-fill" viewBox="0 0 16 16">
@@ -184,16 +209,16 @@ use core\classes\Functions;
                                 d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
                         </svg>
 
-                        Mensagens (client)
+                        Mensagens
 
                     </a>
 
                 </li>
 
 
-                <li class="nav-item">
+                <li class="nav-item  py-2 px-2 w-100">
 
-                    <a class="nav-link text-center mb-2 " href="?a=account_page">
+                    <a class="nav-link  d-flex gap-2 align-items-center " href="?a=account_page">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -208,8 +233,8 @@ use core\classes\Functions;
                 </li>
 
 
-                <li class="nav-item">
-                    <a class="nav-link text-center " href="?a=signout">
+                <li class="nav-item  py-2 px-2 w-100">
+                    <a class="nav-link d-flex gap-2 align-items-center " href="?a=signout">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"

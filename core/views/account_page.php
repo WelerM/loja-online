@@ -12,13 +12,13 @@
 
 
                     <dt class="col-sm-3">Nome</dt>
-                    <dd class="col-sm-9"><?= $data['user_data']['name'] ?></dd>
+                    <dd class="col-sm-9"><?= $data['name'] ?></dd>
 
                     <dt class="col-sm-3">E-mail</dt>
-                    <dd class="col-sm-9"><?= $data['user_data']['email'] ?></dd>
+                    <dd class="col-sm-9"><?= $data['email'] ?></dd>
 
                     <dt class="col-sm-3">Criado em</dt>
-                    <dd class="col-sm-9"><?= date('d/m/Y', strtotime($data['user_data']['created_at'])) ?></dd>
+                    <dd class="col-sm-9"><?= date('d/m/Y', strtotime($data['created_at'])) ?></dd>
 
 
 
@@ -52,31 +52,7 @@
             </div>
 
 
-            <!-- Minhas perguntas - client view -->
-            <div class="col-md-6 col=sm-12      ">
-                <p class="fs-2">Minha perguntas (apenas client)</p>
-
-                <?php foreach ($data['user_questions'] as $item) : ?>
-
-                    <div class="border m-1 p-2 rounded-1 d-flex gap-3">
-                        <div>
-
-                            <a href="?a=show_product/<?= $item['id'] ?>">
-                                <img style="max-width: 60px;" class="img-fluid" src="<?= $item['img_src'] ?>" alt="">
-                            </a>
-
-                        </div>
-
-                        <div>
-                            <p class="m-0"><?= $item['question'] ?></p>
-                            <p class="m-0"><?= $item['created_at'] ?></p>
-                        </div>
-                    </div>
-
-
-                <?php endforeach; ?>
-
-            </div>
+           
 
 
         </div>

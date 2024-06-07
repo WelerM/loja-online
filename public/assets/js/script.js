@@ -55,7 +55,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                     let input_product_id = document.querySelector('.product-id')
                     input_product_id.setAttribute('value', item.product_id)
 
-     
+
                     li.appendChild(client_text)
                     li.appendChild(client_text_time)
                     ul.appendChild(li)
@@ -137,19 +137,52 @@ if (document.querySelector('.btn-edit-img')) {
 }
 
 
+if (document.querySelector('#btn-delete-product')) {
+    document.querySelector('#btn-delete-product').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        Swal.fire({
+            title: "Tem certeza que quer deletar o produto?",
+            text: "Isso não pode ser revertido!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, quero deletar!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Produto deletado!",
+                    text: "O produto foi deletado com sucesso.",
+                    icon: "success"
+                }).then(() => {
+                    window.location.href = document.querySelector('#btn-delete-product').href;
+                })
+
+            }
+        });
+    })
+}
+
+
+
+// create_product_page view
+if (document.querySelector('#btn-fake-add-img')) {
+    document.querySelector('#btn-fake-add-img').addEventListener('click', () => {
+        //let btn_real_add_img = 
+        document.querySelector('.btn-add-img').click()
+    })
+}
 
 
 
 
 
 
-
-
-
-
-
-
-
+if (document.querySelector('.chat-container')) {
+    let chat_container = document.querySelector('.chat-container')
+    chat_container.scrollTop = chat_container.scrollHeight;
+}
 
 
 

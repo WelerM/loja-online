@@ -58,7 +58,7 @@
                 <!-- Crud BTN container  -->
                 <div class="d-flex flex-column justify-content-between py-2">
                     <a class="btn btn-warning btn-sm " href="?a=edit_product_page/<?= $product['id']; ?>">Editar</a>
-                    <a class="btn btn-danger btn-sm " href="?a=delete_product/<?= $product['id'] ?>">Excluir</a>
+                    <a id="btn-delete-product" class="btn btn-danger btn-sm " href="?a=delete_product/<?= $product['id'] ?>">Excluir</a>
                 </div>
 
             </div>
@@ -67,4 +67,5 @@
 
 
     </div>
+
 </div>

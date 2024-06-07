@@ -71,7 +71,7 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'admin/my_products_page',
+            'product/my_products_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
@@ -91,7 +91,7 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'admin/edit_product_page',
+            'edit_product_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);

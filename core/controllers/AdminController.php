@@ -25,7 +25,7 @@ class AdminController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'admin/answer_questions_page',
+            'answer_questions_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
@@ -40,7 +40,7 @@ class AdminController
         $product_id = $_POST['product_id'];
         $product_message_id = $_POST['product_message_id'];
 
-     
+
         $admin = new Admin();
 
         $results = $admin->answer_question($product_id, $product_message_id, $answer);
@@ -59,62 +59,110 @@ class AdminController
         return;
     }
 
-    public function contact_store_page($id)
+    public function list_user_messages_page()
     {
-        //Checks if user is logged
-        if (!Functions::user_logged()) {
-            $_SESSION['error'] = "É necessário fazer login para entrar em contato";
-            Functions::redirect('product_details_page/' . $id);
-            return;
-        }
 
-        $product_id = $id;
+        $admin = new Admin();
 
-        $product = new Product();
-
-        //Show prodcut preview 
-        $data = $product->show_product($product_id);
-
+        $data = $admin->list_active_user_messasges();
 
         // print_r($data);
         // die();
-
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'admin/contact_store_page',
+            'list_user_messages_page',
             'layouts/footer',
             'layouts/html_footer',
         ], $data);
     }
 
-    public function contact_store()
+    // public function answer_user_messages_page()
+    // {
+
+    //     $admin = new Admin();
+
+    //     $data = '';// $admin->list_active_user_messasges();
+
+    //     // print_r($data);
+    //     // die();
+
+    //     Functions::Layout([
+    //         'layouts/html_header',
+    //         'layouts/header',
+    //         'answer_user_message',
+    //         'layouts/footer',
+    //         'layouts/html_footer',
+    //     ], $data);
+
+    // }
+
+
+
+    public function answer_user_message_page()
     {
 
+        echo $_GET['user_id'];
 
-        //Store message into database
-        //Sends email to store's admin
-
-        $user_message = $_POST['user-message'];
-        $user_id = $_POST['user-id'];
-        $product_id = $_POST['product-id'];
+        die();
+        $_GET['product-id'];
 
         $admin = new Admin();
-        $result = $admin->contact_store($user_message, $user_id, $product_id);
 
+        $data = $admin->get_user_message_information();
 
-        if (!$result) {
+        // print_r($data);
+        // die();
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'answer_user_message_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
 
-            Functions::redirect('contact_store_page/' . $product_id);
-            $_SESSION['error'] = 'Erro ao enviar mensagem';
-
+    }
+    public function answer_user_message($chat_message_id)
+    {
+        //Check if inputs are coming filled
+        if (!isset($_POST['answer'])) {
+            $_SESSION['error'] = 'É necessário escrever uma resposta';
+            Functions::redirect('answer_user_message_page/' . $chat_message_id);
             return;
         }
-        ;
+        if (!isset($_POST['chat-message-id'])) {
+            $_SESSION['error'] = 'Erro';
+            Functions::redirect('answer_user_message_page/' . $chat_message_id);
+            return;
+        }
+        if (!isset($_POST['product-id'])) {
+            $_SESSION['error'] = 'Erro';
+            Functions::redirect('answer_user_message_page/' . $chat_message_id);
+            return;
+        }
+        if (!isset($_POST['user-id'])) {
+            $_SESSION['error'] = 'Erro';
+            Functions::redirect('answer_user_message_page/' . $chat_message_id);
+            return;
+        }
 
-        Functions::redirect('contact_store_page/' . $product_id);
-        $_SESSION['success'] = 'Mensagem enviada com sucesso!';
+        $admin = new Admin();
+        $result = $admin->answer_user_message();
 
+        // print_r($params);
+        // die();
+
+        if (!$result) {
+            $_SESSION['error'] = 'Erro ao responder mensagem de usuário';
+            Functions::redirect('answer_user_message_page/' . $chat_message_id);
+            return;
+        }
+
+        $_SESSION['success'] = 'Mensagem respondida com sucesso';
+        Functions::redirect('answer_user_message_page/' . $chat_message_id);
         return;
+
     }
+
+
 }

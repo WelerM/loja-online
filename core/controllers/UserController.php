@@ -2,6 +2,7 @@
 
 namespace core\controllers;
 
+use core\classes\Logger;
 use core\models\User;
 use core\classes\Functions;
 use core\classes\SendEmail;
@@ -16,13 +17,12 @@ class UserController
 
         $product = new Product();
 
+
+
         $data = $product->list_products();
 
-        // print_r($data);
-        // foreach ($data as $item) {
-        //     echo $item['id'];
-        // }
-        // die();
+
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -131,14 +131,14 @@ class UserController
     {
 
         $user_id = $_SESSION['user_id'];
-        
+
         $user = new User();
 
         $data = $user->list_user_messages($user_id);
-        
 
-        // print_r($result);
-        // die();
+
+        print_r($data);
+        die();
 
         Functions::Layout([
             'layouts/html_header',
@@ -246,6 +246,61 @@ class UserController
         Functions::redirect('home');
     }
     //===================================================================
+
+    public function contact_store_page($id)
+    {
+        //Checks if user is logged
+        if (!Functions::user_logged()) {
+            $_SESSION['error'] = "É necessário fazer login para entrar em contato";
+            Functions::redirect('product_details_page/' . $id);
+            return;
+        }
+
+        $product_id = $id;
+
+        $user = new User();
+
+        //Show prodcut preview 
+        $data = $user->list_user_chat_messages($product_id);
+
+ 
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'contact_store_page',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data);
+    }
+    public function contact_store()
+    {
+        //Store message into database
+        //Sends email to store's admin
+
+        $user_message = $_POST['user-message'];
+        $user_id = $_POST['user-id'];
+        $product_id = $_POST['product-id'];
+
+        $user = new User();
+        $result = $user->contact_store($user_message, $user_id, $product_id);
+
+
+
+        if (!$result) {
+
+            Functions::redirect('contact_store_page/' . $product_id);
+            $_SESSION['error'] = 'Erro ao enviar mensagem';
+
+            return;
+        }
+        ;
+
+        Functions::redirect('contact_store_page/' . $product_id);
+        $_SESSION['success'] = 'Mensagem enviada com sucesso! Aguarde a loja responder.';
+
+        return;
+    }
+
 
     public function register()
     {

@@ -87,10 +87,10 @@
             <?php endif; ?>
 
             <!-- Question -->
-            <?php if (isset($data['product_messages']) && $data['product_messages'] != null): ?>
+            <?php if (isset($data) && $data != null): ?>
 
 
-                <?php foreach ($data['product_messages'] as $data): ?>
+                <?php foreach ($data['product_messages'] as $message): ?>
                     <!-- Question -->
                     <div class="">
                         <!-- Question -->
@@ -99,16 +99,16 @@
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
                                     <img style="width:25px; height:25px" src="assets/images/user.png" alt="">
-                                    <p class="ms-2"><?= $data['name']; ?></p>
+                                    <p class="ms-2"><?= $message['name']; ?></p>
                                 </div>
-                                <p style="font-size:13px" class="m-0"><?= date('d/m/Y', strtotime($data['message_created_at'])) . ' às ' . date('H:i', strtotime($data['message_created_at'])) . 'h' ?></p>
+                                <p style="font-size:13px" class="m-0"><?= date('d/m/Y', strtotime($message['message_created_at'])) . ' às ' . date('H:i', strtotime($message['message_created_at'])) . 'h' ?></p>
                             </div>
 
-                            <p class="m-0 ps-2"><?= $data['message']; ?></p>
+                            <p class="m-0 ps-2"><?= $message['message']; ?></p>
 
                         </div>
                         <!-- Answer -->
-                        <?php if ($data['answer'] != ''): ?>
+                        <?php if ($message['answer'] != ''): ?>
                             <!-- Answer -->
 
                             <div style="width:fit-content" class="d-flex gap-2">
@@ -122,10 +122,10 @@
 
                                     <div class="d-flex flex-row justify-content-between align-items-center">
                                         <p class="m-0 me-3"><?= APP_NAME ?></p>
-                                        <p style="font-size:13px" class="m-0"><?= date('d/m/Y', strtotime($data['answer_created_at'])) . ' às ' . date('H:i', strtotime($data['answer_created_at'])) . 'h' ?></p>
+                                        <p style="font-size:13px" class="m-0"><?= date('d/m/Y', strtotime($message['answer_created_at'])) . ' às ' . date('H:i', strtotime($message['answer_created_at'])) . 'h' ?></p>
                                     </div>
 
-                                    <p class="m-0 "><?= $data['answer']; ?></p>
+                                    <p class="m-0 "><?= $message['answer']; ?></p>
                                 </div>
 
                             </div>

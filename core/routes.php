@@ -36,11 +36,17 @@ $routes = [
 
     
     //Admin
+    //product questions
     'answer_question' => 'admincontroller@answer_question',
-    'get_user_questions' => 'admincontroller@get_user_questions',
     'answer_questions_page' => 'admincontroller@answer_questions_page',
-    'contact_store_page' => 'admincontroller@contact_store_page',
-    'contact_store' => 'admincontroller@contact_store',
+
+    'list_user_messages_page' => 'admincontroller@list_user_messages_page',
+    'answer_user_message_page' => 'admincontroller@answer_user_message_page',
+    'answer_user_message' => 'admincontroller@answer_user_message',
+
+    'get_user_questions' => 'admincontroller@get_user_questions',
+    'contact_store_page' => 'usercontroller@contact_store_page',
+    'contact_store' => 'usercontroller@contact_store',
 
 ];
 
