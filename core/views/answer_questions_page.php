@@ -1,6 +1,6 @@
-<div style="min-height: 100vh;" class="">
+<div style="min-height: 100vh;" class="container row mx-auto py-5">
 
-    <div class="container py-5">
+    <div class="col-md-6 col-sm-6 mx-auto">
 
 
         <?php if (isset($_SESSION['error'])) : ?>
@@ -32,60 +32,68 @@
         <?php endif; ?>
 
 
-        <h2>Perguntas não respondidas</h2>
+        <h5>Perguntas não respondidas</h5>
 
-        <?php foreach ($data as $item) : ?>
+        <?php if (!empty($data)) : ?>
 
-            <div style="width: w-100;" class="row border p-0 my-3 rounded shadow bg-body-tertiary">
+            <?php foreach ($data as $item) : ?>
 
-                <div class="col-8 border-0 border-end p-3">
+                <div style="width: w-100;" class="row border p-0 my-3 rounded shadow bg-body-tertiary">
 
-                    <div class="d-flex justify-content-between">
+                    <div class="col-8 border-0 border-end p-3">
 
-                        <div class="d-flex gap-3">
-                            <img style="width:30px; height:30px" src="assets/images/user.png" alt="">
-                            <p><?= $item['user_name'] ?> </p>
+                        <div class="d-flex justify-content-between">
+
+                            <div class="d-flex gap-3">
+                                <img style="width:30px; height:30px" src="assets/images/user.png" alt="">
+                                <p><?= $item['user_name'] ?> </p>
+                            </div>
+
+
+                            <p style="font-size:13px">
+                                <?= date('d/m/Y', strtotime($item['message_created_at'])) . ' às ' . date('H:i', strtotime($item['message_created_at'])) . 'h' ?>
+                            </p>
+
+                        </div>
+
+                        <!-- User question text -->
+                        <div class="bg-white p-2 border rounded">
+
+                            <p><?= $item['product_message'] ?></p>
                         </div>
 
 
-                        <p style="font-size:13px">
-                            <?= date('d/m/Y', strtotime($item['message_created_at'])) . ' às ' . date('H:i', strtotime($item['message_created_at'])) . 'h' ?>
-                        </p>
+                        <div style="height: fit-content;" class="d-flex gap-1 mt-2  ">
+
+                            <button name="<?= $item['product_message_id'] ?>" class="btn-ver-chat btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                                Responder
+                            </button>
+
+                            <button class="btn btn-danger btn-sm">Exclur</button>
+
+
+                        </div>
 
                     </div>
 
-                    <!-- User question text -->
-                    <div class="bg-white p-2 border rounded">
-
-                        <p><?= $item['product_message'] ?></p>
-                    </div>
-
-
-                    <div style="height: fit-content;" class="d-flex gap-1 mt-2  ">
-
-                        <button name="<?= $item['product_message_id'] ?>" class="btn-ver-chat btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                            Responder
-                        </button>
-
-                        <button class="btn btn-danger btn-sm">Exclur</button>
-
-
+                    <div class="col-auto p-3">
+                        <p>Produto</p>
+                        <img src="<?= $item['img_src'] ?>" class="img-fluid" style="max-width: 60px; height: 60px" alt="">
+                        <h5 class="card-title"><?= $item['product_name']; ?> </h5>
+                        <p class="card-title"><?= 'R$ ' . $item['product_price']; ?> </p>
                     </div>
 
                 </div>
 
-                <div class="col-auto p-3">
-                    <p>Produto</p>
-                    <img src="<?= $item['img_src'] ?>" class="img-fluid" style="max-width: 60px; height: 60px" alt="">
-                    <h5 class="card-title"><?= $item['product_name']; ?> </h5>
-                    <p class="card-title"><?= 'R$ ' . $item['product_price']; ?> </p>
-                </div>
+            <?php endforeach; ?>
+            
+        <?php else : ?>
 
-            </div>
+            <p>Ainda não há perguntas de usuários</p>
 
-        <?php endforeach; ?>
+        <?php endif ?>
+
     </div>
-
 
 
 
@@ -112,11 +120,21 @@
                 <div class="d-flex flex-column gap-1">
 
                     <form action="?a=answer_question" method="POST">
+
                         <textarea class="form-control" name="answer" id=""></textarea>
+
                         <button type="submit" class="btn btn-success btn-sm">Responder</button>
 
-                        <input class="product-message-id d-none" name="product_message_id" type="text">
+
+                        <!-- Hidden -->
+                        <input class="product-message-id d-none" name="product-message-id" type="text">
+
+                        <!-- Hidden -->
                         <input class="product-id d-none" name="product_id" value="" type="text">
+
+                        <!-- Hidden -->
+                        <input class="product-user-id d-none" name="user_id" value="" type="text">
+
                     </form>
 
                 </div>

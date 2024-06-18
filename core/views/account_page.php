@@ -4,6 +4,25 @@
         <div class="row">
             <div class=" col-md-6 col=sm-12 ">
 
+                <?php if (isset($_SESSION['error'])) :  ?>
+
+                    <div class='alert alert-danger text-center'>
+                        <?= $_SESSION['error'] ?>
+                        <?php unset($_SESSION['error']) ?>
+                    </div>
+
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['success'])) :  ?>
+
+                    <div class='alert alert-success text-center'>
+                        <?= $_SESSION['success'] ?>
+                        <?php unset($_SESSION['success']) ?>
+                    </div>
+
+                <?php endif; ?>
+
+
                 <p class="fs-2">Minha conta</p>
 
                 <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
@@ -24,19 +43,12 @@
 
                 </dl>
 
-                <?php if (isset($_SESSION['error'])) : ?>
 
-                    <div class='alert alert-danger text-center'>
-                        <?= $_SESSION['error'] ?>
-                        <?php unset($_SESSION['error']) ?>
-                    </div>
-
-                <?php endif ?>
-
-                <button style="width: fit-content;" class="btn btn-warning btn-sm ">Edit</button>
+                <a href="?a=edit_account_page" style="width: fit-content;" class="btn btn-warning btn-sm">Editar conta</a>
 
                 <!-- Add swal to this button -->
-                <button class="btn-ask-delete-account btn btn-danger btn-sm">Delete account</button>
+                <a href="?a=delete_account" style="width: fit-content;" class="btn btn-danger btn-sm">Deletar conta</a>
+
 
                 <form id="form-delete-account" class="d-none mt-3" action="?a=delete_account" method="POST">
 
@@ -52,7 +64,7 @@
             </div>
 
 
-           
+
 
 
         </div>

@@ -1,29 +1,23 @@
 {
-    "name": "weler/build_look",
-    "description": "personal Project",
+    "name": "weler/loja",
+    "description": "test",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Weler\\Buildlookmvc\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Weler S Martins",
-            "email": "welerson194@gmail.com"
-        }
-    ],
-    "require": {
-        "phpmailer/phpmailer": "^6.9",
-        "twbs/bootstrap-icons": "^1.11",
-        "monolog/monolog": "^3.6"
-    },
-    "autoload":{
-        "psr-4":{
             "core\\": "core/"
         },
         "files": [
             "config.php"
         ]
+    },
+    "authors": [
+        {
+            "name": "Weler",
+            "email": "welerson194@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.9",
+        "monolog/monolog": "^2.9"
     }
 }

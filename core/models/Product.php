@@ -33,36 +33,41 @@ class Product
             $params
         );
 
-        $result['product_details'] = json_decode(json_encode($product_details[0]), true);
-        //-
+       //    $result['product_details'] = json_decode(json_encode($product_details[0]), true);
+        //------------------------------------------------
 
+        try {
+            $params = [
+                ':product_id' => $product_id,
+                ':admin_id' => 1
+            ];
+            
+            // Get user's questions made on this product along with admin answers
+            $product_messages = $db->select(
+                "SELECT 
+                    users.name AS user_name,
+                    product_messages.message AS user_message,
+                    product_messages.created_at AS message_created_at
+                FROM
+                    users
+                JOIN
+                    product_messages
+                ON  
+                    users.id = product_messages.sender_id
+                WHERE
+                    product_messages.product_id = :product_id
+                AND
+                    product_messages.sender_id != :admin_id",
+                $params
+            );  
 
+           $result['product_messages'] = json_decode(json_encode($product_messages), true);
 
-        $product_messages = $db->select(
-            "SELECT
-                name,
-                message,
-                product_messages.created_at AS message_created_at,
-                answer,
-                product_answers.created_at AS answer_created_at
-            FROM
-                product_messages 
-            LEFT JOIN
-                product_answers  ON product_messages.answer_id = product_answers.id
-            JOIN
-                users ON product_messages.user_id = users.id
-            WHERE 
-                product_messages.product_id = :id
-            ORDER BY 
-                product_messages.id
-            DESC",
-            $params
-        );
+           return $result;
+        } catch (Exception $e) {
+           return $e;
+        }
 
-        $result['product_messages'] = json_decode(json_encode($product_messages), true);
-
-
-        return $result;
 
 
         //-----------------------------------------------------------
@@ -150,27 +155,34 @@ class Product
             //Inserts product into database
             $db = new Database();
 
+            $admin_id = 1;
+
             $params = [
+                ':sender_id' => $_SESSION['user_id'],
+                ':receiver_id' => $admin_id,
                 ':product_id' => $_GET['product_id'],
-                ':user_id' => $_SESSION['user_id'],
                 ':message' => trim($_POST['question-text'])
             ];
 
             $db->insert(
-                "INSERT INTO product_messages VALUES(
+                "INSERT INTO product_messages 
+                VALUES(
                          0,
+                        :sender_id,
+                        :receiver_id,
                         :product_id,
-                        :user_id,
-                        DEFAULT,
                         :message,
                         DEFAULT,
-                        NOW()
+                        DEFAULT,
+                        NOW(),
+                        NULL
                     )",
                 $params
             );
 
             return true;
         } catch (Exception $e) {
+
             return false;
         }
     }
@@ -214,7 +226,7 @@ class Product
 
         $params = [
             ':product_message_id' => $product_message_id,
-            ':active' => 1
+            ':is_responded' => 0
         ];
 
         try {
@@ -226,6 +238,7 @@ class Product
                     products.id AS product_id,
                     product_messages.message AS user_question,
                     product_messages.created_at AS question_created_at,
+                    users.id AS user_id,
                     users.name AS user_name
                 FROM 
                     product_messages
@@ -236,11 +249,11 @@ class Product
                 JOIN 
                     users
                 ON 
-                    product_messages.user_id = users.id
+                    product_messages.sender_id = users.id
                 WHERE 
                     product_messages.id = :product_message_id
                 AND 
-                    product_messages.active = :active",
+                    product_messages.is_responded = :is_responded",
                 $params
             );
 
@@ -371,7 +384,6 @@ class Product
                     id = :product_id",
                 $params
             );
-
         } catch (Exception $e) {
             //    echo $e;
             //return false;
@@ -432,7 +444,6 @@ class Product
                     id = :id",
                 $params
             );
-
         } catch (Exception $e) {
             //     echo $e;
             //return false;
@@ -477,7 +488,6 @@ class Product
                     id = :id",
                 $params
             );
-
         } catch (Exception $e) {
             echo $e;
             return false;
@@ -502,10 +512,8 @@ class Product
             );
 
             $handle_deletion_result = true;
-
         } catch (Exception $e) {
             $handle_deletion_result = false;
-
         }
 
         //Checks if product was deleted
@@ -531,6 +539,39 @@ class Product
         }
 
         return true;
+    }
 
+    public function get_products_count()
+    {
+        $db = new Database();
+
+        $result = $db->select("SELECT COUNT(*) AS products_count FROM products");
+
+
+        $result = json_decode(json_encode($result[0]), true);
+        return $result['products_count'];
+    }
+
+    public function get_products_messages_count()
+    {
+        $db = new Database();
+        $params = [
+            ':admin_id' => 1,
+            ':is_responded' => 0
+
+        ];
+        $result = $db->select(
+            "SELECT COUNT(*) AS products_messages_count 
+             FROM
+                 product_messages
+            WHERE
+                 is_responded = :is_responded
+            AND
+                 sender_id != :admin_id",
+            $params
+        );
+
+        $result = json_decode(json_encode($result[0]), true);
+        return $result['products_messages_count'];
     }
 }

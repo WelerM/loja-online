@@ -54,7 +54,7 @@
 
         </div>
 
-        <!-- Img name input trigger SHOWN-->
+        <!-- Img name input trigger HIDE-->
         <button class="btn btn-add-img d-none align-items-center border mb-3">
 
             Choose an image
@@ -88,16 +88,12 @@
 
         </div>
 
-
         <!-- Product description-->
         <div class="form-floating mb-3">
             <textarea class="form-control bg-body-tertiary" name="product-description" placeholder="Leave a comment here"
                 id="floatingTextarea2" style="height: 100px"></textarea>
             <label class="" for="floatingTextarea2">Descrição do produto</label>
         </div>
-
-
-
 
         <!-- Product link-->
         <div class="mb-3">
@@ -111,14 +107,11 @@
 
 
 
-
         <!-- Hidden input img id for UPDATES -->
         <div class="d-none">
             <label for="input-img-id" class="form-label d-none"></label>
             <input id="input-img-id" class="form-control d-none" name="input-img-id" type="text">
-
         </div>
-
 
 
 

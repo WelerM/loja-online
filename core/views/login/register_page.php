@@ -4,8 +4,27 @@
 
         <form class=" p-4 mx-auto mt-5" style="max-width:500px" action="?a=register" method="POST">
 
-            <p class="text-center text-success fs-2 mb-4">Criar conta</p>
+        <?php if (isset($_SESSION['error'])) :  ?>
 
+            
+            
+            <p class="text-center text-success fs-2 mb-4">Criar conta</p>
+            
+            <div class='alert alert-danger text-center'>
+                <?= $_SESSION['error'] ?>
+                <?php unset($_SESSION['error']) ?>
+            </div>
+            
+            <?php endif; ?>
+            
+            <?php if (isset($_SESSION['success'])) :  ?>
+            
+            <div class='alert alert-success text-center'>
+                <?= $_SESSION['success'] ?>
+                <?php unset($_SESSION['success']) ?>
+            </div>
+            
+            <?php endif; ?>
 
             <!-- Name -->
             <div class="mb-3">
@@ -45,23 +64,6 @@
             </div>
 
 
-            <?php if (isset($_SESSION['error'])) :  ?>
-
-                <div class='alert alert-danger text-center'>
-                    <?= $_SESSION['error'] ?>
-                    <?php unset($_SESSION['error']) ?>
-                </div>
-
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['success'])) :  ?>
-
-                <div class='alert alert-success text-center'>
-                    <?= $_SESSION['success'] ?>
-                    <?php unset($_SESSION['success']) ?>
-                </div>
-
-            <?php endif; ?>
 
 
             <div class="js-alert-error d-none alert alert-danger"></div>

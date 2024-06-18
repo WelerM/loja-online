@@ -15,12 +15,18 @@ class AdminController
     {
 
         $admin = new Admin();
+        $product = new Product();
 
-        $results = $admin->list_active_product_questions();
-        $data = json_decode(json_encode($results), true);
+        $data = $admin->list_active_product_questions();
+  
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
-        // print_r($results);
-        // die();
+        // print_r($data);
 
         Functions::Layout([
             'layouts/html_header',
@@ -28,7 +34,7 @@ class AdminController
             'answer_questions_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
     //===============================================================
 
@@ -36,14 +42,15 @@ class AdminController
     public function answer_question()
     {
 
-        $answer = $_POST['answer'];
-        $product_id = $_POST['product_id'];
-        $product_message_id = $_POST['product_message_id'];
+        //Check if variables come correctly
+        $_POST['answer'];
+        $_POST['product_id'];
+        $_POST['user_id'];
 
 
         $admin = new Admin();
 
-        $results = $admin->answer_question($product_id, $product_message_id, $answer);
+        $results = $admin->answer_question();
 
 
         if (!$results) {
@@ -63,64 +70,49 @@ class AdminController
     {
 
         $admin = new Admin();
+        $product = new Product();
 
         $data = $admin->list_active_user_messasges();
 
-        // print_r($data);
-        // die();
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
             'list_user_messages_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
-
-    // public function answer_user_messages_page()
-    // {
-
-    //     $admin = new Admin();
-
-    //     $data = '';// $admin->list_active_user_messasges();
-
-    //     // print_r($data);
-    //     // die();
-
-    //     Functions::Layout([
-    //         'layouts/html_header',
-    //         'layouts/header',
-    //         'answer_user_message',
-    //         'layouts/footer',
-    //         'layouts/html_footer',
-    //     ], $data);
-
-    // }
-
-
 
     public function answer_user_message_page()
     {
 
-        echo $_GET['user_id'];
-
-        die();
-        $_GET['product-id'];
 
         $admin = new Admin();
+        $product = new Product();
 
         $data = $admin->get_user_message_information();
 
-        // print_r($data);
-        // die();
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
             'answer_user_message_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
-
+        ], $data, $header_data);
     }
     public function answer_user_message($chat_message_id)
     {
@@ -161,8 +153,5 @@ class AdminController
         $_SESSION['success'] = 'Mensagem respondida com sucesso';
         Functions::redirect('answer_user_message_page/' . $chat_message_id);
         return;
-
     }
-
-
 }

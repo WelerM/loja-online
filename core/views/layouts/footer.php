@@ -8,21 +8,21 @@
 
             <ul>
                 <li class="fw-semibold mb-1">Contact</li>
-                <li class=""><a href="<?=DEVELOPER_GITHUB_LINK?>" target="_blank" class="text-dark">Github</a></li>
-                <li class="" style="user-select: text;"><?=DEVELOPER_EMAIL_LINK?></li>
+                <li class=""><a href="" target="_blank" class="text-dark">Github</a></li>
+                <li class="" style="user-select: text;"></li>
      
             </ul>
 
             <ul>
                 <li class="fw-semibold mb-1">About the app</li>
-                <li class=""><a href="<?=REPOSITORY_LINK?>" target="_blank" class="text-dark">Repository</a></li>
+                <li class=""><a href="" target="_blank" class="text-dark">Repository</a></li>
                 <li class=""><a href="?a=technologies_page"  class="text-dark">Technologies</a></li>
                 
             </ul>
 
             <ul>
                 <li class="fw-semibold mb-1">Social media</li>
-                <li class=""><a href="<?=REPOSITORY_LINK?>" target="_blank" class="text-dark">Repository</a></li>
+                <li class=""><a href="" target="_blank" class="text-dark">Repository</a></li>
                 <li class=""><a href="?a=technologies_page"  class="text-dark">Technologies</a></li>
                 
             </ul>

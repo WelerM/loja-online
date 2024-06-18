@@ -6,7 +6,11 @@ use core\classes\Logger;
 use core\models\User;
 use core\classes\Functions;
 use core\classes\SendEmail;
+use core\models\Admin;
 use core\models\Product;
+use Exception;
+use ReturnTypeWillChange;
+use stdClass;
 
 class UserController
 {
@@ -14,24 +18,31 @@ class UserController
     public function home_page()
     {
 
-
         $product = new Product();
+        $admin = new Admin();
 
-
-
+        //Main data to view
         $data = $product->list_products();
 
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
 
+
+    
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
             'home_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
-
+        ], $data, $header_data);
     }
+    //===================================================================
 
     public function account_page()
     {
@@ -42,13 +53,20 @@ class UserController
             return;
         }
 
-
-
         //Get user data
         $user = new User();
-        $data = $user->get_user_personal_info($_SESSION['user_id']);
+        $admin = new Admin();
+        $product = new Product();
 
+        //Main data to view
+        $data = $user->get_user_personal_info();
 
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
         Functions::Layout([
             'layouts/html_header',
@@ -56,7 +74,7 @@ class UserController
             'account_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
     //===================================================================
 
@@ -130,15 +148,18 @@ class UserController
     public function my_messages_page()
     {
 
-        $user_id = $_SESSION['user_id'];
-
         $user = new User();
+        $admin = new Admin();
+        $product = new Product();
 
-        $data = $user->list_user_messages($user_id);
+        $data = $user->list_user_messages();
 
-
-        print_r($data);
-        die();
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
         Functions::Layout([
             'layouts/html_header',
@@ -146,7 +167,7 @@ class UserController
             'my_messages_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
     //===================================================================
 
@@ -163,10 +184,34 @@ class UserController
     }
     //===================================================================
 
+    public function edit_account_page()
+    {
 
+        //Get user old data to fill inputs
+        $user = new User();
+        $admin = new Admin();
+        $product = new Product();
 
+        $data = $user->get_user_personal_info();
 
-    //API
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'edit_account_page',
+            'layouts/footer',
+            'layouts/html_footer',
+
+        ], $data, $header_data);
+    }
+    //===================================================================
+
 
 
     //Being used in javascript
@@ -222,10 +267,6 @@ class UserController
         $user_password = trim($_POST['login-password']);
 
 
-
-
-
-
         //Validate login
         $users = new User();
 
@@ -237,6 +278,18 @@ class UserController
             Functions::redirect('login_page');
             return;
         }
+
+        //Verifies if it's an admin or user login
+
+        if (intval($result->id) === 1) { //admin
+
+
+            // $admin = new Admin();
+            // $result = $admin->get_admin_data();
+            // $_SESSION['admin_data'] = $result;
+
+        }
+
         //Valid login
         $_SESSION['user_id'] = $result->id;
         $_SESSION['user_name'] = $result->name;
@@ -247,6 +300,7 @@ class UserController
     }
     //===================================================================
 
+    
     public function contact_store_page($id)
     {
         //Checks if user is logged
@@ -263,7 +317,7 @@ class UserController
         //Show prodcut preview 
         $data = $user->list_user_chat_messages($product_id);
 
- 
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -292,8 +346,7 @@ class UserController
             $_SESSION['error'] = 'Erro ao enviar mensagem';
 
             return;
-        }
-        ;
+        };
 
         Functions::redirect('contact_store_page/' . $product_id);
         $_SESSION['success'] = 'Mensagem enviada com sucesso! Aguarde a loja responder.';
@@ -328,7 +381,7 @@ class UserController
             !isset($_POST['signup-repeat-password'])
         ) {
             $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('signup_page');
+            Functions::redirect('register_page');
             exit();
         }
 
@@ -340,21 +393,21 @@ class UserController
             trim(empty($_POST['signup-repeat-password']))
         ) {
             $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('signup_page');
+            Functions::redirect('register_page');
             exit();
         }
 
         //Checks for valid email
         if (filter_var(trim($_POST['signup-email']), FILTER_VALIDATE_EMAIL) === false) {
             $_SESSION['error'] = "Invalid email!";
-            Functions::redirect('signup_page');
+            Functions::redirect('register_page');
             exit();
         }
 
         //Verifies if password = repeat-password
         if ($_POST['signup-password'] != $_POST['signup-repeat-password']) {
             $_SESSION['error'] = "Passwords don't match!";
-            Functions::redirect('signup_page');
+            Functions::redirect('register_page');
             exit();
         }
 
@@ -365,8 +418,8 @@ class UserController
 
         if ($users->verify_email_exists($_POST['signup-email'])) {
 
-            $_SESSION['error'] = "Email already taken!";
-            Functions::redirect('signup_page');
+            $_SESSION['error'] = "Esse email já está sendo utilizado!";
+            Functions::redirect('register_page');
             exit();
         }
 
@@ -397,8 +450,6 @@ class UserController
 
 
     //Sign Up
-
-
     public function confirm_email()
     {
 
@@ -548,17 +599,93 @@ class UserController
     //===================================================================
 
 
-
     public function delete_account()
     {
 
-        $user_password = trim($_POST['password']);
+        // $user_password = trim($_POST['password']);
 
-        $users = new User();
-        $users->delete_account($user_password);
+        // $users = new User();
+        // $users->delete_account($user_password);
+
+
+        echo 'delete acc controller';
     }
     //===================================================================
 
+    public function edit_account()
+    {
+        $user = new User();
+
+        //Verifies if there's an open session
+        if (!Functions::user_logged()) {
+            Functions::redirect('edit_account_page');
+            return;
+        }
+        //Verifies if there was a form submition
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            Functions::redirect('edit_account_page');
+            return;
+        }
+        //Checks for unset inputs 
+        if (
+            !isset($_POST['name']) ||
+            !isset($_POST['email']) ||
+            !isset($_POST['password']) ||
+            !isset($_POST['repeat-password'])
+        ) {
+            $_SESSION['error'] = "Empty fields!";
+            Functions::redirect('edit_account_page');
+            return;
+        }
+
+        //Checks for empty fields
+        if (
+            trim(empty($_POST['name'])) ||
+            trim(empty($_POST['email'])) ||
+            trim(empty($_POST['password'])) ||
+            trim(empty($_POST['repeat-password']))
+        ) {
+            $_SESSION['error'] = "Empty fields!";
+            Functions::redirect('edit_account_page');
+            return;
+        }
+
+        //Verifies if password = repeat-password
+        if ($_POST['password'] != $_POST['repeat-password']) {
+            $_SESSION['error'] = "Passwords don't match!";
+            Functions::redirect('edit_account_page');
+            return;
+        }
+
+        //---------------------------------------------
+        //Checks for valid email
+        if (filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL) === false) {
+            $_SESSION['error'] = "Invalid email!";
+            Functions::redirect('edit_account_page');
+            return;
+        }
+
+        //Verifies if new email is available to use
+        $check_email_available = $user->verify_available_email();
 
 
+        if (!$check_email_available) {
+            $_SESSION['error'] = "Este email já está em uso. Por favor, escolha outro email";
+            Functions::redirect('account_page');
+            return;
+        }
+
+
+        $result = $user->edit_account();
+
+        if (!$result) {
+            $_SESSION['error'] = "Erro ao editar conta!";
+            Functions::redirect('account_page');
+            return;
+        }
+
+        $_SESSION['success'] = "Conta editada com sucesso!";
+        Functions::redirect('account_page');
+    }
+    //===================================================================
 }

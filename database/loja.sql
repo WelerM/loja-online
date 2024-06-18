@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 07-Jun-2024 às 22:43
+-- Tempo de geração: 18/06/2024 às 21:57
 -- Versão do servidor: 10.4.32-MariaDB
--- versão do PHP: 8.2.12
+-- Versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `chat`
+-- Estrutura para tabela `chat`
 --
 
 CREATE TABLE `chat` (
@@ -38,7 +38,7 @@ CREATE TABLE `chat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `chat`
+-- Despejando dados para a tabela `chat`
 --
 
 INSERT INTO `chat` (`id`, `sender_id`, `receiver_id`, `product_id`, `message`, `is_responded`, `created_at`) VALUES
@@ -54,12 +54,14 @@ INSERT INTO `chat` (`id`, `sender_id`, `receiver_id`, `product_id`, `message`, `
 (47, 4, 1, 43, 'nova?', 1, '2024-06-07 18:41:04'),
 (48, 1, 4, 43, 'sim', 0, '2024-06-07 18:41:39'),
 (49, 4, 1, 43, 'vou querer', 0, '2024-06-07 18:42:07'),
-(50, 1, 4, 41, 'ok', 0, '2024-06-07 18:42:30');
+(50, 1, 4, 41, 'ok', 0, '2024-06-07 18:42:30'),
+(51, 4, 1, 42, 'ok', 0, '2024-06-10 18:12:04'),
+(52, 17, 1, 42, 'rrr', 0, '2024-06-14 19:58:20');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `products`
+-- Estrutura para tabela `products`
 --
 
 CREATE TABLE `products` (
@@ -75,66 +77,45 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `products`
+-- Despejando dados para a tabela `products`
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_file_name`, `link`, `updated_at`, `created_at`) VALUES
-(41, 'jaqueta', 2000, 'ee', 'assets/images/products/jaqueta_1717676327624.png', 'jaqueta_1717676327624.png', 'e', '2024-06-06 12:18:47', '2024-06-06 12:18:47'),
-(42, 'boné', 200, 'f', 'assets/images/products/boné_1717676380961.png', 'boné_1717676380961.png', 'f', '2024-06-06 12:19:40', '2024-06-06 12:19:40'),
-(43, 'blusa', 200, '2fsdf', 'assets/images/products/blusa_1717690605759.png', 'blusa_1717690605759.png', '222', '2024-06-06 16:16:45', '2024-06-06 16:16:45');
+(47, 'jaqueta', 200, 'boa', 'assets/images/products/jaqueta_1718721663135.png', 'jaqueta_1718721663135.png', '111', '2024-06-18 14:41:03', '2024-06-18 14:41:03'),
+(48, 'boné', 50, 'bom', 'assets/images/products/boné_1718721713927.png', 'boné_1718721713927.png', '2w', '2024-06-18 14:41:53', '2024-06-18 14:41:53');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `product_answers`
---
-
-CREATE TABLE `product_answers` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `answer` varchar(300) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Extraindo dados da tabela `product_answers`
---
-
-INSERT INTO `product_answers` (`id`, `product_id`, `answer`, `created_at`) VALUES
-(26, 41, 'sim amigo\r\n', '2024-06-06 14:02:08'),
-(27, 41, 'sim, é original', '2024-06-06 14:02:17');
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `product_messages`
+-- Estrutura para tabela `product_messages`
 --
 
 CREATE TABLE `product_messages` (
   `id` int(11) NOT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `receiver_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `answer_id` int(11) DEFAULT NULL,
   `message` varchar(300) DEFAULT NULL,
-  `active` tinyint(4) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `is_responded` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `product_messages`
+-- Despejando dados para a tabela `product_messages`
 --
 
-INSERT INTO `product_messages` (`id`, `product_id`, `user_id`, `answer_id`, `message`, `active`, `created_at`) VALUES
-(28, 41, 1, 26, 'disponível?', 0, '2024-06-06 12:20:16'),
-(29, 41, 4, 27, 'original?', 0, '2024-06-06 13:50:56'),
-(30, 42, 1, NULL, 'ola?', 1, '2024-06-06 19:01:06'),
-(31, 41, 4, NULL, 'gostei', 1, '2024-06-07 14:06:27'),
-(32, 43, 4, NULL, 'oi', 1, '2024-06-07 18:58:31');
+INSERT INTO `product_messages` (`id`, `sender_id`, `receiver_id`, `product_id`, `message`, `is_responded`, `active`, `created_at`, `deleted_at`) VALUES
+(54, 17, 1, 48, 'Novo?', 1, 1, '2024-06-18 18:13:01', NULL),
+(55, 17, 1, 48, 'olá?', 1, 1, '2024-06-18 18:13:07', NULL),
+(56, 1, 17, 48, 'sim', 0, 1, '2024-06-18 18:13:26', NULL),
+(57, 1, 17, 48, 'opa', 0, 1, '2024-06-18 18:14:17', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `users`
+-- Estrutura para tabela `users`
 --
 
 CREATE TABLE `users` (
@@ -151,19 +132,19 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `users`
+-- Despejando dados para a tabela `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`) VALUES
 (1, 'weler', 'welerson194@gmail.com', 'admin', '$2y$10$yK3ynBNhbLt8GEYWl1VlreXWzePgZ2PjdB7Ujy9KwQBWdPMOVwKGi', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-05-28 14:15:46', '2024-05-28 14:11:17'),
-(4, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$ghrNbrjpN/THAKVFZOpJwe.gfre4/fBj43QhYItrnO2RawDgMwq.C', NULL, 1, '', '2024-05-29 14:25:01', '2024-05-29 14:24:44');
+(17, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$RG3sPMMdozghCo2jtfY1tOZqKMA4u7mPaHNKraPwSx6tcaYScKCtW', NULL, 1, '', '2024-06-14 18:34:12', '2024-06-14 18:33:47');
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices para tabela `chat`
+-- Índices de tabela `chat`
 --
 ALTER TABLE `chat`
   ADD PRIMARY KEY (`id`),
@@ -171,88 +152,60 @@ ALTER TABLE `chat`
   ADD KEY `receiver_id` (`receiver_id`);
 
 --
--- Índices para tabela `products`
+-- Índices de tabela `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `product_answers`
---
-ALTER TABLE `product_answers`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`);
-
---
--- Índices para tabela `product_messages`
+-- Índices de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
   ADD KEY `product_msg_product_id` (`product_id`);
 
 --
--- Índices para tabela `users`
+-- Índices de tabela `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
 -- AUTO_INCREMENT de tabela `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
-
---
--- AUTO_INCREMENT de tabela `product_answers`
---
-ALTER TABLE `product_answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- Restrições para despejos de tabelas
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `chat`
---
-ALTER TABLE `chat`
-  ADD CONSTRAINT `chat_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `chat_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`);
-
---
--- Limitadores para a tabela `product_answers`
---
-ALTER TABLE `product_answers`
-  ADD CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
-
---
--- Limitadores para a tabela `product_messages`
+-- Restrições para tabelas `product_messages`
 --
 ALTER TABLE `product_messages`
-  ADD CONSTRAINT `product_messages_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `product_msg_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 COMMIT;
 

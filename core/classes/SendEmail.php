@@ -24,11 +24,11 @@ class SendEmail
         //Ready to send
         try {
             //Server settings
-            $mail->SMTPDebug = 0; //Enable verbose debug output
+            $mail->SMTPDebug = 2; //Enable verbose debug output
             $mail->isSMTP(); //Send using SMTP
             $mail->Host = EMAIL_SMTP; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
-            $mail->Username = EMAIL_SENDER; //SMTP username
+            $mail->Username = EMAIL_USERNAME; //SMTP username
             $mail->Password = EMAIL_PASSWORD; //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; //Enable implicit TLS encryption
             $mail->Port = EMAIL_PORT; //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
@@ -39,7 +39,7 @@ class SendEmail
 
             //Content
             $mail->isHTML(true); //Set email format to HTML
-            $mail->Subject = EMAIL_MSG_2;
+            $mail->Subject = 'test';
 
             //Email info
             $html = '<h3>Confirm your account</h3>';

@@ -16,11 +16,20 @@ class ProductController
         $product_id = $id;
 
         $product = new Product();
+        $admin = new Admin();
+        $product = new Product();
+
 
         $data = $product->show_product($product_id);
 
-        // print_r($data);
-        // die('aqui');
+       print_r($data);
+     die();
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
         Functions::Layout([
             'layouts/html_header',
@@ -28,15 +37,24 @@ class ProductController
             'product/product_details_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
 
     public function list_products_page()
     {
 
         $product = new Product();
+        $admin = new Admin();
+        $product = new Product();
 
         $data = $product->list_products();
+
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
 
         Functions::Layout([
@@ -45,27 +63,45 @@ class ProductController
             'product/list_products_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
 
     public function create_product_page()
     {
+        $admin = new Admin();
+        $product = new Product();
+
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
             'product/create_product_page',
             'layouts/footer',
             'layouts/html_footer',
-        ]);
+        ], null, $header_data);
     }
 
     public function my_products_page()
     {
 
         $product = new Product();
+        $admin = new Admin();
 
+        //Main data to view
         $data = $product->list_my_products();
 
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
 
         Functions::Layout([
@@ -74,27 +110,30 @@ class ProductController
             'product/my_products_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
 
     public function edit_product_page($id = null)
     {
-
+        $admin = new Admin();
         $product = new Product();
 
         $data = $product->show_product_details($id);
-
-
-        // print_r($data);
-        // die();
+        
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
 
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'edit_product_page',
+            'product/edit_product_page',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
 
 
@@ -103,6 +142,7 @@ class ProductController
     public function create_product()
     {
 
+      
 
         //Verifies if there was a form submition
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -191,8 +231,8 @@ class ProductController
     {
 
         $product_id = $_POST['product-id'];
-    
-        
+
+
         //Check if params come correctly
         //Product name
         if (!isset($_POST['product-name']) || empty(trim($_POST['product-name']))) {
@@ -224,7 +264,7 @@ class ProductController
         $product = new Product();
 
         //Checks whether or not a new image was choosen:
-        if ($_FILES['file']['size'] === 0) {//Will not update product image
+        if ($_FILES['file']['size'] === 0) { //Will not update product image
 
             $result = $product->edit_product();
 
@@ -238,15 +278,13 @@ class ProductController
             $_SESSION['success'] = 'Produto editado com sucesso';
             Functions::redirect('my_products_page');
             return;
-
-        }
-        ;
+        };
         //---------------------------------------------------------------
 
 
 
         //Checks whether or not a new image was choosen:
-        if ($_FILES['file']['size'] != 0) {//Will update product image
+        if ($_FILES['file']['size'] != 0) { //Will update product image
 
             //Checks if an image file was choosen by the user
 
@@ -254,19 +292,16 @@ class ProductController
 
             if (!$result) {
 
-                $_SESSION['error'] = 'Erro ao responder pergunta';
+                $_SESSION['error'] = 'Erro ao editar produto';
                 Functions::redirect('my_products_page');
                 return;
             }
 
 
-            $_SESSION['success'] = 'Pergunta respondida com sucesso';
+            $_SESSION['success'] = 'Produto editado com sucesso';
             Functions::redirect('my_products_page');
             return;
-        }
-        ;
-
-
+        };
     }
 
     public function delete_product($product_id)
@@ -284,7 +319,7 @@ class ProductController
             return;
         }
 
-        $_SESSION['success'] = 'Pergunta respondida com sucesso';
+        $_SESSION['success'] = 'Produto deletado com sucesso';
         Functions::redirect('my_products_page');
         return;
     }
@@ -311,15 +346,18 @@ class ProductController
 
         $result = $product->make_question();
 
+       
         if (!$result) {
+            $_SESSION['error'] = 'Erro ao fazer pergunta';
             //The variable "data" in the URL will be used inside the "start" function in the script.js file
             Functions::redirect("product_details_page/" . $product_id . '&error');
-            exit();
+            return;
         }
 
         //The variable "data" in the URL will be used inside the "start" function in the script.js file
+        $_SESSION['success'] = 'Pergunta realizada com sucesso';
         Functions::redirect("product_details_page/" . $product_id);
-        exit();
+        return;
     }
 
 
@@ -348,6 +386,4 @@ class ProductController
         $results = json_encode($results);
         print_r($results);
     }
-
-
 }

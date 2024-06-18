@@ -1,7 +1,12 @@
+
+? implemetar 'excluir' perguntas em produtos
+? criar mascara price
+
 # Login ok
 # Register ok
 # Redefine password ok
 # Deletar produto Ok
+# Editar conta Ok
 
 # Enviar email ao admin quando um usuario fizer pergunta
 do produto
@@ -13,3 +18,9 @@ fechando assim o file explorer, o programa dara um erro
 # Update da imagem em si do produto nao esta implementado
 
 Criar pagina de entrar em contato e mandar  menssagem chat
+
+
+# Metodos register e update account estao com apenas um
+tratamentos de input
+
+# checar a logica da columna " password_ reset token"

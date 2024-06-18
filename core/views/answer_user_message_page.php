@@ -38,6 +38,7 @@
 
         <h5>Responder mensagem do usuário</h5>
 
+        
         <!-- Currently HIDDEN -->
         <?php foreach ($data as $message): ?>
 

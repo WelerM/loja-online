@@ -11,6 +11,7 @@ $routes = [
     'email_sent_page' => 'usercontroller@email_sent_page',
     'account_page' => 'usercontroller@account_page',
     'my_messages_page' => 'usercontroller@my_messages_page',
+    'edit_account_page' => 'usercontroller@edit_account_page',
 
     'login' => 'usercontroller@login',
     'register' => 'usercontroller@register',
@@ -20,6 +21,7 @@ $routes = [
     'confirm_email' => 'usercontroller@confirm_email',
     'is_user_logged' => 'usercontroller@is_user_logged',
     'delete_account' => 'usercontroller@delete_account',
+    'edit_account' => 'usercontroller@edit_account',
     
     
     //Product
@@ -76,6 +78,7 @@ if (isset($_GET['a'])) {
 $parts = explode('@', $routes[$action]);
 $controller = 'core\\controllers\\' . ucfirst($parts[0]);
 $method = $parts[1];
+
 
 $ctr = new $controller();
 if ($id !== null) {

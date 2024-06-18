@@ -11,23 +11,69 @@ use Exception;
 class User
 {
 
-    //Used in Main's "sign up" method
-    public static function verify_email_exists($email)
+    public static function get_user_personal_info()
     {
-
         $db = new Database();
-        $params = [
-            ':e' => strtolower(trim($email))
-        ];
-        $results = $db->select("SELECT * FROM users WHERE email = :e", $params);
 
-        //Verifies if there is a username registered with the same name
-        if (count($results) != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        //Get user's personal data
+        $params = [
+            ':id' => $_SESSION['user_id']
+        ];
+
+        $results = $db->select(
+            "SELECT *  FROM users 
+             WHERE users.id = :id",
+            $params
+        );
+
+        $results = json_decode(json_encode($results[0]), true);
+
+
+        return $results;
     }
+    //============================================================
+
+    public function list_user_messages()
+    {
+        $db = new Database();
+
+        $params = [
+            ':id' => $_SESSION['user_id']
+        ];
+
+        $result = $db->select(
+            "SELECT 
+                users.id AS user_id,
+                users.name AS user_name,
+                products.name AS product_name,
+                products.price AS product_price,
+                products.img_src AS product_img_src,
+                message,
+                chat.created_at AS chat_created_at
+            FROM
+                chat
+            JOIN
+                users
+            ON
+                chat.sender_id = users.id
+            JOIN
+                products
+            ON
+                chat.product_id = products.id
+            WHERE 
+                sender_id = :id
+            OR
+                receiver_id = :id",
+            $params
+        );
+
+        $result = json_decode(json_encode($result), true);
+
+        return $result;
+    }
+    //===================================================================
+
+    
     public function validate_email($purl)
     {
 
@@ -62,6 +108,168 @@ class User
         return true;
     }
     //============================================================
+
+    public function list_user_chat_messages($product_id)
+    {
+
+
+        $db = new Database();
+
+
+        //First select to get details of the product
+        $params = [
+            ':product_id' => $product_id
+        ];
+
+        $product_results = $db->select(
+            "SELECT * FROM
+                products
+            WHERE
+                id = :product_id",
+            $params
+        );
+
+        // if (count($results) === 0) {
+        //     return false;
+        // }
+
+        //$results['product_details'] = $results;
+        $results['product_details'] = json_decode(json_encode($product_results[0]), true);
+        //-------------------------------------------------------------
+
+
+
+
+
+        // // Store message into database
+        $params = [
+            ':sender_id' => $_SESSION['user_id'],
+            ':receiver_id' => 1,
+            ':product_id' => $product_id,
+        ];
+        $chat_results = $db->select(
+            "SELECT 
+                users.id AS user_id,
+                users.name AS user_name,
+                message,
+                chat.created_at AS message_created_at
+             FROM
+                chat
+            JOIN
+                users
+            ON 
+                chat.sender_id = users.id
+            WHERE
+                product_id = :product_id
+            AND
+                (sender_id = :sender_id OR sender_id = :receiver_id)
+            ORDER BY
+                chat.created_at ASC",
+            $params
+        );
+
+
+
+        $results['user_chat_messages'] = '';
+
+        if (count($chat_results) != 0) {
+            $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
+        }
+
+
+        $results = json_decode(json_encode($results), true);
+        //------------------------------------------------------
+
+
+
+
+
+        //Checks if user can send a new message
+        $params = [
+            ':sender_id' => $_SESSION['user_id'],
+            ':product_id' => $product_id,
+        ];
+
+        $result = $db->select(
+            "SELECT 
+                is_responded
+            FROM
+                chat
+            WHERE
+                sender_id = :sender_id
+            AND
+                product_id = :product_id
+            ORDER BY(id)
+            DESC
+            LIMIT 1",
+            $params
+        );
+
+        $results['send_new_message'] = true;
+
+        if (count($result) !== 0) {
+
+            if (!$result[0]->is_responded) {
+
+                $results['send_new_message'] = false;
+            }
+        }
+
+
+        return $results;
+    }
+    
+    //===================================================================
+
+
+
+    public static function verify_email_exists($email)
+    {
+
+        $db = new Database();
+        $params = [
+            ':e' => strtolower(trim($email))
+        ];
+        $results = $db->select("SELECT * FROM users WHERE email = :e", $params);
+
+        //Verifies if there is a username registered with the same name
+        if (count($results) != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //============================================================
+
+    public function verify_available_email()
+    {
+
+        //REturns false if not available to use
+        $db = new Database();
+
+        $params = [
+            ':user_id' => $_SESSION['user_id'],
+            ':user_email' => trim(strtolower($_POST['email']))
+        ];
+
+        $result = $db->select(
+            "SELECT * FROM
+                users
+            WHERE
+                email = :user_email
+            AND 
+                id != :user_id",
+            $params
+        );
+
+        if (count($result) != 0) {
+            return false;
+        }
+
+        return true;
+    }
+    //============================================================
+
 
 
 
@@ -187,11 +395,45 @@ class User
 
 
             return $purl;
-
         } catch (Exception $e) {
             echo $e;
         }
     }
+    //============================================================
+    public function edit_account()
+    {
+
+        //edit in the database
+        $db = new Database();
+
+        try {
+
+            $params = [
+                ':user_id' => $_SESSION['user_id'],
+                ':user_name' => $_POST['name'],
+                ':user_email' => $_POST['email'],
+                ':user_password' => password_hash(trim($_POST['password']), PASSWORD_DEFAULT)
+            ];
+
+            $db->update(
+                "UPDATE
+                    users
+                SET
+                    name = :user_name,
+                    email = :user_email,
+                    password = :user_password,
+                    updated_at = NOW()
+                WHERE
+                    id = :user_id",
+                $params
+            );
+
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
 
     //Recover password
     public function check_email_exists($email)
@@ -212,6 +454,7 @@ class User
 
         return true;
     }
+    //============================================================
 
     public function update_token($email, $token)
     {
@@ -228,15 +471,12 @@ class User
             UPDATE users 
             SET password_reset_token = :password_reset_token
             WHERE email = :email", $params);
-
-
-
         } catch (Exception $e) {
             echo $e;
         }
-
-
     }
+    //============================================================
+
     public function check_token_exists($token)
     {
         $db = new Database();
@@ -251,6 +491,7 @@ class User
 
         return $result;
     }
+    //============================================================
 
     public function update_user_password($user_id, $passowrd)
     {
@@ -267,30 +508,7 @@ class User
             SET password = :password
             WHERE id = :id", $params);
     }
-
-
-
-
-    public static function get_user_personal_info($user_id)
-    {
-        $db = new Database();
-
-        //Get user's personal data
-        $params = [
-            ':id' => $user_id
-        ];
-
-        $results = $db->select(
-            "SELECT *  FROM users 
-             WHERE users.id = :id",
-            $params
-        );
-
-        $results = json_decode(json_encode($results[0]), true);
-
-
-        return $results;
-    }
+    //============================================================
 
 
     public function get_all_user_questions_by_product($product_id)
@@ -340,13 +558,11 @@ class User
 
 
             return $results;
-
         } catch (Exception $th) {
             return $th;
         }
-
-
     }
+    //============================================================
 
 
 
@@ -397,37 +613,6 @@ class User
 
         //Redirect to the home page
         Functions::redirect();
-    }
-    //===================================================================
-
-
-    public function list_user_messages($user_id)
-    {
-        $db = new Database();
-
-        $params = [
-            ':id' => $user_id
-        ];
-
-        $result = $db->select(
-            "SELECT 
-                name,
-                message,
-                chat.created_at
-            FROM
-                chat
-            JOIN
-                users
-            ON
-                chat.sender_id = users.id
-            WHERE 
-                sender_id = :id",
-            $params
-        );
-
-        $result = json_decode(json_encode($result[0]), true);
-
-        return $result;
     }
     //===================================================================
 
@@ -503,118 +688,5 @@ class User
     //===================================================================
 
 
-    public function list_user_chat_messages($product_id)
-    {
-
-
-        $db = new Database();
-
-
-        //First select to get details of the product
-        $params = [
-            ':product_id' => $product_id
-        ];
-
-        $product_results = $db->select(
-            "SELECT * FROM
-                products
-            WHERE
-                id = :product_id",
-            $params
-        );
-
-        // if (count($results) === 0) {
-        //     return false;
-        // }
-
-        //$results['product_details'] = $results;
-        $results['product_details'] = json_decode(json_encode($product_results[0]), true);
-        //-------------------------------------------------------------
-
-
-
-
-
-        // // Store message into database
-        $params = [
-            ':sender_id' => $_SESSION['user_id'],
-            ':receiver_id' => 1,
-            ':product_id' => $product_id,
-        ];
-        $chat_results = $db->select(
-            "SELECT 
-                users.id AS user_id,
-                users.name AS user_name,
-                message,
-                chat.created_at AS message_created_at
-             FROM
-                chat
-            JOIN
-                users
-            ON 
-                chat.sender_id = users.id
-            WHERE
-                product_id = :product_id
-            AND
-                (sender_id = :sender_id OR sender_id = :receiver_id)
-            ORDER BY
-                chat.created_at ASC",
-            $params
-        );
-
-
-
-        $results['user_chat_messages'] = '';
-
-        if (count($chat_results) != 0) {
-            $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
-        }
-
-
-        $results = json_decode(json_encode($results), true);
-        //------------------------------------------------------
-
-
-
-
-
-        //Checks if user can send a new message
-        $params = [
-            ':sender_id' => $_SESSION['user_id'],
-            ':product_id' => $product_id,
-        ];
-
-        $result = $db->select(
-            "SELECT 
-                is_responded
-            FROM
-                chat
-            WHERE
-                sender_id = :sender_id
-            AND
-                product_id = :product_id
-            ORDER BY(id)
-            DESC
-            LIMIT 1",
-            $params
-        );
-
-        $results['send_new_message'] = true;
-
-        if (count($result) !== 0) {
-
-            if (!$result[0]->is_responded) {
-
-                $results['send_new_message'] = false;
-            }
-        }
-
-
-        return $results;
-    }
-
-    //===================================================================
 
 }
-
-
