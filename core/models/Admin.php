@@ -4,7 +4,7 @@ namespace core\models;
 
 use core\classes\Database;
 use core\classes\Functions;
-use core\classes\Logger;
+use core\classes\Log;
 use core\classes\SendEmail;
 use core\models\Image;
 use Exception;
@@ -18,56 +18,33 @@ class Admin
     {
 
         $db = new Database();
-        
+
         try {
 
-            //Create registry on table 'products answers'
+            //Update registry on table 'products_messages'
             $params = [
-                ':sender_id' => 1, //Admin id
-                ':receiver_id' => trim($_POST['user_id']),
-                ':product_id' => trim($_POST['product_id']),
-                ':message' => trim($_POST['answer'])
-            ];
-
-            $db->insert(
-                "INSERT INTO 
-                    product_messages
-                 VALUES(
-                    0,
-                    :sender_id,
-                    :receiver_id,
-                    :product_id,
-                    :message,
-                    DEFAULT,
-                    DEFAULT,
-                    NOW(),
-                    NULL
-                )",
-                $params
-            );
-
-            //------------------------------------
-
-
-            //Update user product message on table product_messages to is_responded = 1 / true
-            $params = [
-                ':is_responded' => 1,
-                ':product_message_id' => trim($_POST['product-message-id'])
+                ':product_message_id' => trim($_POST['product-message-id']),
+                ':answer' => trim($_POST['answer']),
+                ':active' => 0
             ];
 
             $db->update(
                 "UPDATE
                     product_messages
                 SET
-                    is_responded = :is_responded
+                    answer = :answer,
+                    active = :active,
+                    answer_created_at = NOW()
                 WHERE
-                    id = :product_message_id",
+                    product_messages.id = :product_message_id",
                 $params
             );
 
+
+
             return true;
         } catch (Exception $e) {
-            return $e;
+            echo $e;
         }
     }
 
@@ -81,15 +58,17 @@ class Admin
             $db = new Database();
 
             $params = [
-                ':is_responded' => 0,
-                ':sender_id' => 1 //Admin id
+                ':active' => 1,
+
             ];
 
             $results = $db->select(
                 "SELECT 
                     product_messages.id AS product_message_id,
                     product_messages.message AS product_message,
-                    product_messages.created_at AS message_created_at,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.deleted_at AS product_deleted,
 
                     users.id AS user_id,
                     users.name AS user_name,
@@ -103,15 +82,118 @@ class Admin
                 JOIN 
                     users 
                 ON 
-                    product_messages.sender_id = users.id
+                    product_messages.user_id = users.id
                 JOIN
                     products
                 ON
                     product_messages.product_id = products.id
                 WHERE 
-                    product_messages.is_responded = :is_responded
-                AND 
-                    product_messages.sender_id != :sender_id",
+                    product_messages.active = :active",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+
+    public function list_answered_product_questions()
+    {
+
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS product_message,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.answer AS answer,
+                    product_messages.answer_created_at AS answer_created_at,
+                    product_messages.deleted_at AS product_deleted,
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    product_messages
+                JOIN 
+                    users 
+                ON 
+                    product_messages.user_id = users.id
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
+               WHERE
+                    product_messages.active = :active
+               AND
+                    product_messages.deleted_at IS NULL
+            ",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+    public function list_deleted_product_questions(){
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS product_message,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.answer AS answer,
+                    product_messages.answer_created_at AS answer_created_at,
+                    product_messages.deleted_at AS product_deleted,
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    product_messages
+                JOIN 
+                    users 
+                ON 
+                    product_messages.user_id = users.id
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
+               WHERE
+                    product_messages.active = :active
+               AND
+                    product_messages.deleted_at IS NOT NULL
+            ",
                 $params
             );
 
@@ -123,58 +205,118 @@ class Admin
         }
     }
 
+
+
+
     public function list_active_user_messasges()
     {
 
         $db = new Database();
 
-        $params = [
-            ':is_responded' => 0,
-            ':sender_id' => $_SESSION['user_id']
-        ];
 
-        $results = $db->select(
-            "SELECT
-                users.id AS user_id,
-                users.name AS user_name,
+        try {
+
+            $params = [
+                ':active' => 1
+            ];
+
+            $results = $db->select(
+                "SELECT
+                    users.id AS user_id,
+                    users.name AS user_name,
+                    
+                    chat.id AS chat_message_id,
+                    chat.message AS user_message,
+                    chat.message_created_at AS chat_created_at,
+    
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS product_img_src
                 
-                chat.id AS chat_message_id,
-                chat.message AS user_message,
-                chat.created_at AS chat_created_at,
-                chat.created_at AS chat_created_at,
+                FROM
+                    chat
+                JOIN
+                    products
+                ON
+                    chat.product_id = products.id
+                JOIN
+                    users
+                ON 
+                    chat.user_id = users.id
+                WHERE
+                    chat.active = :active
+                ",
+                $params
+            );
 
-                products.id AS product_id,
-                products.name AS product_name,
-                products.price AS product_price,
-                products.img_src AS product_img_src
-            
-            FROM
-                chat
-            JOIN
-                users
-            ON
-                chat.sender_id = users.id
-            JOIN
-                products
-            ON 
-                chat.product_id = products.id
-            WHERE
-                is_responded = :is_responded
-            AND 
-                sender_id != :sender_id",
-            $params
-        );
-
-
-
-        $results = json_decode(json_encode($results), true);
-
-        return $results;
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
     public function get_user_message_information()
     {
         $db = new Database();
+
+
+        try {
+
+            //Admin is responding....
+            $params = [
+                ':user_id' => trim($_GET['user_id']),
+                ':product_id' => trim($_GET['product-id']),
+                ':active' => 1
+            ];
+            $chat_results = $db->select(
+                "SELECT 
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    chat.id AS chat_message_id,
+                    chat.message AS message,
+                    chat.message_created_at AS message_created_at,
+
+                    products.id AS product_id
+
+                 FROM
+                    chat    
+                JOIN
+                    users
+                ON 
+                    chat.user_id = users.id
+                JOIN
+                    products
+                ON
+                    chat.product_id = products.id
+                WHERE
+                    product_id = :product_id
+                AND
+                    chat.user_id = :user_id
+                AND 
+                    chat.active = :active",
+                $params
+            );
+
+
+
+            $results['user_chat_messages'] = '';
+
+            if (count($chat_results) != 0) {
+                $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
+            }
+
+            $results = json_decode(json_encode($results), true);
+
+            return $results;
+        } catch (Exception $e) {
+            echo $e;
+        }
+
+
+
 
         // $params = [
         //     ':chat_id' => $chat_message_id
@@ -210,45 +352,6 @@ class Admin
         // );
 
 
-        //Admin is responding....
-        $params = [
-            ':sender_id' => $_SESSION['user_id'],
-            ':receiver_id' => trim($_GET['user-id']),
-            ':product_id' => trim($_GET['product-id'])
-        ];
-        $chat_results = $db->select(
-            "SELECT 
-                users.id AS user_id,
-                users.name AS user_name,
-                message,
-                chat.created_at AS message_created_at
-             FROM
-                chat    
-            JOIN
-                users
-            ON 
-                chat.sender_id = users.id
-            WHERE
-                product_id = :product_id
-            AND
-                (sender_id = :sender_id OR sender_id = :receiver_id)
-            ORDER BY
-                chat.created_at ASC",
-            $params
-        );
-
-
-
-        $results['user_chat_messages'] = '';
-
-        if (count($chat_results) != 0) {
-            $results['user_chat_messages'] = json_decode(json_encode($chat_results), true);
-        }
-
-
-        $results = json_decode(json_encode($results), true);
-
-        return $results;
     }
 
     public function get_admin_data()
@@ -272,40 +375,33 @@ class Admin
         $db = new Database();
 
         $result_admn_answer = false;
-        $result_update_is_responded = false;
 
         try {
 
             $params = [
-                ':sender_id' => $_SESSION['user_id'],
-                ':receiver_id' => $_POST['user-id'],
-                ':product_id' => $_POST['product-id'],
-                ':message' => $_POST['answer']
+                ':chat_message_id' => $_POST['chat-message-id'],
+                ':answer' => $_POST['answer'],
+                ':active' => 0
             ];
 
 
-            $db->insert(
-                "INSERT INTO
+            $db->update(
+                "UPDATE
                     chat
-                VALUES(
-                    0,
-                    :sender_id,
-                    :receiver_id,
-                    :product_id,
-                    :message,
-                    DEFAULT,
-                    NOW()
-                )",
+                SET
+                    answer = :answer,
+                    active = :active,
+                    answer_created_at = NOW()
+                WHERE
+                    id = :chat_message_id",
                 $params
             );
 
             $result_admn_answer = true;
         } catch (Exception $e) {
 
-            $log = new Logger('error');
-            $log = $log->create_log();
-            $log->warning('Error when creating admin chat message: ' . $e->getMessage());
-
+            $log = new Log('error');
+       
             $result_admn_answer = false;
         }
         //------------------------------------------------------------------------------
@@ -315,43 +411,7 @@ class Admin
 
             return false;
         }
-        //------------------------------------------------------------------------------
 
-
-
-        // #2 Update user message as is_responded' = 0
-
-        try {
-            $params = [
-                ':is_responded' => 1,
-                ':chat_message_id' => $_POST['chat-message-id']
-            ];
-
-            $result = $db->update(
-                "UPDATE 
-                    chat
-                SET
-                    is_responded = :is_responded
-                WHERE
-                    id = :chat_message_id
-                ",
-                $params
-            );
-
-            $result_update_is_responded = true;
-        } catch (Exception $e) {
-
-            $log = new Logger('error');
-            $log = $log->create_log();
-            $log->warning('Error when updating user chat table is_responded = 1: ' . $e->getMessage());
-
-            $result_update_is_responded = false;
-        }
-        //------------------------------------------------------------------------------
-
-        if (!$result_admn_answer || !$result_update_is_responded) {
-            return false;
-        }
 
         return true;
     }
@@ -361,8 +421,7 @@ class Admin
         $db = new Database();
 
         $params = [
-            ':is_responded' => 0,
-            ':sender_id' => 1
+            ':active' => 1
         ];
 
         $result = $db->select(
@@ -370,9 +429,7 @@ class Admin
              FROM
                  chat
             WHERE
-                sender_id != :sender_id
-            AND
-                 is_responded = :is_responded",
+                 active = :active",
             $params
         );
 

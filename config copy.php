@@ -12,3 +12,10 @@ define('MYSQL_CHARSET', 'utf8');
 define('APP_NAME', 'Loja Online');
 define('APP_BASE_URL', 'http://localhost/loja/public/');
 define('APP_DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT'] . "/loja");
+
+//Email
+define('EMAIL_SMTP', '');
+define('EMAIL_USERNAME', '');
+define('EMAIL_PORT', '');
+define('EMAIL_PASSWORD', '');
+define('EMAIL_SENDER', '');

@@ -73,7 +73,7 @@ class User
     }
     //===================================================================
 
-    
+
     public function validate_email($purl)
     {
 
@@ -116,7 +116,7 @@ class User
         $db = new Database();
 
 
-        //First select to get details of the product
+        //Get details of the product
         $params = [
             ':product_id' => $product_id
         ];
@@ -139,12 +139,9 @@ class User
 
 
 
-
-
-        // // Store message into database
+        //Get chat related to the product
         $params = [
-            ':sender_id' => $_SESSION['user_id'],
-            ':receiver_id' => 1,
+            // ':user_id' => $_SESSION['user_id'],
             ':product_id' => $product_id,
         ];
         $chat_results = $db->select(
@@ -152,19 +149,15 @@ class User
                 users.id AS user_id,
                 users.name AS user_name,
                 message,
-                chat.created_at AS message_created_at
+                chat.message_created_at AS message_created_at
              FROM
                 chat
             JOIN
                 users
             ON 
-                chat.sender_id = users.id
+                chat.user_id = users.id
             WHERE
-                product_id = :product_id
-            AND
-                (sender_id = :sender_id OR sender_id = :receiver_id)
-            ORDER BY
-                chat.created_at ASC",
+                product_id = :product_id",
             $params
         );
 
@@ -177,7 +170,7 @@ class User
         }
 
 
-        $results = json_decode(json_encode($results), true);
+          $results = json_decode(json_encode($results), true);
         //------------------------------------------------------
 
 
@@ -186,17 +179,17 @@ class User
 
         //Checks if user can send a new message
         $params = [
-            ':sender_id' => $_SESSION['user_id'],
+            ':user_id' => $_SESSION['user_id'],
             ':product_id' => $product_id,
         ];
 
         $result = $db->select(
             "SELECT 
-                is_responded
+                active
             FROM
                 chat
             WHERE
-                sender_id = :sender_id
+                user_id = :user_id
             AND
                 product_id = :product_id
             ORDER BY(id)
@@ -205,20 +198,16 @@ class User
             $params
         );
 
-        $results['send_new_message'] = true;
 
-        if (count($result) !== 0) {
+        $results['send_new_message'] = false;
 
-            if (!$result[0]->is_responded) {
-
-                $results['send_new_message'] = false;
-            }
+        if ($result[0]->active != 1) {
+            $results['send_new_message'] = true;
         }
-
 
         return $results;
     }
-    
+
     //===================================================================
 
 
@@ -630,9 +619,8 @@ class User
         // Store message into database
         $params = [
             ':user_id' => $user_id,
-            ':receiver_id' => 1,
             ':product_id' => $product_id,
-            ':user_message' => $user_message
+            ':message' => $user_message
         ];
 
         $insert_result = $db->insert(
@@ -641,11 +629,12 @@ class User
              VALUES(
                 0,
                 :user_id,
-                :receiver_id,
                 :product_id,
-                :user_message,
+                :message,
                 DEFAULT,
-                NOW()
+                DEFAULT,
+                NOW(),
+                DEFAULT
              )",
             $params
         );

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18/06/2024 às 21:57
+-- Tempo de geração: 21/06/2024 às 21:57
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.0.30
 
@@ -29,34 +29,23 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `chat` (
   `id` int(11) NOT NULL,
-  `sender_id` int(11) NOT NULL,
-  `receiver_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
   `message` text NOT NULL,
-  `is_responded` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `answer` text DEFAULT NULL,
+  `active` tinyint(1) DEFAULT 1,
+  `message_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `answer_created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `chat`
 --
 
-INSERT INTO `chat` (`id`, `sender_id`, `receiver_id`, `product_id`, `message`, `is_responded`, `created_at`) VALUES
-(12, 4, 1, 42, 'fff', 1, '2024-06-06 17:03:48'),
-(38, 1, 4, 42, 'sim', 0, '2024-06-07 17:01:16'),
-(39, 4, 1, 42, 'quero', 1, '2024-06-07 17:07:20'),
-(41, 1, 4, 42, 'ta', 0, '2024-06-07 17:16:53'),
-(42, 4, 1, 42, 'ola?', 1, '2024-06-07 18:27:21'),
-(43, 1, 4, 42, 'Opa', 0, '2024-06-07 18:27:49'),
-(44, 4, 1, 42, 'disponível?', 1, '2024-06-07 18:35:27'),
-(45, 4, 1, 41, 'tenho interesse', 1, '2024-06-07 18:39:36'),
-(46, 1, 4, 42, 'sim', 0, '2024-06-07 18:40:31'),
-(47, 4, 1, 43, 'nova?', 1, '2024-06-07 18:41:04'),
-(48, 1, 4, 43, 'sim', 0, '2024-06-07 18:41:39'),
-(49, 4, 1, 43, 'vou querer', 0, '2024-06-07 18:42:07'),
-(50, 1, 4, 41, 'ok', 0, '2024-06-07 18:42:30'),
-(51, 4, 1, 42, 'ok', 0, '2024-06-10 18:12:04'),
-(52, 17, 1, 42, 'rrr', 0, '2024-06-14 19:58:20');
+INSERT INTO `chat` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`) VALUES
+(54, 17, 48, 'oi', 'dd', 0, '2024-06-19 13:46:11', '2024-06-19 15:11:57'),
+(56, 17, 47, 'fff', 'sim', 0, '2024-06-19 14:08:31', '2024-06-19 15:15:07'),
+(58, 17, 48, 'tenho interesse', NULL, 1, '2024-06-21 16:29:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -82,7 +71,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_file_name`, `link`, `updated_at`, `created_at`) VALUES
 (47, 'jaqueta', 200, 'boa', 'assets/images/products/jaqueta_1718721663135.png', 'jaqueta_1718721663135.png', '111', '2024-06-18 14:41:03', '2024-06-18 14:41:03'),
-(48, 'boné', 50, 'bom', 'assets/images/products/boné_1718721713927.png', 'boné_1718721713927.png', '2w', '2024-06-18 14:41:53', '2024-06-18 14:41:53');
+(48, 'boné', 50, 'bom', 'assets/images/products/boné_1718721713927.png', 'boné_1718721713927.png', '2w', '2024-06-18 14:41:53', '2024-06-18 14:41:53'),
+(49, 'sneakers', 222, 'bons', 'assets/images/products/sneakers_1718824209488.png', 'sneakers_1718824209488.png', 'w', '2024-06-19 19:10:09', '2024-06-19 19:10:09');
 
 -- --------------------------------------------------------
 
@@ -92,13 +82,13 @@ INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_fi
 
 CREATE TABLE `product_messages` (
   `id` int(11) NOT NULL,
-  `sender_id` int(11) DEFAULT NULL,
-  `receiver_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
   `message` varchar(300) DEFAULT NULL,
-  `is_responded` tinyint(1) NOT NULL DEFAULT 0,
+  `answer` text DEFAULT NULL,
   `active` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `message_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `answer_created_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -106,11 +96,17 @@ CREATE TABLE `product_messages` (
 -- Despejando dados para a tabela `product_messages`
 --
 
-INSERT INTO `product_messages` (`id`, `sender_id`, `receiver_id`, `product_id`, `message`, `is_responded`, `active`, `created_at`, `deleted_at`) VALUES
-(54, 17, 1, 48, 'Novo?', 1, 1, '2024-06-18 18:13:01', NULL),
-(55, 17, 1, 48, 'olá?', 1, 1, '2024-06-18 18:13:07', NULL),
-(56, 1, 17, 48, 'sim', 0, 1, '2024-06-18 18:13:26', NULL),
-(57, 1, 17, 48, 'opa', 0, 1, '2024-06-18 18:14:17', NULL);
+INSERT INTO `product_messages` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`, `deleted_at`) VALUES
+(54, 17, 48, 'Novo?', 'sim', 0, '2024-06-18 18:13:01', '2024-06-19 13:00:26', '2024-06-21 12:46:10'),
+(55, 17, 48, 'olá?', 'oi', 0, '2024-06-18 18:13:07', '2024-06-19 13:01:08', '2024-06-21 13:12:34'),
+(59, 17, 47, 'quero', 'ok', 0, '2024-06-19 13:07:58', '2024-06-19 13:22:40', '2024-06-21 13:13:03'),
+(60, 1, 47, 'olá', 'oi', 0, '2024-06-19 17:51:44', '2024-06-19 17:52:37', NULL),
+(61, 17, 48, 'oi', NULL, 0, '2024-06-19 17:56:02', NULL, '2024-06-20 19:12:32'),
+(62, 17, 48, 'oi', NULL, 0, '2024-06-19 17:56:10', NULL, '2024-06-20 19:14:55'),
+(63, 1, 48, 'oi', NULL, 0, '2024-06-19 17:56:22', NULL, '2024-06-20 19:12:04'),
+(64, 17, 47, 'tenho interesse', 'ok', 0, '2024-06-20 19:39:12', '2024-06-20 19:40:12', NULL),
+(65, 17, 47, 'quero', NULL, 0, '2024-06-20 19:52:16', NULL, '2024-06-21 13:13:25'),
+(66, 17, 48, 'eu quero', NULL, 1, '2024-06-21 16:23:28', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -136,7 +132,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`) VALUES
-(1, 'weler', 'welerson194@gmail.com', 'admin', '$2y$10$yK3ynBNhbLt8GEYWl1VlreXWzePgZ2PjdB7Ujy9KwQBWdPMOVwKGi', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-05-28 14:15:46', '2024-05-28 14:11:17'),
+(1, 'welerr', 'welerson194@gmail.com', 'admin', '$2y$10$12v4jesZPI3z9EZ2.5/YSezmCjiUYJuXKRGehh6IiUyGM2XdmppOK', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-06-21 16:17:44', '2024-05-28 14:11:17'),
 (17, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$RG3sPMMdozghCo2jtfY1tOZqKMA4u7mPaHNKraPwSx6tcaYScKCtW', NULL, 1, '', '2024-06-14 18:34:12', '2024-06-14 18:33:47');
 
 --
@@ -148,8 +144,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_r
 --
 ALTER TABLE `chat`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `sender_id` (`sender_id`),
-  ADD KEY `receiver_id` (`receiver_id`);
+  ADD KEY `sender_id` (`user_id`);
 
 --
 -- Índices de tabela `products`
@@ -178,19 +173,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT de tabela `users`

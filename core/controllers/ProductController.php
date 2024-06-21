@@ -22,8 +22,9 @@ class ProductController
 
         $data = $product->show_product($product_id);
 
-       print_r($data);
-     die();
+        // print_r($data);
+        // die();
+
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -39,6 +40,7 @@ class ProductController
             'layouts/html_footer',
         ], $data, $header_data);
     }
+    //================================================
 
     public function list_products_page()
     {
@@ -60,11 +62,12 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'product/list_products_page',
+            'product/meus-produtos',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
     }
+    //================================================
 
     public function create_product_page()
     {
@@ -86,6 +89,7 @@ class ProductController
             'layouts/html_footer',
         ], null, $header_data);
     }
+    //================================================
 
     public function my_products_page()
     {
@@ -112,6 +116,7 @@ class ProductController
             'layouts/html_footer',
         ], $data, $header_data);
     }
+    //================================================
 
     public function edit_product_page($id = null)
     {
@@ -119,7 +124,7 @@ class ProductController
         $product = new Product();
 
         $data = $product->show_product_details($id);
-        
+
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -130,19 +135,19 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'product/edit_product_page',
+            'product/editar-produto',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
     }
-
+    //================================================
 
 
 
     public function create_product()
     {
 
-      
+
 
         //Verifies if there was a form submition
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -227,6 +232,7 @@ class ProductController
         Functions::redirect("my_products_page");
         return;
     }
+    //================================================
     public function edit_product()
     {
 
@@ -303,26 +309,8 @@ class ProductController
             return;
         };
     }
+    //================================================
 
-    public function delete_product($product_id)
-    {
-
-
-        $product = new Product();
-
-        $result = $product->delete_product($product_id);
-
-
-        if (!$result) {
-            $_SESSION['error'] = 'Falha ao deletar de produto';
-            Functions::redirect('my_products_page');
-            return;
-        }
-
-        $_SESSION['success'] = 'Produto deletado com sucesso';
-        Functions::redirect('my_products_page');
-        return;
-    }
 
     public function make_question()
     {
@@ -346,7 +334,7 @@ class ProductController
 
         $result = $product->make_question();
 
-       
+
         if (!$result) {
             $_SESSION['error'] = 'Erro ao fazer pergunta';
             //The variable "data" in the URL will be used inside the "start" function in the script.js file
@@ -359,17 +347,8 @@ class ProductController
         Functions::redirect("product_details_page/" . $product_id);
         return;
     }
+    //================================================
 
-
-    public function list_products()
-    {
-        $products = new Product();
-    }
-
-    // public function list_users_with_active_questions()
-    // {
-
-    // }
 
     public function show_product_question_details()
     {
@@ -386,4 +365,45 @@ class ProductController
         $results = json_encode($results);
         print_r($results);
     }
+    //================================================
+
+    public function delete_product($product_id)
+    {
+
+
+        $product = new Product();
+
+        $result = $product->delete_product($product_id);
+
+
+        if (!$result) {
+            $_SESSION['error'] = 'Falha ao deletar de produto';
+            Functions::redirect('my_products_page');
+            return;
+        }
+
+        $_SESSION['success'] = 'Produto deletado com sucesso';
+        Functions::redirect('my_products_page');
+        return;
+    }
+    //================================================
+
+    public function delete_product_message($message_id)
+    {
+
+        $product = new Product();
+        $result = $product->delete_product_message($message_id);
+
+
+        if (!$result) {
+            $_SESSION['error'] = 'Erro ao deletar mensagem de produto';
+            Functions::redirect("answer_questions_page");
+            return;
+        }
+
+        $_SESSION['success'] = 'Mensagem de produto deletada com sucesso';
+        Functions::redirect("perguntas-em-produtos");
+        return;
+    }
+    //================================================
 }

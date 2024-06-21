@@ -1,32 +1,15 @@
-<div class="container py-5 vh-100 ">
+<div style="min-height: 100vh;" class="container py-5 mx-auto ">
 
-    <div class="col-6  h-100 ">
+    <div class="col-md-6 col-sm-12  mx-auto">
         <div class="row">
             <div class=" col-md-6 col=sm-12 ">
 
-                <?php if (isset($_SESSION['error'])) :  ?>
-
-                    <div class='alert alert-danger text-center'>
-                        <?= $_SESSION['error'] ?>
-                        <?php unset($_SESSION['error']) ?>
-                    </div>
-
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['success'])) :  ?>
-
-                    <div class='alert alert-success text-center'>
-                        <?= $_SESSION['success'] ?>
-                        <?php unset($_SESSION['success']) ?>
-                    </div>
-
-                <?php endif; ?>
+            <?php include('components/alert.php');?>
 
 
                 <p class="fs-2">Minha conta</p>
 
                 <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
-
                 <dl class="row">
 
 

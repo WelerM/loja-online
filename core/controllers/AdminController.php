@@ -11,14 +11,31 @@ use core\models\Product;
 
 class AdminController
 {
-    public function answer_questions_page()
+    public function product_questions_page($segment = null)
     {
 
+        $data = null;
         $admin = new Admin();
         $product = new Product();
 
-        $data = $admin->list_active_product_questions();
-  
+
+        if ($segment === NULL) {
+
+            $data = $admin->list_active_product_questions();
+        } else if ($segment === 'nao-respondidas') {
+
+            $data = $admin->list_active_product_questions();
+        } else if ($segment === 'respondidas') {
+
+            $data = $admin->list_answered_product_questions();
+        } else if ('deletadas') {
+
+            $data = $admin->list_deleted_product_questions();
+        }
+
+            // print_r($data);
+        // die('aqui');
+
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -26,12 +43,11 @@ class AdminController
             'user_messages_count' => $admin->get_user_messages_count()
         ];
 
-        // print_r($data);
 
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'answer_questions_page',
+            'perguntas-em-produtos',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -51,6 +67,7 @@ class AdminController
         $admin = new Admin();
 
         $results = $admin->answer_question();
+
 
 
         if (!$results) {
@@ -74,6 +91,8 @@ class AdminController
 
         $data = $admin->list_active_user_messasges();
 
+        // print_r($data);
+
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -84,7 +103,7 @@ class AdminController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'list_user_messages_page',
+            'mensagens-de-usuarios',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -99,6 +118,7 @@ class AdminController
 
         $data = $admin->get_user_message_information();
 
+        // print_r($data);
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -109,7 +129,7 @@ class AdminController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'answer_user_message_page',
+            'responder-mensagem-de-usuario',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -138,6 +158,8 @@ class AdminController
             return;
         }
 
+        $user_id = $_POST['user-id'];
+        $product_id = $_POST['product-id'];
         $admin = new Admin();
         $result = $admin->answer_user_message();
 
@@ -146,12 +168,12 @@ class AdminController
 
         if (!$result) {
             $_SESSION['error'] = 'Erro ao responder mensagem de usuário';
-            Functions::redirect('answer_user_message_page/' . $chat_message_id);
+            Functions::redirect('answer_user_message_page&user_id=' . $user_id . '&product-id=' . $product_id);
             return;
         }
 
         $_SESSION['success'] = 'Mensagem respondida com sucesso';
-        Functions::redirect('answer_user_message_page/' . $chat_message_id);
+        Functions::redirect('list_user_messages_page');
         return;
     }
 }

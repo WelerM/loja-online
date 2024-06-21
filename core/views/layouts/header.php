@@ -119,7 +119,7 @@ use core\classes\Functions;
                     <!-- Create product -->
                     <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
 
-                        <a class="nav-link d-flex justify-content-between " href="?a=create_product_page">
+                        <a class="nav-link d-flex justify-content-between " href="?a=criar-produto">
 
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -138,7 +138,7 @@ use core\classes\Functions;
 
                     <!-- My products -->
                     <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
-                        <a class="nav-link d-flex justify-content-between " href="?a=my_products_page">
+                        <a class="nav-link d-flex justify-content-between " href="?a=meus-produtos">
                             <div>
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
@@ -161,7 +161,7 @@ use core\classes\Functions;
                     <!-- Products questions -->
                     <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
 
-                        <a class="nav-link d-flex justify-content-between " href="?a=answer_questions_page">
+                        <a class="nav-link d-flex justify-content-between " href="?a=perguntas-em-produtos/nao-respondidas">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
@@ -181,7 +181,7 @@ use core\classes\Functions;
                     <!-- User messages -->
                     <li class="nav-item bg-danger-subtle py-2 px-2 w-100">
 
-                        <a class="nav-link d-flex justify-content-between " href="?a=list_user_messages_page">
+                        <a class="nav-link d-flex justify-content-between " href="?a=mensagens-de-usuarios">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
                                     <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
@@ -222,7 +222,7 @@ use core\classes\Functions;
                 <!-- My account -->
                 <li class="nav-item  py-2 px-2 w-100">
 
-                    <a class="nav-link  d-flex gap-2 align-items-center " href="?a=account_page">
+                    <a class="nav-link  d-flex gap-2 align-items-center " href="?a=minha-conta">
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />

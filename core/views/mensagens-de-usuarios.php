@@ -1,6 +1,12 @@
 <div style="min-height:100vh" class="container row  mx-auto py-5">
 
     <div class="col-md-6 col-sm-12 mx-auto">
+
+
+    <?php include('components/alert.php');?>
+            
+
+
         <h5>Mensagens de usuários</h5>
 
 
@@ -35,7 +41,7 @@
 
                         <div style="height: fit-content;" class="d-flex gap-1 mt-2  ">
 
-                            <a class="btn btn-success btn-sm" href="?a=answer_user_message_page/user_id=<?= $message["user_id"] ?>&product-id=<?= $message['product_id'] ?>">Responder</a>
+                            <a class="btn btn-success btn-sm" href="?a=responder-mensagem-de-usuario&user_id=<?= $message["user_id"] ?>&product-id=<?= $message['product_id'] ?>">Responder</a>
 
                             <button class="btn btn-danger btn-sm">Exclur</button>
 

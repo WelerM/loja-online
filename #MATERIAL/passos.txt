@@ -1,6 +1,7 @@
 
 ? implemetar 'excluir' perguntas em produtos
 ? criar mascara price
+? bloquear views de admins para clients
 
 # Login ok
 # Register ok

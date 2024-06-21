@@ -2,21 +2,23 @@
 
 namespace core\controllers;
 
-use core\classes\Logger;
+use core\classes\Log;
 use core\models\User;
 use core\classes\Functions;
 use core\classes\SendEmail;
 use core\models\Admin;
 use core\models\Product;
 use Exception;
-use ReturnTypeWillChange;
-use stdClass;
 
 class UserController
 {
 
     public function home_page()
     {
+        
+        // $logger = new Log();
+        // $logger->logger('testando kk', 'warning');
+   
 
         $product = new Product();
         $admin = new Admin();
@@ -33,7 +35,7 @@ class UserController
 
 
 
-    
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -300,7 +302,7 @@ class UserController
     }
     //===================================================================
 
-    
+
     public function contact_store_page($id)
     {
         //Checks if user is logged
@@ -317,7 +319,8 @@ class UserController
         //Show prodcut preview 
         $data = $user->list_user_chat_messages($product_id);
 
-
+         print_r($data);
+        // die();
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -326,6 +329,8 @@ class UserController
             'layouts/html_footer',
         ], $data);
     }
+    //===================================================================
+
     public function contact_store()
     {
         //Store message into database
@@ -354,6 +359,7 @@ class UserController
         return;
     }
 
+    //===================================================================
 
     public function register()
     {

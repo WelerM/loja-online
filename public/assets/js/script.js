@@ -18,7 +18,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
             .then(function (response) {
 
                 let data = response.data
-                
+
                 console.log(data);
 
                 let questions_header_display = document.querySelector('.questions-header-display')
@@ -54,11 +54,11 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                     let input_product_message_id = document.querySelector('.product-message-id')
                     input_product_message_id.setAttribute('value', item.product_message_id)
 
-                     //Hidden
+                    //Hidden
                     let input_product_id = document.querySelector('.product-id')
                     input_product_id.setAttribute('value', item.product_id)
 
-                     //Hidden
+                    //Hidden
                     let product_user_id = document.querySelector('.product-user-id')
                     product_user_id.setAttribute('value', item.user_id)
 
@@ -188,3 +188,38 @@ if (document.querySelector('.chat-container')) {
     chat_container.scrollTop = chat_container.scrollHeight;
 }
 
+
+
+
+//
+if (document.querySelector('.btn-delete-product-question')) {
+    document.querySelector('.btn-delete-product-question').addEventListener
+        ('click', (e) => {
+
+            e.preventDefault();
+
+
+            Swal.fire({
+                title: "Tem certeza que quer deletar esta mensagem?",
+                text: "Isso não pode ser revertido!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, quero deletar!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Mensagem deletada!",
+                        text: "O produto foi deletado com sucesso.",
+                        icon: "success"
+                    }).then(() => {
+
+                        window.location.href = document.querySelector('.btn-delete-product-question').href;
+          
+                    })
+
+                }
+            });
+        })
+}

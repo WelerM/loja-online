@@ -7,7 +7,9 @@
 // die();
 
 
-
+// $logger = new Log();
+// $logger->logger('testando kk', 'warning');
+   
 
 
 
