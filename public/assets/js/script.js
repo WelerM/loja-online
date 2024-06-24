@@ -144,31 +144,37 @@ if (document.querySelector('.btn-edit-img')) {
 }
 
 
-if (document.querySelector('#btn-delete-product')) {
-    document.querySelector('#btn-delete-product').addEventListener('click', (e) => {
-        e.preventDefault();
+if (document.querySelector('.btn-delete-product')) {
 
-        Swal.fire({
-            title: "Tem certeza que quer deletar o produto?",
-            text: "Isso não pode ser revertido!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sim, quero deletar!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Produto deletado!",
-                    text: "O produto foi deletado com sucesso.",
-                    icon: "success"
-                }).then(() => {
-                    window.location.href = document.querySelector('#btn-delete-product').href;
-                })
+    document.querySelectorAll('.btn-delete-product').forEach((btn) => {
 
-            }
-        });
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            Swal.fire({
+                title: "Tem certeza que quer deletar o produto?",
+                text: "Isso não pode ser revertido!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, quero deletar!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Produto deletado!",
+                        text: "O produto foi deletado com sucesso.",
+                        icon: "success"
+                    }).then(() => {
+                        window.location.href = btn.href;
+                    })
+
+                }
+            });
+        })
     })
+
 }
 
 
@@ -193,33 +199,38 @@ if (document.querySelector('.chat-container')) {
 
 //
 if (document.querySelector('.btn-delete-product-question')) {
-    document.querySelector('.btn-delete-product-question').addEventListener
-        ('click', (e) => {
 
-            e.preventDefault();
+    document.querySelectorAll('.btn-delete-product-question').forEach((btn) => {
 
 
-            Swal.fire({
-                title: "Tem certeza que quer deletar esta mensagem?",
-                text: "Isso não pode ser revertido!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Sim, quero deletar!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "Mensagem deletada!",
-                        text: "O produto foi deletado com sucesso.",
-                        icon: "success"
-                    }).then(() => {
 
-                        window.location.href = document.querySelector('.btn-delete-product-question').href;
-          
-                    })
+        btn.addEventListener('click', (e) => {
 
-                }
-            });
-        })
+                e.preventDefault();
+
+
+                Swal.fire({
+                    title: "Tem certeza que quer deletar esta mensagem?",
+                    text: "Isso não pode ser revertido!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sim, quero deletar!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Mensagem deletada!",
+                            text: "O produto foi deletado com sucesso.",
+                            icon: "success"
+                        }).then(() => {
+
+                            window.location.href = btn.href;
+
+                        })
+
+                    }
+                });
+            })
+    })
 }

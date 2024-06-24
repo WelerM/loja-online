@@ -21,12 +21,14 @@ class User
         ];
 
         $results = $db->select(
-            "SELECT *  FROM users 
-             WHERE users.id = :id",
+            "SELECT *  FROM
+                 users 
+             WHERE
+                 users.id = :id",
             $params
         );
 
-        $results = json_decode(json_encode($results[0]), true);
+      // $results = json_decode(json_encode($results[0]), true);
 
 
         return $results;
@@ -48,22 +50,23 @@ class User
                 products.name AS product_name,
                 products.price AS product_price,
                 products.img_src AS product_img_src,
-                message,
-                chat.created_at AS chat_created_at
+                chat.message,
+                chat.message_created_at AS chat_created_at,
+                chat.answer AS answer,
+                chat.answer_created_at AS answer_created_at
             FROM
                 chat
             JOIN
                 users
             ON
-                chat.sender_id = users.id
+                chat.user_id = users.id
             JOIN
                 products
             ON
                 chat.product_id = products.id
             WHERE 
-                sender_id = :id
-            OR
-                receiver_id = :id",
+                chat.user_id = :id
+            ORDER BY chat.id DESC ",
             $params
         );
 
@@ -149,7 +152,9 @@ class User
                 users.id AS user_id,
                 users.name AS user_name,
                 message,
-                chat.message_created_at AS message_created_at
+                chat.message_created_at AS message_created_at,
+                answer AS admin_answer,
+                answer_created_at 
              FROM
                 chat
             JOIN
@@ -198,11 +203,12 @@ class User
             $params
         );
 
+        // print_r($result[0]);
+        // die('opa');
+        $results['send_new_message'] = true;
 
-        $results['send_new_message'] = false;
-
-        if ($result[0]->active != 1) {
-            $results['send_new_message'] = true;
+        if (count($result) >0 && $result[0]->active != 0) {
+            $results['send_new_message'] = false;
         }
 
         return $results;

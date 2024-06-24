@@ -6,7 +6,7 @@ use core\classes\Functions;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailfer\Exception;
+use Exception;
 
 
 class SendEmail
@@ -49,10 +49,15 @@ class SendEmail
             $mail->Body = $html;
             $mail->send();
 
-            Functions::redirect('email_sent_page');
+            $_SESSION['success'] = "Email enviado com sucesso!";
+            Functions::redirect('email-enviado');
             return;
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    
+            $logger = new Log;
+            $logger->logger($e->getMessage(), 'critical');
+
+
             return false;
         }
     }
@@ -95,7 +100,12 @@ class SendEmail
             Functions::redirect('email_sent_page');
             return;
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+
+            $logger = new Log();
+            $logger->logger($e->getMessage(), 'critical');
+
+
+
             return false;
         }
     }

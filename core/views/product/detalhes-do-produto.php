@@ -1,9 +1,11 @@
 <div style="min-height: 100vh;" class="container row mx-auto py-5">
 
+<?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+
 
     <div class="pt-5 px-1 col-md-6 col-sm-12 row mx-auto">
 
-        <div style="height:fit-content;" class="col-md-12 col-sm-12 mb-5 d-flex gap-2 px-0 ">
+        <div style="height:fit-content;" class="col-md-12    col-sm-12 mb-5 d-flex gap-2 px-0 ">
 
 
             <img class="img-fluid  w-50  " style=" max-height:400px" src="<?= $data['product_details']['img_src']; ?>" alt="...">
@@ -14,7 +16,7 @@
                 <p class=""> <?= $data['product_details']['description']; ?></p>
                 <a href="#" class=""><?= $data['product_details']['link']; ?></a>
 
-                <a href="?a=contact_store_page/<?= $data['product_details']['id']; ?>" style="width: fit-content" class="btn btn-success mt-4 btn-sm">Entrar em contato</a>
+                <a href="?a=contatar-loja/<?= $data['product_details']['id']; ?>" style="width: fit-content" class="btn btn-success mt-4 btn-sm">Entrar em contato</a>
 
 
             </div>
@@ -44,9 +46,9 @@
 
             <?php else : ?>
                 <!-- Create account to make a question -->
-                <a href="?a=login_page" class="my-5 ">
+                <a href="?a=entrar" class="my-5 ">
 
-                    Crie uma conta para fazer perguntas
+                    Esteja logado para fazer perguntas
 
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />

@@ -1,30 +1,13 @@
 <div class=" " style="height:fit-content">
 
     <div class="welcome-container  w-100">
-
+        
         <form class=" p-4 mx-auto mt-5" style="max-width:500px" action="?a=register" method="POST">
+            
+            <p class="text-center text-success  fs-2 mb-4">Registrar</p>
 
-        <?php if (isset($_SESSION['error'])) :  ?>
+            <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
-            
-            
-            <p class="text-center text-success fs-2 mb-4">Criar conta</p>
-            
-            <div class='alert alert-danger text-center'>
-                <?= $_SESSION['error'] ?>
-                <?php unset($_SESSION['error']) ?>
-            </div>
-            
-            <?php endif; ?>
-            
-            <?php if (isset($_SESSION['success'])) :  ?>
-            
-            <div class='alert alert-success text-center'>
-                <?= $_SESSION['success'] ?>
-                <?php unset($_SESSION['success']) ?>
-            </div>
-            
-            <?php endif; ?>
 
             <!-- Name -->
             <div class="mb-3">
@@ -49,7 +32,7 @@
 
                 <label for="signup-password" class="form-label">Senha</label>
 
-                <input  id="signup-password"  placeholder="Senha" type="password" name="signup-password" class="form-control   ">
+                <input id="signup-password" placeholder="Senha" type="password" name="signup-password" class="form-control   ">
 
             </div>
 
@@ -59,7 +42,7 @@
 
                 <label for="signup-repeat-password" class="form-label">Repetir senha</label>
 
-                <input  id="signup-repeat-password" placeholder="Repetir senha"  type="password" name="signup-repeat-password" class="form-control   ">
+                <input id="signup-repeat-password" placeholder="Repetir senha" type="password" name="signup-repeat-password" class="form-control   ">
 
             </div>
 

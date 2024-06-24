@@ -88,7 +88,9 @@ class Admin
                 ON
                     product_messages.product_id = products.id
                 WHERE 
-                    product_messages.active = :active",
+                    product_messages.active = :active
+                AND
+                    products.deleted_at IS NULL",
                 $params
             );
 
@@ -142,6 +144,9 @@ class Admin
                     product_messages.active = :active
                AND
                     product_messages.deleted_at IS NULL
+                ORDER BY
+                    product_messages.id 
+                DESC
             ",
                 $params
             );
@@ -149,6 +154,8 @@ class Admin
 
             $results = json_decode(json_encode($results), true);
             return $results;
+
+      
         } catch (Exception $e) {
             return $e;
         }

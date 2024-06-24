@@ -1,6 +1,6 @@
 <div style="min-height: 100vh" class="row container  mx-auto py-5">
 
-    <h2 class="mb-4">Adicionar produto</h2>
+    <h5 class="mb-4">Adicionar produto</h5>
 
 
     <!-- img add container -->

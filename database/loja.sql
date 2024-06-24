@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 21/06/2024 às 21:57
+-- Tempo de geração: 24/06/2024 às 21:18
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.0.30
 
@@ -43,9 +43,12 @@ CREATE TABLE `chat` (
 --
 
 INSERT INTO `chat` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`) VALUES
-(54, 17, 48, 'oi', 'dd', 0, '2024-06-19 13:46:11', '2024-06-19 15:11:57'),
-(56, 17, 47, 'fff', 'sim', 0, '2024-06-19 14:08:31', '2024-06-19 15:15:07'),
-(58, 17, 48, 'tenho interesse', NULL, 1, '2024-06-21 16:29:41', NULL);
+(62, 19, 47, 'oi', 'ola', 0, '2024-06-24 12:41:19', '2024-06-24 12:42:20'),
+(63, 19, 47, 'disponível?', 'sim', 0, '2024-06-24 12:53:58', '2024-06-24 12:54:26'),
+(64, 19, 47, 'vou querer entao', '', 0, '2024-06-24 12:54:44', '2024-06-24 12:59:46'),
+(65, 19, 47, 'vou querer', 'ok', 0, '2024-06-24 13:00:59', '2024-06-24 13:01:25'),
+(66, 19, 52, 'ola', NULL, 1, '2024-06-24 16:38:39', NULL),
+(67, 19, 59, 'tenho interesse', NULL, 1, '2024-06-24 17:25:11', NULL);
 
 -- --------------------------------------------------------
 
@@ -62,17 +65,19 @@ CREATE TABLE `products` (
   `img_file_name` varchar(200) DEFAULT NULL,
   `link` text NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_file_name`, `link`, `updated_at`, `created_at`) VALUES
-(47, 'jaqueta', 200, 'boa', 'assets/images/products/jaqueta_1718721663135.png', 'jaqueta_1718721663135.png', '111', '2024-06-18 14:41:03', '2024-06-18 14:41:03'),
-(48, 'boné', 50, 'bom', 'assets/images/products/boné_1718721713927.png', 'boné_1718721713927.png', '2w', '2024-06-18 14:41:53', '2024-06-18 14:41:53'),
-(49, 'sneakers', 222, 'bons', 'assets/images/products/sneakers_1718824209488.png', 'sneakers_1718824209488.png', 'w', '2024-06-19 19:10:09', '2024-06-19 19:10:09');
+INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_file_name`, `link`, `updated_at`, `created_at`, `deleted_at`) VALUES
+(56, 'blusa preta', 200, 'wwfwef', 'assets/images/products/blusa preta_1719248970602.png', 'blusa preta_1719248970602.png', 'f', '2024-06-24 17:09:30', '2024-06-24 17:09:30', '2024-06-24 18:12:14'),
+(58, 'jaquet', 200, '2', 'assets/images/products/jaquet_1719249029720.png', 'jaquet_1719249029720.png', '2', '2024-06-24 17:10:29', '2024-06-24 17:10:29', '2024-06-24 17:39:08'),
+(59, 'oculos', 100, 'dsdgsgsd', 'assets/images/products/oculos_1719249063231.png', 'oculos_1719249063231.png', '2424\'', '2024-06-24 17:11:03', '2024-06-24 17:11:03', NULL),
+(60, 'jaqueta', 200, 'a jaqueta laranja é uma peça vibrante e estilosa, perfeita para quem deseja adicionar um toque de cor e personalidade ao seu guarda-roupa. feita com materiais de alta qualidade, essa jaqueta combina conforto e durabilidade, sendo ideal para diversas ', 'assets/images/products/jaqueta_1719252266388.png', 'jaqueta_1719252266388.png', 'www.google.com', '2024-06-24 18:04:26', '2024-06-24 18:04:26', NULL);
 
 -- --------------------------------------------------------
 
@@ -97,16 +102,14 @@ CREATE TABLE `product_messages` (
 --
 
 INSERT INTO `product_messages` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`, `deleted_at`) VALUES
-(54, 17, 48, 'Novo?', 'sim', 0, '2024-06-18 18:13:01', '2024-06-19 13:00:26', '2024-06-21 12:46:10'),
-(55, 17, 48, 'olá?', 'oi', 0, '2024-06-18 18:13:07', '2024-06-19 13:01:08', '2024-06-21 13:12:34'),
-(59, 17, 47, 'quero', 'ok', 0, '2024-06-19 13:07:58', '2024-06-19 13:22:40', '2024-06-21 13:13:03'),
-(60, 1, 47, 'olá', 'oi', 0, '2024-06-19 17:51:44', '2024-06-19 17:52:37', NULL),
-(61, 17, 48, 'oi', NULL, 0, '2024-06-19 17:56:02', NULL, '2024-06-20 19:12:32'),
-(62, 17, 48, 'oi', NULL, 0, '2024-06-19 17:56:10', NULL, '2024-06-20 19:14:55'),
-(63, 1, 48, 'oi', NULL, 0, '2024-06-19 17:56:22', NULL, '2024-06-20 19:12:04'),
-(64, 17, 47, 'tenho interesse', 'ok', 0, '2024-06-20 19:39:12', '2024-06-20 19:40:12', NULL),
-(65, 17, 47, 'quero', NULL, 0, '2024-06-20 19:52:16', NULL, '2024-06-21 13:13:25'),
-(66, 17, 48, 'eu quero', NULL, 1, '2024-06-21 16:23:28', NULL, NULL);
+(72, 19, 59, 'tenho interesse', 'ok', 0, '2024-06-24 17:25:51', '2024-06-24 17:26:11', '2024-06-24 17:27:25'),
+(73, 19, 58, 'olar', 'oi', 0, '2024-06-24 17:27:00', '2024-06-24 17:27:09', NULL),
+(74, 19, 58, 'oi', 'opa', 0, '2024-06-24 17:29:25', '2024-06-24 17:29:53', NULL),
+(75, 19, 59, 'oi', 'sim', 0, '2024-06-24 17:29:29', '2024-06-24 17:29:57', '2024-06-24 17:30:17'),
+(76, 19, 59, 'oi', 'oi', 0, '2024-06-24 17:30:42', '2024-06-24 17:30:51', NULL),
+(77, 19, 59, 'immm', 'dddd', 0, '2024-06-24 17:30:59', '2024-06-24 17:31:09', NULL),
+(78, 19, 59, 'oi', NULL, 1, '2024-06-24 17:32:09', NULL, NULL),
+(79, 19, 58, 'oi', NULL, 1, '2024-06-24 17:32:15', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -133,7 +136,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`) VALUES
 (1, 'welerr', 'welerson194@gmail.com', 'admin', '$2y$10$12v4jesZPI3z9EZ2.5/YSezmCjiUYJuXKRGehh6IiUyGM2XdmppOK', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-06-21 16:17:44', '2024-05-28 14:11:17'),
-(17, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$RG3sPMMdozghCo2jtfY1tOZqKMA4u7mPaHNKraPwSx6tcaYScKCtW', NULL, 1, '', '2024-06-14 18:34:12', '2024-06-14 18:33:47');
+(19, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$0H0nlAQWApiNxDkWJKB4me7EVMd3IvHYgVD2fw29ByLEN8RtnyIK6', NULL, 1, '', '2024-06-21 20:30:38', '2024-06-21 20:29:47');
 
 --
 -- Índices para tabelas despejadas
@@ -173,25 +176,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de tabela `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restrições para tabelas despejadas

@@ -69,7 +69,7 @@ class Product
 
             return $result;
         } catch (Exception $e) {
-          
+
             return false;
         }
     }
@@ -80,12 +80,43 @@ class Product
 
         $db = new Database();
 
-        $results = $db->select("SELECT * FROM products");
+        $results = $db->select(
+            "SELECT * FROM 
+                products
+            WHERE
+                products.deleted_at
+            IS NULL 
+            ORDER BY
+                 id
+             DESC"
+        );
 
         $results = json_decode(json_encode($results), true);
 
         return $results;
     }
+    //===================================================
+    public function list_deleted_products()
+    {
+
+        $db = new Database();
+
+        $results = $db->select(
+            "SELECT * FROM 
+                products
+            WHERE
+                products.deleted_at
+            IS NOT NULL 
+            ORDER BY
+                 id
+             DESC"
+        );
+
+        $results = json_decode(json_encode($results), true);
+
+        return $results;
+    }
+    //===================================================
 
     public function create_product(
 
@@ -134,7 +165,8 @@ class Product
                         :img_file_name,
                         :link,
                         NOW(),
-                        NOW()
+                        NOW(),
+                        NULL
                     )",
                 $params
             );
@@ -513,18 +545,21 @@ class Product
         //---------------------------------------
 
 
-        //Proceeds to delete product on database
+        //Proceeds to update product to "deleted" on database
         try {
-            $db->delete(
-                "DELETE FROM
+            $db->update(
+                "UPDATE
                     products
-                 WHERE
+                 SET
+                    deleted_at = NOW()
+                WHERE
                     id = :id",
                 $params
             );
 
             $handle_deletion_result = true;
         } catch (Exception $e) {
+
             $handle_deletion_result = false;
         }
 
@@ -611,7 +646,7 @@ class Product
 
             return true;
         } catch (Exception $e) {
-            
+
             return false;
         }
     }

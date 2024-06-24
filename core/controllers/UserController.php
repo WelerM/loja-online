@@ -15,10 +15,10 @@ class UserController
 
     public function home_page()
     {
-        
+
         // $logger = new Log();
         // $logger->logger('testando kk', 'warning');
-   
+
 
         $product = new Product();
         $admin = new Admin();
@@ -39,7 +39,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'home_page',
+            'home',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -73,7 +73,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'account_page',
+            'minha-conta',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -87,7 +87,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/register_page',
+            'login/registrar',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -107,7 +107,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/login_page',
+            'login/entrar',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -119,8 +119,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/email_sent_page',
-
+            'login/email-enviado',
             'layouts/html_footer',
         ]);
     }
@@ -156,6 +155,8 @@ class UserController
 
         $data = $user->list_user_messages();
 
+        // print_r($data);
+
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -166,7 +167,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'my_messages_page',
+            'minhas-mensagens',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
@@ -259,7 +260,7 @@ class UserController
 
             $_SESSION['error'] = "Empty fields!";
 
-            Functions::redirect('login_page');
+            Functions::redirect('entrar');
             return;
         }
 
@@ -277,19 +278,8 @@ class UserController
 
         if (is_string($result)) {
             $_SESSION['error'] = $result;
-            Functions::redirect('login_page');
+            Functions::redirect('entrar');
             return;
-        }
-
-        //Verifies if it's an admin or user login
-
-        if (intval($result->id) === 1) { //admin
-
-
-            // $admin = new Admin();
-            // $result = $admin->get_admin_data();
-            // $_SESSION['admin_data'] = $result;
-
         }
 
         //Valid login
@@ -308,26 +298,35 @@ class UserController
         //Checks if user is logged
         if (!Functions::user_logged()) {
             $_SESSION['error'] = "É necessário fazer login para entrar em contato";
-            Functions::redirect('product_details_page/' . $id);
+            Functions::redirect('detalhes-do-produto/' . $id);
             return;
         }
 
         $product_id = $id;
 
         $user = new User();
+        $admin = new Admin();
+        $product = new Product();
+
 
         //Show prodcut preview 
         $data = $user->list_user_chat_messages($product_id);
 
-         print_r($data);
-        // die();
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+        // print_r($data);
+
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'contact_store_page',
+            'contatar-loja',
             'layouts/footer',
             'layouts/html_footer',
-        ], $data);
+        ], $data, $header_data);
     }
     //===================================================================
 
@@ -347,13 +346,13 @@ class UserController
 
         if (!$result) {
 
-            Functions::redirect('contact_store_page/' . $product_id);
+            Functions::redirect('contatar-loja/' . $product_id);
             $_SESSION['error'] = 'Erro ao enviar mensagem';
 
             return;
         };
 
-        Functions::redirect('contact_store_page/' . $product_id);
+        Functions::redirect('contatar-loja/' . $product_id);
         $_SESSION['success'] = 'Mensagem enviada com sucesso! Aguarde a loja responder.';
 
         return;
@@ -485,27 +484,29 @@ class UserController
         $users = new User();
         $result = $users->validate_email($purl);
 
-        if ($result) {
-
-            $_SESSION['success'] = 'Emal confirmation successfull';
-
-            Functions::Layout([
-                'layouts/html_header',
-                'layouts/header',
-                'login/login_page',
-                'layouts/html_footer',
-            ]);
-        } else {
+        if (!$result) {
 
             $_SESSION['error'] = "Error when confirming your email";
 
             Functions::Layout([
                 'layouts/html_header',
                 'layouts/header',
-                'login/login_page',
+                'login/entrar',
                 'layouts/html_footer',
             ]);
         }
+
+
+        $_SESSION['success'] = 'Emal confirmation successfull';
+        $logger = new Log();
+        $logger->logger('Novo usuário no sistema', 'INFO');
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'login/entrar',
+            'layouts/html_footer',
+        ]);
     }
     //===================================================================
 

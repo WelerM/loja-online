@@ -35,21 +35,29 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'product/product_details_page',
+            'product/detalhes-do-produto',
             'layouts/footer',
             'layouts/html_footer',
         ], $data, $header_data);
     }
     //================================================
 
-    public function list_products_page()
+    public function list_products_page($segment = null)
     {
 
         $product = new Product();
         $admin = new Admin();
         $product = new Product();
+        $data = null;
 
-        $data = $product->list_products();
+        if ($segment === 'deletados') {
+                $data = $product->list_deleted_products();
+        } else if ($segment === NULL) {
+
+            $data = $product->list_products();
+        }
+
+        // print_r($data);
 
         //Header data
         $header_data = [
@@ -84,14 +92,14 @@ class ProductController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'product/create_product_page',
+            'product/criar-produto',
             'layouts/footer',
             'layouts/html_footer',
         ], null, $header_data);
     }
     //================================================
 
-    public function my_products_page()
+    public function my_products_page_wwwwwwwwwwwwwwwww()
     {
 
         $product = new Product();
@@ -177,12 +185,12 @@ class ProductController
         //Checks if user chose a name for the image
         if (!isset($_POST['product-name'])) {
             $_SESSION['error'] = "Nome do arquivo não informado";
-            Functions::redirect("my_products_page");
+            Functions::redirect("criar-produto");
             return;
         }
         if (empty(trim($_POST['product-name']))) {
             $_SESSION['error'] = "Nome do arquivo não pode estar vazio";
-            Functions::redirect("my_products_page");
+            Functions::redirect("criar-produto");
             return;
         }
 
@@ -194,21 +202,21 @@ class ProductController
         //Checks if img extension is valid
         if (!in_array($fileActualExt, $allowed)) {
             $_SESSION['error'] = "Arquivo não suportado";
-            Functions::redirect("my_products_page");
+            Functions::redirect("criar-produto");
             return;
         }
 
         //Checks if there was an error uploading the img
         if ($fileError !== 0) {
             $_SESSION['error'] = "Erro ao fazer upload do arquivo";
-            Functions::redirect("my_products_page");
+            Functions::redirect("criar-produto");
             return;
         }
 
         //Checks if img size is under the specific value
         if ($fileSize >= 1000000) {
             $_SESSION['error'] = "O arquivo é grande demais";
-            Functions::redirect("my_products_page");
+            Functions::redirect("criar-produto");
             return;
         }
 
@@ -229,7 +237,7 @@ class ProductController
         );
 
         $_SESSION['success'] = "Produto inserido com sucesso";
-        Functions::redirect("my_products_page");
+        Functions::redirect("meus-produtos");
         return;
     }
     //================================================
@@ -318,12 +326,12 @@ class ProductController
 
         //checks if user is logged
         if (!isset($_SESSION['user_id'])) {
-            Functions::redirect("show_product/" . $product_id);
+            Functions::redirect("detalhes-do-produto/" . $product_id);
             exit();
         }
 
         if (!isset($_GET['product_id'])) {
-            Functions::redirect("show_product/" . $product_id);
+            Functions::redirect("detalhes-do-produto/" . $product_id);
             exit();
 
             die('product id not found');
@@ -338,13 +346,13 @@ class ProductController
         if (!$result) {
             $_SESSION['error'] = 'Erro ao fazer pergunta';
             //The variable "data" in the URL will be used inside the "start" function in the script.js file
-            Functions::redirect("product_details_page/" . $product_id . '&error');
+            Functions::redirect("detalhes-do-produto/" . $product_id . '&error');
             return;
         }
 
         //The variable "data" in the URL will be used inside the "start" function in the script.js file
         $_SESSION['success'] = 'Pergunta realizada com sucesso';
-        Functions::redirect("product_details_page/" . $product_id);
+        Functions::redirect("detalhes-do-produto/" . $product_id);
         return;
     }
     //================================================
@@ -374,16 +382,17 @@ class ProductController
         $product = new Product();
 
         $result = $product->delete_product($product_id);
-
+        // print_r($result);
+        // die();
 
         if (!$result) {
             $_SESSION['error'] = 'Falha ao deletar de produto';
-            Functions::redirect('my_products_page');
+            Functions::redirect('meus-produtos');
             return;
         }
 
         $_SESSION['success'] = 'Produto deletado com sucesso';
-        Functions::redirect('my_products_page');
+        Functions::redirect('meus-produtos');
         return;
     }
     //================================================

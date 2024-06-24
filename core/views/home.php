@@ -16,7 +16,7 @@
 
             <?php foreach ($data as $item): ?>
 
-                <a href="?a=product_details_page/<?= $item['id']; ?>" class="text-dark">
+                <a href="?a=detalhes-do-produto/<?= $item['id']; ?>" class="text-dark">
 
                     <div class="card" style="">
 
