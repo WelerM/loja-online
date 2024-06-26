@@ -128,6 +128,8 @@ class Product
     ) {
 
 
+
+
         //Inserts new image into system's folder
         $root = $_SERVER["DOCUMENT_ROOT"] . '/loja/public';
 
@@ -149,7 +151,7 @@ class Product
 
             $params = [
                 ':name' => trim($_POST['product-name']),
-                ':price' => $product_price,
+                ':price' => str_replace(',', '.', str_replace('.', '', trim($product_price))),
                 ':description' => strtolower(trim($_POST['product-description'])),
                 ':img_src' => $file_src,
                 ':img_file_name' => $file_new_name,
@@ -177,6 +179,7 @@ class Product
             die();
         }
     }
+    //===============================================================
 
     public function make_question()
     {
@@ -218,6 +221,7 @@ class Product
             return false;
         }
     }
+    //===============================================================
 
     public function list_questions($product_id)
     {
@@ -263,6 +267,7 @@ class Product
             die();
         }
     }
+    //===============================================================
 
     public function show_product_question_details($product_message_id)
     {
@@ -309,6 +314,7 @@ class Product
             echo $e;
         }
     }
+    //===============================================================
 
 
 
@@ -328,6 +334,7 @@ class Product
 
         return $results;
     }
+    //===============================================================
 
     public function show_product_details($id)
     {
@@ -342,6 +349,7 @@ class Product
 
         return $results;
     }
+    //===============================================================
 
 
     public function edit_product()
@@ -357,7 +365,7 @@ class Product
                 $params = [
                     ':id' => $_POST['product-id'],
                     ':product_name' => $_POST['product-name'],
-                    ':product_price' => $_POST['product-price'],
+                    ':product_price' => str_replace(',', '.', str_replace('.', '', trim($_POST['product-price']))),
                     ':product_description' => $_POST['product-description'],
                     ':product_link' => $_POST['product-link'],
                 ];
@@ -464,7 +472,7 @@ class Product
             $params = [
                 ':id' => $_POST['product-id'],
                 ':product_name' => $_POST['product-name'],
-                ':product_price' => $_POST['product-price'],
+                ':product_price' => str_replace(',', '.', str_replace('.', '', trim($_POST['product-price']))),
                 ':product_description' => $_POST['product-description'],
 
                 ':img_src' => $file_src,
@@ -507,6 +515,7 @@ class Product
 
         return true;
     }
+    //===============================================================
 
 
     public function delete_product($product_id)
@@ -587,17 +596,26 @@ class Product
 
         return true;
     }
+    //===============================================================
 
     public function get_products_count()
     {
         $db = new Database();
 
-        $result = $db->select("SELECT COUNT(*) AS products_count FROM products");
+        $result = $db->select(
+            "SELECT COUNT(*) AS products_count
+            FROM
+                products
+            WHERE
+                products.deleted_at
+            IS NULL"
+        );
 
 
         $result = json_decode(json_encode($result[0]), true);
         return $result['products_count'];
     }
+    //===============================================================
 
     public function get_products_messages_count()
     {
@@ -611,13 +629,17 @@ class Product
              FROM
                  product_messages
             WHERE
-                 active = :active",
+                 active = :active
+            AND 
+                product_messages.deleted_at 
+            IS NULL",
             $params
         );
 
         $result = json_decode(json_encode($result[0]), true);
         return $result['products_messages_count'];
     }
+    //===============================================================
 
     public function delete_product_message($message_id)
     {
@@ -650,4 +672,204 @@ class Product
             return false;
         }
     }
+    //===============================================================
+
+    public function delete_user_message($message_id)
+    {
+
+        $db = new Database();
+
+
+        try {
+
+            $params = [
+                ':message_id' => $message_id
+            ];
+
+            $db->update(
+                "UPDATE
+                    chat
+                SET 
+                    active = 0,
+                    deleted_at = NOW()
+                WHERE
+                    chat.id = :message_id",
+                $params
+            );
+
+            return true;
+        } catch (Exception $e) {
+
+            return false;
+        }
+    }
+
+    public function list_active_product_questions()
+    {
+
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 1,
+
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS product_message,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.deleted_at AS product_deleted,
+
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    product_messages
+                JOIN 
+                    users 
+                ON 
+                    product_messages.user_id = users.id
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
+                WHERE 
+                    product_messages.active = :active
+                AND
+                    products.deleted_at IS NULL
+                ORDER BY
+                    product_messages.id
+                DESC",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+
+    public function list_answered_product_questions()
+    {
+
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS product_message,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.answer AS answer,
+                    product_messages.answer_created_at AS answer_created_at,
+                    product_messages.deleted_at AS product_deleted,
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    product_messages
+                JOIN 
+                    users 
+                ON 
+                    product_messages.user_id = users.id
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
+               WHERE
+                    product_messages.active = :active
+               AND
+                    product_messages.deleted_at IS NULL
+                ORDER BY
+                    product_messages.id 
+                DESC
+            ",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+
+      
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+    public function list_deleted_product_questions(){
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    product_messages.id AS product_message_id,
+                    product_messages.message AS product_message,
+                    product_messages.active AS product_message_active,
+                    product_messages.message_created_at AS message_created_at,
+                    product_messages.answer AS answer,
+                    product_messages.answer_created_at AS answer_created_at,
+                    product_messages.deleted_at AS product_deleted,
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    product_messages
+                JOIN 
+                    users 
+                ON 
+                    product_messages.user_id = users.id
+                JOIN
+                    products
+                ON
+                    product_messages.product_id = products.id
+               WHERE
+                    product_messages.active = :active
+               AND
+                    product_messages.deleted_at IS NOT NULL
+               ORDER BY
+                     product_messages.id 
+               DESC
+            ",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
 }

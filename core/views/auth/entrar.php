@@ -1,8 +1,7 @@
-<div style=" min-height: 100vh;" class="py-5 row mx-auto" >
+<div style=" min-height: 100vh;" class="container row mx-auto" >
 
-    <div class="col-md-6 col-sm-12 mx-auto">
 
-        <form class="login-form p-4  d-flez flex-column mx-auto" style="max-width: 400px;"  action="?a=login" method="POST">
+        <form class="col-md-6 col-sm-12 mx-auto p-0" style="max-width: 400px;"  action="?a=login" method="POST">
 
 
             <p class="text-center text-success  fs-2 mb-4">Entrar</p>
@@ -57,7 +56,6 @@
 
         </form>
 
-    </div>
 
 
 </div>

@@ -28,21 +28,6 @@ class Functions
     foreach ($structures as $structure) {
         include_once("../core/views/$structure.php");
     }
-
-
-
-        //Verifies if $structures is an array;
-        // if (!is_array($structures)) {
-        //     throw new Exception("Invalid layout structures");
-        // }
-
-        // if (!empty($data && is_array($data))) {
-        //     extract($data);
-        // }
-
-        // foreach ($structures as $structure) {
-        //     include_once("../core/views/$structure.php");
-        // }
     }
 
     public static function user_logged()

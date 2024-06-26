@@ -206,31 +206,50 @@ if (document.querySelector('.btn-delete-product-question')) {
 
         btn.addEventListener('click', (e) => {
 
-                e.preventDefault();
+            e.preventDefault();
 
 
-                Swal.fire({
-                    title: "Tem certeza que quer deletar esta mensagem?",
-                    text: "Isso não pode ser revertido!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Sim, quero deletar!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Mensagem deletada!",
-                            text: "O produto foi deletado com sucesso.",
-                            icon: "success"
-                        }).then(() => {
+            Swal.fire({
+                title: "Tem certeza que quer deletar esta mensagem?",
+                text: "Isso não pode ser revertido!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, quero deletar!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Mensagem deletada!",
+                        text: "O produto foi deletado com sucesso.",
+                        icon: "success"
+                    }).then(() => {
 
-                            window.location.href = btn.href;
+                        window.location.href = btn.href;
 
-                        })
+                    })
 
-                    }
-                });
-            })
+                }
+            });
+        })
     })
+}
+
+// Input mask
+
+if (document.querySelector('.input-price')) {
+    document.querySelectorAll('.input-price').forEach((btn) => {
+
+        btn.addEventListener('input', (e) => {
+            //Removes non number characters
+            let input_value = e.target.value.replace(/[^\d]/g, '');
+
+            let formatted_input_value = (input_value.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.')) + '' + input_value.slice(-2);
+
+            formatted_input_value = formatted_input_value.slice(0, -2) + ',' + formatted_input_value.slice(-2);
+
+            e.target.value = formatted_input_value
+        })
+    })
+
 }

@@ -11,52 +11,58 @@ use core\classes\Functions;
         <a class="navbar-brand text-success fw-bold ps-2" href="?a=home"><?= APP_NAME ?></a>
 
 
-
         <button class="navbar-toggler  " type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon  bg-light"></span>
         </button>
 
 
 
-        <div class="collapse navbar-collapse " id="navbarSupportedContent" style="flex-grow: 0;">
+        <div class="collapse navbar-collapse w-100 pe-2 " id="navbarSupportedContent" style="flex-grow: 0;">
 
 
-            <ul class="navbar-nav mb-2 mb-lg-0 border-0">
+            <ul class="navbar-nav mb-2 mb-lg-0 border-0 w-100 d-flex justify-content-between">
 
-                <!-- Home -->
-                <li class="nav-item text-center p-0 ps-2 py-1 border-bottom  d-flex align-items-center ">
-                    <a class="nav-link p-0" href="?a=home_page">
-                        Home
-                    </a>
-                </li>
+                <div class="container-nav-general-links gap-2">
+                    <!-- Home -->
+                    <li class=" nav-item text-center p-0 ps-2 py-1  d-flex align-items-center j ">
+                        <a class="nav-link p-0" href="?a=home_page">
+                            Home
+                        </a>
+                    </li>
 
-                <!-- sOBRE NÓS -->
-                <li class="nav-item text-center p-0 ps-2  py-1  border-bottom  d-flex align-items-center">
-                    <a class="nav-link p-0" href="#">
-                        Sobre nós
-                    </a>
-                </li>
-
-                <!-- Mobile hamburguer links -->
-                <div class="container-mobile-links">
-                    <!-- Login / register btns -->
-                    <?php if (!Functions::user_logged()) : ?>
+                    <!-- Sobre nós -->
+                    <li class="nav-item text-center p-0 ps-2  py-1   d-flex align-items-center ">
+                        <a class="nav-link p-0" href="#">
+                            Sobre nós
+                        </a>
+                    </li>
+                </div>
 
 
+                <?php if (!Functions::user_logged()) : ?>
+                    <div class="container-auth-btns gap-2">
+                        <!-- Entrar -->
                         <li class="nav-item text-center p-0  me-2">
                             <a class="nav-link p-0" href="?a=entrar">
                                 <button class="btn btn-success border m-0">Entrar</button>
                             </a>
                         </li>
 
+                        <!-- Registrar -->
                         <li class="nav-item text-center p-0 ">
                             <a class="nav-link p-0" href="?a=registrar">
                                 <button class="btn btn-success border m-0">Registrar</button>
                             </a>
                         </li>
 
+                    </div>
+                <?php endif; ?>
 
-                    <?php else : ?>
+
+                <!-- Mobile hamburguer links -->
+                <div class="container-mobile-links">
+
+                    <?php if (Functions::user_logged()) : ?>
 
 
                         <!-- Admin links -->
@@ -178,23 +184,27 @@ use core\classes\Functions;
                     <?php endif; ?>
 
                 </div>
-                <!-- User icon btn -->
-                <div class="mobile-container">
-                    <button class="btn d-flex gap-2 align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser" aria-controls="offcanvasUser">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                        </svg>
+                <?php if (Functions::user_logged()) : ?>
+                    <!-- User icon btn -->
+                    <div class="mobile-container">
+                        <button class="btn d-flex gap-2 align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasUser" aria-controls="offcanvasUser">
 
-                        <?php if ($_SESSION['user_type'] === 'admin') : ?>
-                            <span class="badge text-bg-danger"> <?= $_SESSION['user_type'] ?></span>
-                        <?php else : ?>
-                            <?= $_SESSION['user_name'] ?>
-                        <?php endif; ?>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
 
-                    </button>
-                </div>
+                            <?php if ($_SESSION['user_type'] === 'admin') : ?>
+                                <span class="badge text-bg-danger"> <?= $_SESSION['user_type'] ?></span>
+                            <?php else : ?>
+                                <?= $_SESSION['user_name'] ?>
+                            <?php endif; ?>
+
+                        </button>
+                    </div>
+
+                <?php endif; ?>
 
             </ul>
 

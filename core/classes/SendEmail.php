@@ -91,7 +91,7 @@ class SendEmail
 
             //Email info
             $html = '<h3>Redefine password</h3>';
-            $html .= '<a href=" ' . APP_BASE_URL . '?a=reset_password_page&token=' . $token . '" target="_blank">Redefine password</a><br>';
+            $html .= '<a href=" ' . APP_BASE_URL . '?a=redefinir-senha&token=' . $token . '" target="_blank">Redefine password</a><br>';
             $html .= '<a href="#" target="_blank">' . APP_DOMAIN . '</a><br>';
 
             $mail->Body = $html;

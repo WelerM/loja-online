@@ -21,14 +21,18 @@ class User
         ];
 
         $results = $db->select(
-            "SELECT *  FROM
+            "SELECT 
+                name,
+                email,
+                created_at
+            FROM
                  users 
              WHERE
                  users.id = :id",
             $params
         );
 
-      // $results = json_decode(json_encode($results[0]), true);
+       $results = json_decode(json_encode($results[0]), true);
 
 
         return $results;
@@ -640,6 +644,7 @@ class User
                 DEFAULT,
                 DEFAULT,
                 NOW(),
+                DEFAULT,
                 DEFAULT
              )",
             $params

@@ -83,11 +83,16 @@ class UserController
 
     public function register_page()
     {
+        //Verifies if there's an open session
+        if (Functions::user_logged()) {
+            Functions::redirect();
+            return;
+        }
 
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/registrar',
+            'auth/registrar',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -107,7 +112,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/entrar',
+            'auth/entrar',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -119,7 +124,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/email-enviado',
+            'auth/email-enviado',
             'layouts/html_footer',
         ]);
     }
@@ -138,7 +143,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/reset_password_page',
+            'auth/redefinir-senha',
             'layouts/footer',
             'layouts/html_footer',
         ], $token);
@@ -180,7 +185,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/send_recovery_email',
+            'send_recovery_email',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -197,6 +202,8 @@ class UserController
 
         $data = $user->get_user_personal_info();
 
+        
+        // print_r($data);
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
@@ -207,7 +214,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'edit_account_page',
+            'editar-conta',
             'layouts/footer',
             'layouts/html_footer',
 
@@ -562,13 +569,13 @@ class UserController
         if (!isset($_POST['password']) || !isset($_POST['repeat-password'])) {
             $_SESSION['error'] = "Empty fields";
 
-            Functions::redirect("reset_password_page&token=$token");
+            Functions::redirect("redefinir-senha&token=$token");
             return;
         }
         if (empty(trim($_POST['password'])) || empty(trim($_POST['repeat-password']))) {
             $_SESSION['error'] = "Empty fields";
 
-            Functions::redirect("reset_password_page&token=$token");
+            Functions::redirect("redefinir-senha&token=$token");
             return;
         }
 
@@ -576,7 +583,7 @@ class UserController
         if (trim($_POST['password']) != trim($_POST['repeat-password'])) {
             $_SESSION['error'] = "Passwords don't match";
 
-            Functions::redirect("reset_password_page&token=$token");
+            Functions::redirect("redefinir-senha&token=$token");
             return;
         }
 
@@ -589,7 +596,7 @@ class UserController
 
         if (count($result) === 0) {
             $_SESSION['error'] = "Invalid token";
-            Functions::redirect("reset_password_page&token=$token");
+            Functions::redirect("redefinir-senha&token=$token");
             return;
         }
 
@@ -625,12 +632,12 @@ class UserController
 
         //Verifies if there's an open session
         if (!Functions::user_logged()) {
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
         //Verifies if there was a form submition
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
         //Checks for unset inputs 
@@ -641,7 +648,7 @@ class UserController
             !isset($_POST['repeat-password'])
         ) {
             $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
 
@@ -653,14 +660,14 @@ class UserController
             trim(empty($_POST['repeat-password']))
         ) {
             $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
 
         //Verifies if password = repeat-password
         if ($_POST['password'] != $_POST['repeat-password']) {
             $_SESSION['error'] = "Passwords don't match!";
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
 
@@ -668,7 +675,7 @@ class UserController
         //Checks for valid email
         if (filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL) === false) {
             $_SESSION['error'] = "Invalid email!";
-            Functions::redirect('edit_account_page');
+            Functions::redirect('editar-conta');
             return;
         }
 
@@ -678,7 +685,7 @@ class UserController
 
         if (!$check_email_available) {
             $_SESSION['error'] = "Este email já está em uso. Por favor, escolha outro email";
-            Functions::redirect('account_page');
+            Functions::redirect('minha-conta');
             return;
         }
 
@@ -687,12 +694,12 @@ class UserController
 
         if (!$result) {
             $_SESSION['error'] = "Erro ao editar conta!";
-            Functions::redirect('account_page');
+            Functions::redirect('minha-conta');
             return;
         }
 
         $_SESSION['success'] = "Conta editada com sucesso!";
-        Functions::redirect('account_page');
+        Functions::redirect('minha-conta');
     }
     //===================================================================
 }

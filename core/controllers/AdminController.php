@@ -11,60 +11,8 @@ use core\models\Product;
 
 class AdminController
 {
-    public function product_questions_page($segment = null)
-    {
 
 
-
-        //Checks if user is admin
-        if ($_SESSION['user_id']  != 1) {
-            Functions::redirect('home');
-            return;
-        }
-
-
-        $data = null;
-        $admin = new Admin();
-        $product = new Product();
-
-
-        if ($segment === NULL) {
-
-            $data = $admin->list_active_product_questions();
-        } else if ($segment === 'nao-respondidas') {
-
-            $data = $admin->list_active_product_questions();
-
-        } else if ($segment === 'respondidas') {
-
-            $data = $admin->list_answered_product_questions();
-
-            // print_r($data);
-            // die('opa');
-        } else if ('deletadas') {
-
-            $data = $admin->list_deleted_product_questions();
-        }
-
-        // print_r($data);
-        // die('aqui');
-
-        //Header data
-        $header_data = [
-            'products_count' => $product->get_products_count(),
-            'products_questions_count' => $product->get_products_messages_count(),
-            'user_messages_count' => $admin->get_user_messages_count()
-        ];
-
-
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'perguntas-em-produtos',
-            'layouts/footer',
-            'layouts/html_footer',
-        ], $data, $header_data);
-    }
     //===============================================================
 
 
@@ -100,10 +48,12 @@ class AdminController
     public function list_user_messages_page()
     {
         //Checks if user is admin
-        if ($_SESSION['user_id']  != 1) {
-            Functions::redirect('home');
+        if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
+
+            Functions::redirect();
             return;
         }
+
         $admin = new Admin();
         $product = new Product();
 
@@ -117,7 +67,7 @@ class AdminController
             'products_questions_count' => $product->get_products_messages_count(),
             'user_messages_count' => $admin->get_user_messages_count()
         ];
-
+        // print_r($header_data['user_messages_count']);
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',

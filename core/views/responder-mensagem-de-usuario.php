@@ -3,7 +3,8 @@
     <div class="col-md-6 col-sm-12 mx-auto">
 
 
-        <?php include('components/alert.php');?>
+    <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+
 
         <h5>Responder mensagem do usuário</h5>
 

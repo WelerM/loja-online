@@ -1,11 +1,10 @@
-<div style="min-height:100vh" class="container">
+<div style="min-height:100vh" class="container row mx-auto">
+
+    <form class="col-md-6 col-sm-12 mx-auto p-0" style="max-width:500px" action="?a=edit_account" method="POST">
 
 
-    <form class=" p-4 mx-auto mt-5" style="max-width:500px" action="?a=edit_account" method="POST">
+        <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
-
-
-    <?php include('components/alert.php');?>
 
         <p class="text-center text-success fs-2 mb-4">Editar conta</p>
 

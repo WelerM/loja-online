@@ -45,13 +45,20 @@ class ProductController
     public function list_products_page($segment = null)
     {
 
+        if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
+
+            Functions::redirect();
+            return;
+        }
+
+
         $product = new Product();
         $admin = new Admin();
         $product = new Product();
         $data = null;
 
         if ($segment === 'deletados') {
-                $data = $product->list_deleted_products();
+            $data = $product->list_deleted_products();
         } else if ($segment === NULL) {
 
             $data = $product->list_products();
@@ -79,6 +86,14 @@ class ProductController
 
     public function create_product_page()
     {
+
+   
+        if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
+
+            Functions::redirect();
+            return;
+        }
+
         $admin = new Admin();
         $product = new Product();
 
@@ -99,32 +114,6 @@ class ProductController
     }
     //================================================
 
-    public function my_products_page_wwwwwwwwwwwwwwwww()
-    {
-
-        $product = new Product();
-        $admin = new Admin();
-
-        //Main data to view
-        $data = $product->list_my_products();
-
-        //Header data
-        $header_data = [
-            'products_count' => $product->get_products_count(),
-            'products_questions_count' => $product->get_products_messages_count(),
-            'user_messages_count' => $admin->get_user_messages_count()
-        ];
-
-
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'product/my_products_page',
-            'layouts/footer',
-            'layouts/html_footer',
-        ], $data, $header_data);
-    }
-    //================================================
 
     public function edit_product_page($id = null)
     {
@@ -236,6 +225,7 @@ class ProductController
 
         );
 
+
         $_SESSION['success'] = "Produto inserido com sucesso";
         Functions::redirect("meus-produtos");
         return;
@@ -290,7 +280,7 @@ class ProductController
             }
 
             $_SESSION['success'] = 'Produto editado com sucesso';
-            Functions::redirect('my_products_page');
+            Functions::redirect('meus-produtos');
             return;
         };
         //---------------------------------------------------------------
@@ -313,7 +303,7 @@ class ProductController
 
 
             $_SESSION['success'] = 'Produto editado com sucesso';
-            Functions::redirect('my_products_page');
+            Functions::redirect('meus-produtos');
             return;
         };
     }
@@ -406,7 +396,7 @@ class ProductController
 
         if (!$result) {
             $_SESSION['error'] = 'Erro ao deletar mensagem de produto';
-            Functions::redirect("answer_questions_page");
+            Functions::redirect("perguntas-em-produtos");
             return;
         }
 
@@ -415,4 +405,75 @@ class ProductController
         return;
     }
     //================================================
+
+
+    public function delete_user_message($message_id)
+    {
+
+
+        $product = new Product();
+        $result = $product->delete_user_message($message_id);
+
+        if (!$result) {
+            $_SESSION['error'] = 'Erro ao deletar mensagem de usuário';
+            Functions::redirect("mensagens-de-usuarios");
+            return;
+        }
+
+        
+        $_SESSION['success'] = 'Mensagem de usuário deletada com sucesso';
+        Functions::redirect("mensagens-de-usuarios");
+        return;
+
+    }
+//===============================================================
+public function product_questions_page($segment = null)
+{
+
+
+
+    //Checks if user is admin
+    if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
+
+        Functions::redirect();
+        return;
+    }
+
+    $data = null;
+    $admin = new Admin();
+    $product = new Product();
+
+
+    if ($segment === NULL) {
+
+        $data = $product->list_active_product_questions();
+    } else if ($segment === 'nao-respondidas') {
+
+        $data = $product->list_active_product_questions();
+
+    } else if ($segment === 'respondidas') {
+
+        $data = $product->list_answered_product_questions();
+
+    } else if ('deletadas') {
+
+        $data = $product->list_deleted_product_questions();
+    }
+
+    //Header data
+    $header_data = [
+        'products_count' => $product->get_products_count(),
+        'products_questions_count' => $product->get_products_messages_count(),
+        'user_messages_count' => $admin->get_user_messages_count()
+    ];
+
+
+    Functions::Layout([
+        'layouts/html_header',
+        'layouts/header',
+        'product/perguntas-em-produtos',
+        'layouts/footer',
+        'layouts/html_footer',
+    ], $data, $header_data);
+}
 }

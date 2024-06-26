@@ -4,14 +4,8 @@
 
         <p class="text-center text-success  fs-2 mb-4">Enter your email to redefine your password</p>
 
-        <?php if (isset($_SESSION['error'])) :  ?>
+        <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
-            <div class='alert alert-danger text-center'>
-                <?= $_SESSION['error'] ?>
-                <?php unset($_SESSION['error']) ?>
-            </div>
-
-        <?php endif; ?>
 
 
         <div class="mb-2">

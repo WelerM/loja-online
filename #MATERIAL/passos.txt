@@ -1,27 +1,34 @@
 
-? implemetar 'excluir' perguntas em produtos
-? criar mascara price
-? bloquear views de admins para clients
 
+? em 'http://localhost/loja/public/?a=mensagens-de-usuarios',
+     mostrar somente mensagens de produtos nao deletados
+
+? Bug ao criar produto, se abro o file explorer
+para add imagem mas dou um ESC antes de selecionar a imagem,
+fechando assim o file explorer, o programa dara um erro
+
+
+? Metodos register e update account estao com apenas um
+tratamentos de input
+
+? checar a logica da columna " password_ reset token"
+
+? Fazer responsividade nas views
+    OK ?a=mensagens-de-usuarios (admin)
+    OK ?a=criar-produto (admin)
+    OK ?a=meus-produtos (admin)
+    OK ?a=contatar-loja (client)
+    OK ?a=minha-conta (client)
+
+    ?  ?a=perguntas-em-produtos (admin)
+
+
+Metodos prontos
 # Login ok
 # Register ok
 # Redefine password ok
 # Deletar produto Ok
 # Editar conta Ok
-
 # Enviar email ao admin quando um usuario fizer pergunta
 do produto
 
-# Bug ao cirar produto, se abro o file explorer
-para add imagem mas dou um ESC antes de selecionar a imagem,
-fechando assim o file explorer, o programa dara um erro
-
-# Update da imagem em si do produto nao esta implementado
-
-Criar pagina de entrar em contato e mandar  menssagem chat
-
-
-# Metodos register e update account estao com apenas um
-tratamentos de input
-
-# checar a logica da columna " password_ reset token"

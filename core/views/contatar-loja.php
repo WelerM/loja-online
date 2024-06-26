@@ -1,6 +1,6 @@
 <div style="min-height: 100vh;" class="mx-auto container p-0 row ">
 
-    <div class="mx-auto px-2 py-5 col-md-6 col-sm-12">
+    <div class="mx-auto px-2 py-2 col-md-6 col-sm-12">
 
 
         <?php include('components/alert.php'); ?>
@@ -93,9 +93,7 @@
 
         <?php if (!$data['send_new_message']) : ?>
 
-            <div class="alert alert-success">
-                Por favor, aguarde ser respondido para enviar novas mensagens.
-            </div>
+            <p class="my-3"> Por favor, aguarde ser respondido para enviar novas mensagens.</p>
 
         <?php else : ?>
 

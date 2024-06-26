@@ -20,9 +20,9 @@
                     <div class="card-body p-3">
 
                         <h5 class="card-title"><?= $item['name']; ?> </h5>
-                        <p class="card-title"><?= 'R$ ' . $item['price']; ?> </p>
+                        <p class="card-title"></p><?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?> </p>
                         <p class="card-title"><?= $item['description']; ?> </p>
-                        <p class="card-title"><?= $item['created_at']; ?> </p>
+                        <p class="card-title d-none"><?= date('d/m/Y', strtotime($item['created_at'])) . ' às ' . date('H:i', strtotime($item['created_at'])) . 'h' ?> </p>
 
                     </div>
 
@@ -65,7 +65,7 @@
                 </svg>
 
             </button>
-
+                
 
             <!-- Product name-->
             <div class="mb-3">
@@ -81,7 +81,7 @@
 
                 <label for="input-img-name" class="form-label fw-bold ">Preço do produto</label>
 
-                <input value="<?= $item['price']; ?>" id="" type="text" class="form-control" name="product-price" placeholder="Preço do produto">
+                <input value="<?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?>" type="text" class="input-price form-control" name="product-price" placeholder="Preço do produto">
 
             </div>
 

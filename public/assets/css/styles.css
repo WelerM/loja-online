@@ -164,6 +164,12 @@ h1 {}
     flex-direction: column;
 }
 
+.container-nav-general-links, .container-auth-btns{
+    display: flex;       
+    flex-direction: row;
+}
+
+
 @media(min-width: 991px) {
 
     .container-mobile-links {
@@ -180,5 +186,13 @@ h1 {}
     .mobile-container{
         display: none;
     }   
+
+    .container-nav-general-links{
+        flex-direction: column;
+    }
+    .container-auth-btns{
+        flex-direction: column;
+
+    }
 
 }

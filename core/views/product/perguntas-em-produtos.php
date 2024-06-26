@@ -3,7 +3,7 @@
     <div class="col-md-6 col-sm-6 mx-auto">
 
 
-        <?php include('components/alert.php'); ?>
+    <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
 
         <h5 class="mb-3">Perguntas em produtos</h5>

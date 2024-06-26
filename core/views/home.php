@@ -24,7 +24,7 @@
                         <div class="card-body p-3">
 
                             <h5 class="card-title"><?= $item['name']; ?> </h5>
-                            <p class="card-title"><?= 'R$ ' . $item['price']; ?> </p>
+                            <p class="card-title"><?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?> </p>
 
                         </div>
 

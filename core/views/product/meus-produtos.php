@@ -1,4 +1,4 @@
-<div style="min-height: 100vh;" class="container mx-auto px-1 py-5 row">
+<div style="min-height: 100vh;" class="container mx-auto px-1 py-2 row">
 
     <div class="col-md-6 col-sm-12 p-0 mx-auto">
         <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
@@ -26,7 +26,10 @@
 
                         <div class="  p-0 ps-2">
                             <h5 class="card-title p-0 m-0"><?= $product['name']; ?> </h5>
-                            <p class="card-title p-0 m-0"><?= 'R$ ' . $product['price']; ?> </p>
+
+                            <p class="card-title p-0 m-0"><?= 'R$ ' . number_format($product['price'], 2, ',', '.'); ?> </p>
+                     
+
                             <p class="card-text text-truncate  p-0 m-0" style="max-width:200px"> <?= $product['description']; ?></p>
                             <a href="#" class="p-0 m-0"><?= $product['link']; ?></a>
                         </div>

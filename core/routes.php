@@ -3,53 +3,60 @@
 $routes = [
     // User controller
     'home' => 'usercontroller@home_page',
+    'editar-conta' => 'usercontroller@edit_account_page',
+    'minha-conta' => 'usercontroller@account_page',
+    'minhas-mensagens' => 'usercontroller@my_messages_page',
+    'contatar-loja' => 'usercontroller@contact_store_page',
+    
+    'delete_account' => 'usercontroller@delete_account',
+    'edit_account' => 'usercontroller@edit_account',
+
+
+    //auth
     'entrar' => 'usercontroller@login_page',
     'registrar' => 'usercontroller@register_page',
-    'send_recovery_email_page' => 'usercontroller@send_recovery_email_page',
-    'reset_password_page' => 'usercontroller@reset_password_page',
-    'email-enviado' => 'usercontroller@email_sent_page',
-
-    'minha-conta' => 'usercontroller@account_page',
-    
-    'minhas-mensagens' => 'usercontroller@my_messages_page',
-
-    'edit_account_page' => 'usercontroller@edit_account_page',
     'login' => 'usercontroller@login',
     'register' => 'usercontroller@register',
     'signout' => 'usercontroller@signout',
+    'redefinir-senha' => 'usercontroller@reset_password_page',
+
+    //Email    
+    'send_recovery_email_page' => 'usercontroller@send_recovery_email_page',
+    'email-enviado' => 'usercontroller@email_sent_page',
     'send_recovery_email' => 'usercontroller@send_recovery_email',
     'reset_password' => 'usercontroller@reset_password',
     'confirm_email' => 'usercontroller@confirm_email',
     'is_user_logged' => 'usercontroller@is_user_logged',
-    'delete_account' => 'usercontroller@delete_account',
-    'edit_account' => 'usercontroller@edit_account',
+    
 
+    
     // Product
     'criar-produto' => 'productcontroller@create_product_page',
+    'detalhes-do-produto' => 'productcontroller@product_details_page',
+    'meus-produtos' => 'productcontroller@list_products_page',    
+    'editar-produto' => 'productcontroller@edit_product_page',
 
     'create_product' => 'productcontroller@create_product',
-    'detalhes-do-produto' => 'productcontroller@product_details_page',
-   
-    'meus-produtos' => 'productcontroller@list_products_page',
     'make_question' => 'productcontroller@make_question',
     'show_product_question_details' => 'productcontroller@show_product_question_details',
-    // 'fmeus-produtos' => 'productcontroller@my_products_page',
-    'editar-produto' => 'productcontroller@edit_product_page',
     'edit_product' => 'productcontroller@edit_product',
     'delete_product' => 'productcontroller@delete_product',
     'delete-product-question' => 'productcontroller@delete_product_message',
+    
 
     // Admin
-    'answer_question' => 'admincontroller@answer_question',
-    'perguntas-em-produtos' => 'admincontroller@product_questions_page',
+    'perguntas-em-produtos' => 'productcontroller@product_questions_page',
     'mensagens-de-usuarios' => 'admincontroller@list_user_messages_page',
+    'delete-user-message' => 'productcontroller@delete_user_message',
+    
+    
     
     'responder-mensagem-de-usuario' => 'admincontroller@answer_user_message_page',
     'answer_user_message' => 'admincontroller@answer_user_message',
+    'answer_question' => 'admincontroller@answer_question',
 
     'get_user_questions' => 'admincontroller@get_user_questions',
 
-    'contatar-loja' => 'usercontroller@contact_store_page',
     'contact_store' => 'usercontroller@contact_store',
 ];
 

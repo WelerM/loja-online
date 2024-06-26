@@ -1,4 +1,4 @@
-<div style="min-height: 100vh;" class="container py-5 mx-auto ">
+<div style="min-height: 100vh;" class="container py-2 mx-auto ">
 
     <div class="col-md-6 col-sm-12  mx-auto">
         <div class="row">
@@ -7,7 +7,7 @@
             <?php include('components/alert.php');?>
 
 
-                <p class="fs-2">Minha conta</p>
+                <h5 class="mb-3">Minha conta</h5>
 
                 <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
                 <dl class="row">
@@ -27,7 +27,7 @@
                 </dl>
 
 
-                <a href="?a=edit_account_page" style="width: fit-content;" class="btn btn-warning btn-sm">Editar conta</a>
+                <a href="?a=editar-conta" style="width: fit-content;" class="btn btn-warning btn-sm">Editar conta</a>
 
                 <!-- Add swal to this button -->
                 <a href="?a=delete_account" style="width: fit-content;" class="btn btn-danger btn-sm">Deletar conta</a>

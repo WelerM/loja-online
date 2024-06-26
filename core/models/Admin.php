@@ -50,167 +50,6 @@ class Admin
 
 
 
-    public function list_active_product_questions()
-    {
-
-        try {
-
-            $db = new Database();
-
-            $params = [
-                ':active' => 1,
-
-            ];
-
-            $results = $db->select(
-                "SELECT 
-                    product_messages.id AS product_message_id,
-                    product_messages.message AS product_message,
-                    product_messages.active AS product_message_active,
-                    product_messages.message_created_at AS message_created_at,
-                    product_messages.deleted_at AS product_deleted,
-
-                    users.id AS user_id,
-                    users.name AS user_name,
-
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.img_src AS img_src
-                FROM 
-                    product_messages
-                JOIN 
-                    users 
-                ON 
-                    product_messages.user_id = users.id
-                JOIN
-                    products
-                ON
-                    product_messages.product_id = products.id
-                WHERE 
-                    product_messages.active = :active
-                AND
-                    products.deleted_at IS NULL",
-                $params
-            );
-
-
-            $results = json_decode(json_encode($results), true);
-            return $results;
-        } catch (Exception $e) {
-            return $e;
-        }
-    }
-    //==================================
-
-    public function list_answered_product_questions()
-    {
-
-        try {
-
-            $db = new Database();
-
-            $params = [
-                ':active' => 0,
-            ];
-
-            $results = $db->select(
-                "SELECT 
-                    product_messages.id AS product_message_id,
-                    product_messages.message AS product_message,
-                    product_messages.active AS product_message_active,
-                    product_messages.message_created_at AS message_created_at,
-                    product_messages.answer AS answer,
-                    product_messages.answer_created_at AS answer_created_at,
-                    product_messages.deleted_at AS product_deleted,
-                    users.id AS user_id,
-                    users.name AS user_name,
-
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.img_src AS img_src
-                FROM 
-                    product_messages
-                JOIN 
-                    users 
-                ON 
-                    product_messages.user_id = users.id
-                JOIN
-                    products
-                ON
-                    product_messages.product_id = products.id
-               WHERE
-                    product_messages.active = :active
-               AND
-                    product_messages.deleted_at IS NULL
-                ORDER BY
-                    product_messages.id 
-                DESC
-            ",
-                $params
-            );
-
-
-            $results = json_decode(json_encode($results), true);
-            return $results;
-
-      
-        } catch (Exception $e) {
-            return $e;
-        }
-    }
-    //==================================
-    public function list_deleted_product_questions(){
-        try {
-
-            $db = new Database();
-
-            $params = [
-                ':active' => 0,
-            ];
-
-            $results = $db->select(
-                "SELECT 
-                    product_messages.id AS product_message_id,
-                    product_messages.message AS product_message,
-                    product_messages.active AS product_message_active,
-                    product_messages.message_created_at AS message_created_at,
-                    product_messages.answer AS answer,
-                    product_messages.answer_created_at AS answer_created_at,
-                    product_messages.deleted_at AS product_deleted,
-                    users.id AS user_id,
-                    users.name AS user_name,
-
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.img_src AS img_src
-                FROM 
-                    product_messages
-                JOIN 
-                    users 
-                ON 
-                    product_messages.user_id = users.id
-                JOIN
-                    products
-                ON
-                    product_messages.product_id = products.id
-               WHERE
-                    product_messages.active = :active
-               AND
-                    product_messages.deleted_at IS NOT NULL
-            ",
-                $params
-            );
-
-
-            $results = json_decode(json_encode($results), true);
-            return $results;
-        } catch (Exception $e) {
-            return $e;
-        }
-    }
 
 
 
@@ -253,6 +92,11 @@ class Admin
                     chat.user_id = users.id
                 WHERE
                     chat.active = :active
+                AND
+                    products.deleted_at IS NULL
+                ORDER BY
+                    chat.id
+                DESC
                 ",
                 $params
             );
@@ -443,4 +287,7 @@ class Admin
         $result = json_decode(json_encode($result[0]), true);
         return $result['user_messages_count'];
     }
+
+
+
 }

@@ -1,10 +1,11 @@
-<div style="min-height:100vh" class="container row  mx-auto py-5">
+<div style="min-height:100vh" class="container row  mx-auto px-1 py-3">
 
-    <div class="col-md-6 col-sm-12 mx-auto">
+    <div class="col-md-6 col-sm-12 mx-auto p-0">
 
 
-    <?php include('components/alert.php');?>
-            
+    <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+
+
 
 
         <h5>Mensagens de usuários</h5>
@@ -14,10 +15,11 @@
 
             <?php foreach ($data as $message) : ?>
 
-                <div style="width: w-100;" class="row border p-0 my-3 rounded shadow-sm ">
+                <div class="border p-1 my-3 rounded shadow w-100">
 
-                    <div class="col-8 border-0 border-end p-3">
+                    <div class="p-0">
 
+                        <!-- User icon, name and message timestamp -->
                         <div class="d-flex justify-content-between">
 
                             <div class="d-flex gap-3">
@@ -32,33 +34,34 @@
 
                         </div>
 
-                        <!-- User question text -->
-                        <div class="bg-white p-2 border rounded">
-
+                        <!-- User message -->
+                        <div class="bg-white py-2 bg-body-tertiary border px-1">
                             <p><?= $message['user_message'] ?></p>
                         </div>
 
 
+                        <div class=" d-flex gap-2">
+
+                            <p>Produto: </p>
+
+                            <div>
+                                <p class="fw-bold m-0"><?= $message['product_name'] ?> </p>
+                                <p class="fw-bold m-0"><?= 'R$ ' . number_format($message['product_price'], 2, ',', '.'); ?></p>
+                            </div>
+
+                        </div>
+
+                        <!-- Btns container text -->
                         <div style="height: fit-content;" class="d-flex gap-1 mt-2  ">
 
                             <a class="btn btn-success btn-sm" href="?a=responder-mensagem-de-usuario&user_id=<?= $message["user_id"] ?>&product-id=<?= $message['product_id'] ?>">Responder</a>
 
-                            <button class="btn btn-danger btn-sm">Exclur</button>
-
+                            <a href="?a=delete-user-message/<?= $message['chat_message_id']; ?> " class="btn-delete-product btn btn-danger btn-sm">Excluir</a>
+                            
 
                         </div>
 
-                    </div>
 
-                    <div class="col-auto p-3">
-
-                        <p>Produto</p>
-
-                        <img src="<?= $message['product_img_src'] ?>" class="img-fluid" style="max-width: 60px; height: 60px" alt="">
-
-                        <h5 class="card-title"><?= $message['product_name']; ?> </h5>
-
-                        <p class="card-title"><?= 'R$ ' . $message['product_price']; ?> </p>
                     </div>
 
                 </div>
