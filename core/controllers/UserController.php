@@ -119,17 +119,6 @@ class UserController
     }
     //===================================================================
 
-    public function email_sent_page()
-    {
-        Functions::Layout([
-            'layouts/html_header',
-            'layouts/header',
-            'auth/email-enviado',
-            'layouts/html_footer',
-        ]);
-    }
-    //===================================================================
-
     public function reset_password_page()
     {
         if (!isset($_GET['token'])) {
@@ -185,7 +174,7 @@ class UserController
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'send_recovery_email',
+            'recuperar-senha',
             'layouts/footer',
             'layouts/html_footer',
         ]);
@@ -202,7 +191,7 @@ class UserController
 
         $data = $user->get_user_personal_info();
 
-        
+
         // print_r($data);
         //Header data
         $header_data = [
@@ -237,6 +226,8 @@ class UserController
         }
     }
     //===================================================================
+
+
 
 
     //Sign In
@@ -296,6 +287,121 @@ class UserController
         $_SESSION['user_type'] = $result->user_type;
 
         Functions::redirect('home');
+    }
+    //===================================================================
+
+    public function register()
+    {
+
+
+        //Verifies if there's an open session
+        if (Functions::user_logged()) {
+            Functions::redirect();
+            exit();
+        }
+
+
+        //Verifies if there was a form submition
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            Functions::redirect('registrar');
+            exit();
+        }
+
+
+        //Checks for unset inputs 
+        if (
+            !isset($_POST['signup-name']) ||
+            !isset($_POST['signup-email']) ||
+            !isset($_POST['signup-password']) ||
+            !isset($_POST['signup-repeat-password'])
+        ) {
+            $_SESSION['error'] = "Campos vazios!";
+            Functions::redirect('registrar');
+            return;
+        }
+
+        //Checks for empty fields
+        if (
+            trim(empty($_POST['signup-name'])) ||
+            trim(empty($_POST['signup-email'])) ||
+            trim(empty($_POST['signup-password'])) ||
+            trim(empty($_POST['signup-repeat-password']))
+        ) {
+            $_SESSION['error'] = "Campos vazios!";
+            Functions::redirect('registrar');
+            return;
+        }
+
+        //Checks for valid email
+        if (filter_var(trim($_POST['signup-email']), FILTER_VALIDATE_EMAIL) === false) {
+            $_SESSION['error'] = "Email inválido!";
+            Functions::redirect('registrar');
+            return;
+        }
+
+        //Verifies if password = repeat-password
+        if ($_POST['signup-password'] != $_POST['signup-repeat-password']) {
+            $_SESSION['error'] = "Senhas não conferem";
+            Functions::redirect('registrar');
+            return;
+        }
+
+
+
+        //Verifies on DB if a client with same the email exists
+        $users = new User();
+
+        if ($users->verify_email_exists($_POST['signup-email'])) {
+
+            $_SESSION['error'] = "Esse email já está sendo utilizado!";
+            Functions::redirect('registrar');
+            return;
+        }
+
+
+
+        //Register user on 'USERS' table & 'LOCATION' table
+        //Personal URL is returned after registration
+        $purl = $users->register_user();
+
+
+        $email = new SendEmail();
+
+        $client_email = strtolower(trim($_POST['signup-email']));
+        $result = $email->send_email($client_email, $purl);
+
+        if (!$result) {
+            $_SESSION['error'] = "Erro ao enviar email de verificação. Tente novamente.";
+            Functions::redirect('registrar');
+            return;
+        }
+
+        $_SESSION['success'] = "Verificação da conta enviada com sucesso! Confime em seu email.";
+        Functions::redirect('email-enviado');
+        return;
+    }
+    //===================================================================
+
+    public function email_sent_page()
+    {
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'email-enviado',
+            'layouts/html_footer',
+        ]);
+    }
+    //===================================================================
+
+
+    public function signout()
+    {
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_name']);
+        unset($_SESSION['user_email']);
+        unset($_SESSION['user_type']);
+        Functions::redirect();
     }
     //===================================================================
 
@@ -367,99 +473,6 @@ class UserController
 
     //===================================================================
 
-    public function register()
-    {
-
-
-        //Verifies if there's an open session
-        if (Functions::user_logged()) {
-            Functions::redirect();
-            exit();
-        }
-
-
-        //Verifies if there was a form submition
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            Functions::redirect();
-            exit();
-        }
-
-
-        //Checks for unset inputs 
-        if (
-            !isset($_POST['signup-name']) ||
-            !isset($_POST['signup-email']) ||
-            !isset($_POST['signup-password']) ||
-            !isset($_POST['signup-repeat-password'])
-        ) {
-            $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-        //Checks for empty fields
-        if (
-            trim(empty($_POST['signup-name'])) ||
-            trim(empty($_POST['signup-email'])) ||
-            trim(empty($_POST['signup-password'])) ||
-            trim(empty($_POST['signup-repeat-password']))
-        ) {
-            $_SESSION['error'] = "Empty fields!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-        //Checks for valid email
-        if (filter_var(trim($_POST['signup-email']), FILTER_VALIDATE_EMAIL) === false) {
-            $_SESSION['error'] = "Invalid email!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-        //Verifies if password = repeat-password
-        if ($_POST['signup-password'] != $_POST['signup-repeat-password']) {
-            $_SESSION['error'] = "Passwords don't match!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-
-
-        //Verifies on DB if a client with same the email exists
-        $users = new User();
-
-        if ($users->verify_email_exists($_POST['signup-email'])) {
-
-            $_SESSION['error'] = "Esse email já está sendo utilizado!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-
-
-        //Register user on 'USERS' table & 'LOCATION' table
-        //Personal URL is returned after registration
-        $purl = $users->register_user();
-
-
-        $email = new SendEmail();
-
-        $client_email = strtolower(trim($_POST['signup-email']));
-        $email->send_email($client_email, $purl);
-    }
-    //===================================================================
-
-
-    public function signout()
-    {
-        unset($_SESSION['user_id']);
-        unset($_SESSION['user_name']);
-        unset($_SESSION['user_email']);
-        unset($_SESSION['user_type']);
-        Functions::redirect();
-    }
-    //===================================================================
-
 
     //Sign Up
     public function confirm_email()
@@ -474,7 +487,7 @@ class UserController
 
         //VErifies if purl exists in the url query
         if (!isset($_GET['purl'])) {
-            Functions::redirect();
+            Functions::redirect('Invalid personal url');
             return;
         }
 
@@ -482,8 +495,8 @@ class UserController
 
         //Verifies if purl is valid
         if (strlen($purl) != 12) {
-            die('c');
-            Functions::redirect();
+  
+            Functions::redirect('Invalid personal url');
             return;
         }
 
@@ -493,25 +506,20 @@ class UserController
 
         if (!$result) {
 
-            $_SESSION['error'] = "Error when confirming your email";
-
-            Functions::Layout([
-                'layouts/html_header',
-                'layouts/header',
-                'login/entrar',
-                'layouts/html_footer',
-            ]);
+            $_SESSION['error'] = "Erro ao confirmar seu email";
+            Functions::redirect('entrar');
+            return;
         }
 
 
-        $_SESSION['success'] = 'Emal confirmation successfull';
+        $_SESSION['success'] = 'Emal confirmado com sucesso!';
         $logger = new Log();
         $logger->logger('Novo usuário no sistema', 'INFO');
 
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
-            'login/entrar',
+            'auth/entrar',
             'layouts/html_footer',
         ]);
     }
@@ -553,9 +561,17 @@ class UserController
         $users->update_token($user_email, $token);
 
         //Sends email to reset password
-        $email->send_email_reset_password($user_email, $token);
+        $result  = $email->send_email_reset_password($user_email, $token);
 
-        Functions::redirect('email_sent_page');
+        if (!$result) {
+            $_SESSION['error'] = "Erro ao enviar email de verificação. Tente novamente.";
+            Functions::redirect('registrar');
+            return;
+        }
+
+        $_SESSION['success'] = "Email de recuperação enviado com sucesso! Verifique em seu email.";
+        Functions::redirect('email-enviado');
+        return;
     }
     //===================================================================
 

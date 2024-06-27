@@ -32,7 +32,7 @@ class User
             $params
         );
 
-       $results = json_decode(json_encode($results[0]), true);
+        $results = json_decode(json_encode($results[0]), true);
 
 
         return $results;
@@ -179,7 +179,7 @@ class User
         }
 
 
-          $results = json_decode(json_encode($results), true);
+        $results = json_decode(json_encode($results), true);
         //------------------------------------------------------
 
 
@@ -211,7 +211,7 @@ class User
         // die('opa');
         $results['send_new_message'] = true;
 
-        if (count($result) >0 && $result[0]->active != 0) {
+        if (count($result) > 0 && $result[0]->active != 0) {
             $results['send_new_message'] = false;
         }
 
@@ -358,7 +358,6 @@ class User
 
 
 
-
         //Create personal url
         $purl = Functions::createHash();
 
@@ -369,7 +368,6 @@ class User
             ':email' => strtolower(trim($_POST['signup-email'])),
             ':user_type' => 'client',
             ':password' => password_hash(trim($_POST['signup-password']), PASSWORD_DEFAULT),
-            ':active' => 0,
             ':purl' => $purl
 
         ];
@@ -384,10 +382,11 @@ class User
                                 :user_type,
                                 :password,
                                  NULL,
-                                :active,
+                                DEFAULT,
                                 :purl,
                                 NOW(),
-                                NOW()
+                                NOW(),
+                                DEFAULT
                             )",
                 $params
             );
@@ -688,5 +687,182 @@ class User
     //===================================================================
 
 
+
+    public function list_active_user_messages()
+    {
+
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 1,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    chat.id AS chat_message_id,
+                    chat.message AS user_message,
+                    chat.active AS user_message_active,
+                    chat.message_created_at AS message_created_at,
+                    chat.deleted_at AS chat_deleted,
+
+                    chat.answer AS chat_answer,
+ 
+
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    chat
+                JOIN 
+                    users 
+                ON 
+                    chat.user_id = users.id
+                JOIN
+                    products
+                ON
+                    chat.product_id = products.id
+                WHERE 
+                    chat.active = :active
+                AND
+                    products.deleted_at IS NULL
+                ORDER BY
+                    chat.id
+                DESC",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+    public function list_answered_user_messages()
+    {
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    chat.id AS chat_message_id,
+                    chat.message AS user_message,
+                    chat.active AS user_message_active,
+                    chat.message_created_at AS message_created_at,
+                    chat.deleted_at AS chat_deleted,
+
+                    chat.answer AS chat_answer,
+
+
+                    chat.answer AS answer,
+                    chat.answer_created_at AS answer_created_at,
+                    chat.deleted_at AS product_deleted,
+                    
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    chat
+                JOIN 
+                    users 
+                ON 
+                    chat.user_id = users.id
+                JOIN
+                    products
+                ON
+                    chat.product_id = products.id
+               WHERE
+                    chat.active = :active
+               AND
+                    chat.deleted_at IS NULL
+                ORDER BY
+                    chat.id 
+                DESC
+            ",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //==================================
+    public function list_deleted_user_messages()
+    {
+        try {
+
+            $db = new Database();
+
+            $params = [
+                ':active' => 0,
+            ];
+
+            $results = $db->select(
+                "SELECT 
+                    chat.id AS product_message_id,
+                    chat.message AS user_message,
+                    chat.message_created_at AS message_created_at,
+                    chat.active AS user_message_active,
+                    chat.message_created_at AS message_created_at,
+                    chat.answer AS answer,
+                    chat.answer_created_at AS answer_created_at,
+                    chat.deleted_at AS chat_deleted,
+           
+                    
+                    users.id AS user_id,
+                    users.name AS user_name,
+
+                    products.id AS product_id,
+                    products.name AS product_name,
+                    products.price AS product_price,
+                    products.img_src AS img_src
+                FROM 
+                    chat
+                JOIN 
+                    users 
+                ON 
+                    chat.user_id = users.id
+                JOIN
+                    products
+                ON
+                    chat.product_id = products.id
+               WHERE
+                    chat.active = :active
+               AND
+                    chat.deleted_at IS NOT NULL
+               ORDER BY
+                     chat.id 
+               DESC
+            ",
+                $params
+            );
+
+
+            $results = json_decode(json_encode($results), true);
+            return $results;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+    //=====================================
 
 }

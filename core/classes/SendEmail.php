@@ -39,19 +39,19 @@ class SendEmail
 
             //Content
             $mail->isHTML(true); //Set email format to HTML
-            $mail->Subject = 'test';
+            $mail->Subject = 'Confirmação da conta';
 
             //Email info
-            $html = '<h3>Confirm your account</h3>';
+            $html = '<h3>Confirme sua conta</h3>';
             $html .= '<a href=" ' . APP_BASE_URL . '?a=confirm_email&purl=' . $purl . '" target="_blank">Confirm</a><br>';
             $html .= '<a href="#" target="_blank">' . APP_DOMAIN . '</a><br>';
 
             $mail->Body = $html;
             $mail->send();
 
-            $_SESSION['success'] = "Email enviado com sucesso!";
-            Functions::redirect('email-enviado');
-            return;
+      
+            return true;
+
         } catch (Exception $e) {
     
             $logger = new Log;
@@ -97,14 +97,12 @@ class SendEmail
             $mail->Body = $html;
             $mail->send();
 
-            Functions::redirect('email_sent_page');
-            return;
+            
+            return true;
         } catch (Exception $e) {
 
             $logger = new Log();
             $logger->logger($e->getMessage(), 'critical');
-
-
 
             return false;
         }

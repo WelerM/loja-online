@@ -1,4 +1,4 @@
-# A PHP web application with MVC standard (Login, SQL)
+# A PHP web application with MVC pattern (Login, SQL)
 
 Desription ( current on development ) 
 

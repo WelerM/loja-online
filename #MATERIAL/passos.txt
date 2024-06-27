@@ -1,22 +1,27 @@
 
-
-? em 'http://localhost/loja/public/?a=mensagens-de-usuarios',
-     mostrar somente mensagens de produtos nao deletados
-
 ? Bug ao criar produto, se abro o file explorer
 para add imagem mas dou um ESC antes de selecionar a imagem,
 fechando assim o file explorer, o programa dara um erro
 
-
 ? Metodos register e update account estao com apenas um
-tratamentos de input
-
+    tratamentos de input
+? Criar view para produto deletado (mais informações)
+? bloquear admin de fazer ações de clientes como mandar mensagem em produtos
+? implementar mudança de email na edição da conta
+? implementar deletar conta
 ? checar a logica da columna " password_ reset token"
+
+? fazer tratamento input javascript (
+        registrar,
+        entrar,
+        editar produto,
+        editar conta
+    )
 
 ? Fazer responsividade nas views
     OK ?a=mensagens-de-usuarios (admin)
-    OK ?a=criar-produto (admin)
-    OK ?a=meus-produtos (admin)
+    ? ?a=criar-produto (admin) ( refazer layout, diminuir imagem)
+    ? ?a=meus-produtos (admin)
     OK ?a=contatar-loja (client)
     OK ?a=minha-conta (client)
 

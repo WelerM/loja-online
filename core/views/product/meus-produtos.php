@@ -7,10 +7,13 @@
 
         <h5>Meus produtos</h5>
 
-        <div class="d-flex gap-2 my-3">
-            <a href="?a=meus-produtos" class="btn btn-success btn-sm">ativos</a>
-            <a href="?a=meus-produtos/deletados" class="btn btn-danger btn-sm">deletados</a>
+        <div class="d-flex justify-content-between my-3">
+            <div class="d-flex gap-2">
+                <a href="?a=meus-produtos" class="btn btn-light border btn-sm">ativos</a>
+                <a href="?a=meus-produtos/deletados" class="btn btn-light border btn-sm">deletados</a>
+            </div>
 
+            <a href="?a=criar-produto" class="btn btn-success border btn-sm">Criar</a>
         </div>
 
         <?php if (!empty($data)) : ?>
@@ -28,7 +31,7 @@
                             <h5 class="card-title p-0 m-0"><?= $product['name']; ?> </h5>
 
                             <p class="card-title p-0 m-0"><?= 'R$ ' . number_format($product['price'], 2, ',', '.'); ?> </p>
-                     
+
 
                             <p class="card-text text-truncate  p-0 m-0" style="max-width:200px"> <?= $product['description']; ?></p>
                             <a href="#" class="p-0 m-0"><?= $product['link']; ?></a>

@@ -21,7 +21,7 @@ $routes = [
     'redefinir-senha' => 'usercontroller@reset_password_page',
 
     //Email    
-    'send_recovery_email_page' => 'usercontroller@send_recovery_email_page',
+    'recuperar-senha' => 'usercontroller@send_recovery_email_page',
     'email-enviado' => 'usercontroller@email_sent_page',
     'send_recovery_email' => 'usercontroller@send_recovery_email',
     'reset_password' => 'usercontroller@reset_password',

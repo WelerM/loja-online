@@ -87,7 +87,7 @@ class ProductController
     public function create_product_page()
     {
 
-   
+
         if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
 
             Functions::redirect();
@@ -420,60 +420,69 @@ class ProductController
             return;
         }
 
-        
+
         $_SESSION['success'] = 'Mensagem de usuário deletada com sucesso';
         Functions::redirect("mensagens-de-usuarios");
         return;
-
     }
-//===============================================================
-public function product_questions_page($segment = null)
-{
+    //===============================================================
+
+    public function product_questions_page($segment = null)
+    {
 
 
 
-    //Checks if user is admin
-    if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
+        //Checks if user is admin
+        if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
 
-        Functions::redirect();
-        return;
+            Functions::redirect();
+            return;
+        }
+
+        $data = null;
+        $admin = new Admin();
+        $product = new Product();
+
+
+        if ($segment === NULL) {
+
+            $data = $product->list_active_product_questions();
+            $data['filter'] = 'nao-respondidas';
+            
+        } else if ($segment === 'nao-respondidas') {
+
+            $data = $product->list_active_product_questions();
+            $data['filter'] = 'nao-respondidas';
+
+        } else if ($segment === 'respondidas') {
+
+            $data = $product->list_answered_product_questions();
+            $data['filter'] = 'respondidas';
+
+        } else if ('deletadas') {
+
+            $data = $product->list_deleted_product_questions();
+            $data['filter'] = 'deletadas';
+        }
+
+        //  print_r($data);
+
+        //Header data
+        $header_data = [
+            'products_count' => $product->get_products_count(),
+            'products_questions_count' => $product->get_products_messages_count(),
+            'user_messages_count' => $admin->get_user_messages_count()
+        ];
+
+
+        Functions::Layout([
+            'layouts/html_header',
+            'layouts/header',
+            'product/perguntas-em-produtos',
+            'layouts/footer',
+            'layouts/html_footer',
+        ], $data, $header_data);
     }
-
-    $data = null;
-    $admin = new Admin();
-    $product = new Product();
-
-
-    if ($segment === NULL) {
-
-        $data = $product->list_active_product_questions();
-    } else if ($segment === 'nao-respondidas') {
-
-        $data = $product->list_active_product_questions();
-
-    } else if ($segment === 'respondidas') {
-
-        $data = $product->list_answered_product_questions();
-
-    } else if ('deletadas') {
-
-        $data = $product->list_deleted_product_questions();
-    }
-
-    //Header data
-    $header_data = [
-        'products_count' => $product->get_products_count(),
-        'products_questions_count' => $product->get_products_messages_count(),
-        'user_messages_count' => $admin->get_user_messages_count()
-    ];
-
-
-    Functions::Layout([
-        'layouts/html_header',
-        'layouts/header',
-        'product/perguntas-em-produtos',
-        'layouts/footer',
-        'layouts/html_footer',
-    ], $data, $header_data);
-}
+    //===============================================================
+    
 }

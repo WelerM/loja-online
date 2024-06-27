@@ -47,66 +47,7 @@ class Admin
             echo $e;
         }
     }
-
-
-
-
-
-
-
-    public function list_active_user_messasges()
-    {
-
-        $db = new Database();
-
-
-        try {
-
-            $params = [
-                ':active' => 1
-            ];
-
-            $results = $db->select(
-                "SELECT
-                    users.id AS user_id,
-                    users.name AS user_name,
-                    
-                    chat.id AS chat_message_id,
-                    chat.message AS user_message,
-                    chat.message_created_at AS chat_created_at,
-    
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    products.price AS product_price,
-                    products.img_src AS product_img_src
-                
-                FROM
-                    chat
-                JOIN
-                    products
-                ON
-                    chat.product_id = products.id
-                JOIN
-                    users
-                ON 
-                    chat.user_id = users.id
-                WHERE
-                    chat.active = :active
-                AND
-                    products.deleted_at IS NULL
-                ORDER BY
-                    chat.id
-                DESC
-                ",
-                $params
-            );
-
-            $results = json_decode(json_encode($results), true);
-            return $results;
-        } catch (Exception $e) {
-            echo $e;
-        }
-    }
+    //===============================================================
 
     public function get_user_message_information()
     {
@@ -204,6 +145,7 @@ class Admin
 
 
     }
+    //===============================================================
 
     public function get_admin_data()
     {
@@ -217,6 +159,7 @@ class Admin
         $results = json_decode(json_encode($result), true);
         return $results;
     }
+    //===============================================================
 
     public function answer_user_message()
     {
@@ -252,7 +195,7 @@ class Admin
         } catch (Exception $e) {
 
             $log = new Log('error');
-       
+
             $result_admn_answer = false;
         }
         //------------------------------------------------------------------------------
@@ -266,6 +209,7 @@ class Admin
 
         return true;
     }
+    //===============================================================
 
     public function get_user_messages_count()
     {
@@ -290,4 +234,62 @@ class Admin
 
 
 
+
+
+        //Verificar se esse methodo esta  sendo usado
+        // public function list_active_user_messasges()
+        // {
+    
+        //     $db = new Database();
+    
+    
+        //     try {
+    
+        //         $params = [
+        //             ':active' => 1
+        //         ];
+    
+        //         $results = $db->select(
+        //             "SELECT
+        //                 users.id AS user_id,
+        //                 users.name AS user_name,
+                        
+        //                 chat.id AS chat_message_id,
+        //                 chat.message AS user_message,
+        //                 chat.message_created_at AS chat_created_at,
+        
+        //                 products.id AS product_id,
+        //                 products.name AS product_name,
+        //                 products.price AS product_price,
+        //                 products.img_src AS product_img_src
+                    
+        //             FROM
+        //                 chat
+        //             JOIN
+        //                 products
+        //             ON
+        //                 chat.product_id = products.id
+        //             JOIN
+        //                 users
+        //             ON 
+        //                 chat.user_id = users.id
+        //             WHERE
+        //                 chat.active = :active
+        //             AND
+        //                 products.deleted_at IS NULL
+        //             ORDER BY
+        //                 chat.id
+        //             DESC
+        //             ",
+        //             $params
+        //         );
+    
+        //         $results = json_decode(json_encode($results), true);
+        //         return $results;
+        //     } catch (Exception $e) {
+        //         echo $e;
+        //     }
+        // }
+        //===============================================================
+    
 }

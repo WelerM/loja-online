@@ -13,9 +13,6 @@ class AdminController
 {
 
 
-    //===============================================================
-
-
     public function answer_question()
     {
 
@@ -45,7 +42,7 @@ class AdminController
     }
     //===============================================================
 
-    public function list_user_messages_page()
+    public function list_user_messages_page($segment = null)
     {
         //Checks if user is admin
         if (!Functions::user_logged() || $_SESSION['user_id'] != 1) {
@@ -54,10 +51,33 @@ class AdminController
             return;
         }
 
+        $data = null;
         $admin = new Admin();
         $product = new Product();
+        $user = new User();
 
-        $data = $admin->list_active_user_messasges();
+
+        if ($segment === NULL) {
+
+            $data = $user->list_active_user_messages();
+            $data['filter'] = 'nao-respondidas';
+
+        } else if ($segment === 'nao-respondidas') {
+
+            $data = $user->list_active_user_messages();
+            $data['filter'] = 'nao-respondidas';
+
+        } else if ($segment === 'respondidas') {
+
+            $data = $user->list_answered_user_messages();
+            $data['filter'] = 'respondidas';
+
+        } else if ('deletadas') {
+
+            $data = $user->list_deleted_user_messages();
+            $data['filter'] = 'deletadas';
+        }
+
 
         // print_r($data);
 
@@ -110,7 +130,7 @@ class AdminController
     //===============================================================
 
 
-    public function answer_user_message($chat_message_id)
+    public function answer_user_message()
     {
 
         $user_id = $_GET['user_id'];

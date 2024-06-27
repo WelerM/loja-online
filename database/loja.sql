@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26/06/2024 às 15:52
+-- Tempo de geração: 27/06/2024 às 21:12
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.0.30
 
@@ -44,16 +44,10 @@ CREATE TABLE `chat` (
 --
 
 INSERT INTO `chat` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`, `deleted_at`) VALUES
-(62, 19, 47, 'oi', 'ola', 0, '2024-06-24 12:41:19', '2024-06-24 12:42:20', NULL),
-(63, 19, 47, 'disponível?', 'sim', 0, '2024-06-24 12:53:58', '2024-06-24 12:54:26', NULL),
-(64, 19, 47, 'vou querer entao', '', 0, '2024-06-24 12:54:44', '2024-06-24 12:59:46', NULL),
-(65, 19, 47, 'vou querer', 'ok', 0, '2024-06-24 13:00:59', '2024-06-24 13:01:25', NULL),
-(66, 19, 52, 'ola', NULL, 1, '2024-06-24 16:38:39', NULL, NULL),
-(67, 19, 59, 'tenho interesse', NULL, 1, '2024-06-24 17:25:11', NULL, NULL),
-(68, 19, 64, 'quero', NULL, 0, '2024-06-25 19:03:52', NULL, '2024-06-26 12:26:09'),
-(69, 19, 65, 'a touca é boa?', NULL, 0, '2024-06-25 19:06:45', NULL, '2024-06-26 12:23:59'),
-(70, 19, 61, 'oi', 'olá', 0, '2024-06-26 12:47:47', '2024-06-26 12:49:27', NULL),
-(71, 19, 61, 'quero ela', NULL, 1, '2024-06-26 12:49:38', NULL, NULL);
+(72, 20, 65, 'oi, quero comprar agora', NULL, 1, '2024-06-26 18:46:34', NULL, NULL),
+(73, 20, 62, 'nova?', 'sim', 0, '2024-06-27 12:33:29', '2024-06-27 12:45:14', NULL),
+(74, 20, 63, 'olaa', 'oi', 0, '2024-06-27 14:11:21', '2024-06-27 14:11:34', '2024-06-27 17:02:16'),
+(75, 20, 63, 'novos?', NULL, 0, '2024-06-27 17:32:49', NULL, '2024-06-27 17:33:11');
 
 -- --------------------------------------------------------
 
@@ -87,7 +81,7 @@ INSERT INTO `products` (`id`, `name`, `price`, `description`, `img_src`, `img_fi
 (62, 'botas', 112.34, 'r', 'assets/images/products/botas_1719319250322.png', 'botas_1719319250322.png', 'r', '2024-06-25 12:40:50', '2024-06-25 12:40:50', NULL),
 (63, 'sneakers', 1234.56, '1', 'assets/images/products/sneakers_1719319271396.png', 'sneakers_1719319271396.png', '1', '2024-06-25 12:41:11', '2024-06-25 12:41:11', NULL),
 (64, 'Jaqueta', 123.45, '11', 'assets/images/products/Jaqueta_1719319935913.png', 'Jaqueta_1719319935913.png', '11', '2024-06-25 13:05:59', '2024-06-25 12:52:15', NULL),
-(65, 'Touca', 120.99, 'boa', 'assets/images/products/Touca_1719320844948.png', 'Touca_1719320844948.png', '1', '2024-06-25 13:07:24', '2024-06-25 13:07:24', NULL);
+(65, 'Touca', 0.00, 'boa', 'assets/images/products/Touca_1719320844948.png', 'Touca_1719320844948.png', '1', '2024-06-27 19:10:36', '2024-06-25 13:07:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -112,13 +106,11 @@ CREATE TABLE `product_messages` (
 --
 
 INSERT INTO `product_messages` (`id`, `user_id`, `product_id`, `message`, `answer`, `active`, `message_created_at`, `answer_created_at`, `deleted_at`) VALUES
-(81, 19, 65, 'oi', 'ola', 0, '2024-06-25 19:14:36', '2024-06-25 19:15:53', '2024-06-25 19:18:10'),
-(82, 19, 64, 'tenho interesse', NULL, 0, '2024-06-25 19:14:43', NULL, '2024-06-25 19:16:12'),
-(83, 19, 63, 'novas?', NULL, 0, '2024-06-25 19:14:51', NULL, '2024-06-25 19:22:27'),
-(84, 19, 62, 'quero', 'so comprar', 0, '2024-06-25 19:18:43', '2024-06-25 19:24:14', NULL),
-(85, 19, 64, 'disponível?', 'sim', 0, '2024-06-25 19:19:43', '2024-06-25 19:23:17', NULL),
-(86, 19, 64, 'nova?', 'sim', 0, '2024-06-25 19:25:19', '2024-06-25 19:25:26', NULL),
-(87, 19, 63, 'oi', NULL, 1, '2024-06-26 12:44:49', NULL, NULL);
+(88, 20, 65, 'disponível?', 'sim', 0, '2024-06-26 18:43:36', '2024-06-26 18:43:49', '2024-06-26 18:45:05'),
+(89, 20, 65, 'Como faço para comprar?', 'Clica no botão \"entrar em contato\"', 0, '2024-06-26 18:44:07', '2024-06-26 18:44:45', NULL),
+(90, 20, 64, 'kkkkk', NULL, 0, '2024-06-26 18:44:18', NULL, '2024-06-26 18:44:25'),
+(91, 20, 64, 'oi', NULL, 1, '2024-06-26 18:44:53', NULL, NULL),
+(92, 20, 62, 'quero', NULL, 1, '2024-06-27 12:34:20', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -136,16 +128,17 @@ CREATE TABLE `users` (
   `active` tinyint(1) NOT NULL DEFAULT 0,
   `purl` varchar(300) NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`) VALUES
-(1, 'welerr', 'welerson194@gmail.com', 'admin', '$2y$10$LsUmvrDmraaPaQIGQ5Um/.xjIafvwO8Kxnb7Ixc.o7BbGWAe2D.ie', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-06-26 13:40:49', '2024-05-28 14:11:17'),
-(19, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$0H0nlAQWApiNxDkWJKB4me7EVMd3IvHYgVD2fw29ByLEN8RtnyIK6', NULL, 1, '', '2024-06-21 20:30:38', '2024-06-21 20:29:47');
+INSERT INTO `users` (`id`, `name`, `email`, `user_type`, `password`, `password_reset_token`, `active`, `purl`, `updated_at`, `created_at`, `deleted_at`) VALUES
+(1, 'welerr', 'welerson194@gmail.com', 'admin', '$2y$10$LsUmvrDmraaPaQIGQ5Um/.xjIafvwO8Kxnb7Ixc.o7BbGWAe2D.ie', 'dfe8e8b2f438329867b50f2fbc6380fef511cce67e93a28afae36c1697190d70', 1, '', '2024-06-26 13:40:49', '2024-05-28 14:11:17', NULL),
+(20, 'ana', 'welerson25@yahoo.com', 'client', '$2y$10$eLn4tAL5vDVO0t2Q0tK63ua5WiS4gADsaHSDAIXyLzCeWkuYMr4KK', NULL, 1, '', '2024-06-26 18:42:32', '2024-06-26 18:42:07', NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -185,7 +178,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de tabela `products`
@@ -197,13 +190,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT de tabela `product_messages`
 --
 ALTER TABLE `product_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restrições para tabelas despejadas

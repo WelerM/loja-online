@@ -1,7 +1,6 @@
 <div style="min-height: 100vh" class="container d-flex flex-column py-5 align-items-center">
 
 
-<?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
 
     <h2>Editar produto</h2>

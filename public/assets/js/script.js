@@ -2,16 +2,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
 
     btn.addEventListener('click', (e) => {
 
-
         let product_message_id = e.target.name
-
-        // let product_id = document.querySelector('.product-id')
-        // product_id = product_id.getAttribute('name')
-
-        // let product_message_id = document.querySelector('.product-message-id')
-        // product_message_id = product_message_id.getAttribute('name')
-
-        console.log();
 
         axios.defaults.withCredentials = true;
         axios.get('?a=show_product_question_details&product_message_id=' + product_message_id)
@@ -19,7 +10,6 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
 
                 let data = response.data
 
-                console.log(data);
 
                 let questions_header_display = document.querySelector('.questions-header-display')
                 let img = document.querySelector('.user-img-icon')
@@ -32,7 +22,7 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                 ul.innerHTML = ''
 
                 data.map(item => {
-                    console.log(item);
+
 
                     let li = document.createElement('li')
 
@@ -47,8 +37,15 @@ document.querySelectorAll('.btn-ver-chat').forEach((btn) => {
                     client_text.textContent = item.user_question
 
                     let client_text_time = document.createElement('span')
-                    client_text_time.style.fontSize = '12 px'
-                    client_text_time.textContent = item.question_created_at
+                    client_text_time.setAttribute('style', 'font-size:12px')
+
+                    let [datePart, timePart] = item.question_created_at.split(' ');
+                    let [year, month, day] = datePart.split('-');
+                    let [hours, minutes] = timePart.split(':');
+                    let formatted_date = `${day}/${month}/${year} às ${hours}:${minutes}h`;
+
+
+                    client_text_time.textContent = formatted_date
 
                     //Hidden
                     let input_product_message_id = document.querySelector('.product-message-id')
@@ -235,7 +232,7 @@ if (document.querySelector('.btn-delete-product-question')) {
     })
 }
 
-// Input mask
+// Input mask for product price
 
 if (document.querySelector('.input-price')) {
     document.querySelectorAll('.input-price').forEach((btn) => {
@@ -252,4 +249,96 @@ if (document.querySelector('.input-price')) {
         })
     })
 
+}
+
+
+
+
+
+//Input treatment for views "register", "login", "edit product"
+
+
+if (document.querySelector('form')) {
+    
+    const inputName = document.querySelector('.input-name');
+    const inputEmail = document.querySelector('.input-email');
+    const inputPassword = document.querySelector('.input-password');
+    const inputRepeatPassword = document.querySelector('.input-repeat-password');
+    const alertError = document.querySelector('.js-alert-error');
+
+    document.querySelector('form').addEventListener('submit', (event) => {
+        let hasError = false;
+        alertError.classList.add('d-none');
+        alertError.innerHTML = '';
+
+        // Validação do Nome
+        if (inputName.value.trim() === '') {
+            hasError = true;
+            showError(inputName, 'Por favor, insira seu nome completo.');
+        } else {
+            removeError(inputName);
+        }
+
+        // Validação do Email
+        if (inputEmail.value.trim() === '') {
+            hasError = true;
+            showError(inputEmail, 'Por favor, insira seu email.');
+        } else if (!validateEmail(inputEmail.value)) {
+            hasError = true;
+            showError(inputEmail, 'Por favor, insira um email válido.');
+        } else {
+            removeError(inputEmail);
+        }
+
+        // Validação da Senha
+        if (inputPassword.value.trim() === '') {
+            hasError = true;
+            showError(inputPassword, 'Por favor, insira sua senha.');
+        } else if (inputPassword.value.length < 6) {
+            hasError = true;
+            showError(inputPassword, 'A senha deve ter pelo menos 6 caracteres.');
+        } else {
+            removeError(inputPassword);
+        }
+
+        // Validação da Repetição de Senha
+        if (inputRepeatPassword.value.trim() === '') {
+            hasError = true;
+            showError(inputRepeatPassword, 'Por favor, repita sua senha.');
+        } else if (inputRepeatPassword.value !== inputPassword.value) {
+            hasError = true;
+            showError(inputRepeatPassword, 'As senhas não coincidem.');
+        } else {
+            removeError(inputRepeatPassword);
+        }
+
+        if (hasError) {
+            event.preventDefault();
+            alertError.classList.remove('d-none');
+            alertError.innerHTML = 'Por favor, corrija os erros antes de continuar.';
+        }
+    });
+
+    function showError(input, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'invalid-feedback';
+        errorDiv.innerHTML = message;
+        input.classList.add('is-invalid');
+        if (input.nextElementSibling) {
+            input.nextElementSibling.remove();
+        }
+        input.insertAdjacentElement('afterend', errorDiv);
+    }
+
+    function removeError(input) {
+        input.classList.remove('is-invalid');
+        if (input.nextElementSibling) {
+            input.nextElementSibling.remove();
+        }
+    }
+
+    function validateEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()\[\]\\.,;:\s@"]+\.)+[^<>()\[\]\\.,;:\s@"]{2,})$/i;
+        return re.test(String(email).toLowerCase());
+    }
 }

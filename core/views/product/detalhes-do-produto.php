@@ -17,9 +17,10 @@
                 <p class=""> <?= $data['product_details']['description']; ?></p>
                 <a href="#" class=""><?= $data['product_details']['link']; ?></a>
 
-                <a href="?a=contatar-loja/<?= $data['product_details']['id']; ?>" style="width: fit-content" class="btn btn-success mt-4 btn-sm">Entrar em contato</a>
-
-
+                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != '1') : ?>
+                    <a href="?a=contatar-loja/<?= $data['product_details']['id']; ?>" style="width: fit-content" class="btn btn-success mt-4 btn-sm">Entrar em contato</a>
+                <?php endif; ?>
+                
             </div>
 
         </div>
@@ -29,7 +30,14 @@
 
             <div class="col-md-6 col-sm-12 ">
 
-                <?php if (isset($_SESSION['user_id'])) : ?><!-- User allowed to make question on product -->
+                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] === '1') : ?><!-- User allowed to make question on product -->
+
+                    <div class="alert alert-danger text-center">
+
+                        Você não pode fazer perguntas pois é o administrador
+                    </div>
+
+                <?php elseif (isset($_SESSION['user_id']) && $_SESSION['user_id'] != '1') : ?>
 
                     <div class="mt-3 ">
 
@@ -47,7 +55,6 @@
                         </form>
 
                     </div>
-
                 <?php else : ?>
                     <!-- Create account to make a question -->
                     <a href="?a=entrar" class="my-5 ">
@@ -59,6 +66,7 @@
                             <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
                         </svg>
                     </a>
+
 
                 <?php endif; ?>
 

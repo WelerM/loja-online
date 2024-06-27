@@ -16,12 +16,12 @@
       
         <div class="mb-2">
             <label for="password" class="form-label">New password</label>
-            <input id="password" class="form-control" type="password" name="password">
+            <input id="password" class="input-repeat form-control" type="password" name="password">
         </div>
 
         <div class="mb-3">
             <label for="repeat-password" class="form-label">Repeat password</label>
-            <input id="repeat-password" class="form-control" type="password" name="repeat-password">
+            <input id="repeat-password" class="input-repeat-password form-control" type="password" name="repeat-password">
         </div>
 
         <!-- Hidden -->

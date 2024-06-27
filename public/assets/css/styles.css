@@ -196,3 +196,21 @@ h1 {}
     }
 
 }
+
+
+
+.container-btns-filter{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+@media(max-width: 575px) {
+
+    .container-btns-filter{
+        flex-direction: column;
+    
+    }
+
+}
+
+

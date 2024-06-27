@@ -6,49 +6,35 @@
 
             <p class="text-center text-success  fs-2 mb-4">Entrar</p>
 
+            <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
 
-            <!-- Email -->
+
+            <!-- Email  add 'required' attribute-->
             <div class="mb-3">
 
                 <label for="login-email" class="form-label">Email</label>
 
-                <input value="welerson194@gmail.com" required type="email" name="login-email" class="form-control" id="login-email" aria-describedby="emailHelp">
+                <input  id="login-email" class="input-email form-control" value="welerson194@gmail.com" required type="email" name="login-email"  aria-describedby="emailHelp">
 
 
             </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
-            <!-- Password -->
+            <!-- Password add 'required' attribute -->
             <div class="mb-3">
 
                 <label for="login-password" class="form-label">Senha</label>
 
-                <input  required type="password" name="login-password" class="form-control bg-transparent " id="login-password">
+                <input id="login-password" class="form-control bg-transparent" type="password" name="login-password"  >
 
             </div>
 
 
-            <?php if (isset($_SESSION['error'])) :  ?>
 
-                <div class='alert alert-danger text-center'>
-                    <?= $_SESSION['error'] ?>
-                    <?php unset($_SESSION['error']) ?>
-                </div>
-
-            <?php endif; ?>
-
-            <?php if (isset($_SESSION['success'])) :  ?>
-
-                <div class='alert alert-success text-center'>
-                    <?= $_SESSION['success'] ?>
-                    <?php unset($_SESSION['success']) ?>
-                </div>
-
-            <?php endif; ?>
 
             <div class="mb-3 d-flex justify-content-between">
                 <div class='d-none alert js-alert-error alert-danger text-center'></div>
-                <a class="text-dark fs-6    " href="?a=send_recovery_email_page">Esqueceu sua senha?</a>
-                <a class="text-dark fs-6    " href="?a=register_page">Criar conta</a>
+                <a class="text-dark fs-6    " href="?a=recuperar-senha">Esqueceu sua senha?</a>
+                <a class="text-dark fs-6    " href="?a=registrar">Criar conta</a>
             </div>
 
 
