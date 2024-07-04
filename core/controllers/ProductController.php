@@ -241,25 +241,25 @@ class ProductController
         //Product name
         if (!isset($_POST['product-name']) || empty(trim($_POST['product-name']))) {
             $_SESSION['error'] = 'É necessário adicionar um nome para o produto';
-            Functions::redirect('edit_product_page/' . $product_id);
+            Functions::redirect('editar-produto/' . $product_id);
             return;
         }
         //Produt price
         if (!isset($_POST['product-price']) || empty(trim($_POST['product-price']))) {
             $_SESSION['error'] = 'É necessário adicionar um preço para o produto';
-            Functions::redirect('edit_product_page/' . $product_id);
+            Functions::redirect('editar-produto/' . $product_id);
             return;
         }
         //Produt description
         if (!isset($_POST['product-description']) || empty(trim($_POST['product-description']))) {
             $_SESSION['error'] = 'É necessário adicionar uma descrição para o produto';
-            Functions::redirect('edit_product_page/' . $product_id);
+            Functions::redirect('editar-produto/' . $product_id);
             return;
         }
         //Produt link
         if (!isset($_POST['product-link']) || empty(trim($_POST['product-link']))) {
             $_SESSION['error'] = 'É necessário adicionar um link para o produto';
-            Functions::redirect('edit_product_page/' . $product_id);
+            Functions::redirect('editar-produto/' . $product_id);
             return;
         }
         //--------------------------------------------------------------------
@@ -275,12 +275,12 @@ class ProductController
             if (!$result) {
 
                 $_SESSION['error'] = 'Erro editar produto';
-                Functions::redirect('my_products_page');
+                Functions::redirect('editar-produto/' . $product_id);
                 return;
             }
 
             $_SESSION['success'] = 'Produto editado com sucesso';
-            Functions::redirect('meus-produtos');
+            Functions::redirect('editar-produto/' . $product_id);
             return;
         };
         //---------------------------------------------------------------
@@ -297,7 +297,7 @@ class ProductController
             if (!$result) {
 
                 $_SESSION['error'] = 'Erro ao editar produto';
-                Functions::redirect('my_products_page');
+                Functions::redirect('editar-produto/' . $product_id);
                 return;
             }
 

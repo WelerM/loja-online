@@ -8,6 +8,7 @@ use core\classes\Functions;
 use core\classes\SendEmail;
 use core\models\Admin;
 use core\models\Product;
+use DateTime;
 use Exception;
 
 class UserController
@@ -15,9 +16,6 @@ class UserController
 
     public function home_page()
     {
-
-        // $logger = new Log();
-        // $logger->logger('testando kk', 'warning');
 
 
         $product = new Product();
@@ -32,8 +30,6 @@ class UserController
             'products_questions_count' => $product->get_products_messages_count(),
             'user_messages_count' => $admin->get_user_messages_count()
         ];
-
-
 
 
         Functions::Layout([
@@ -69,6 +65,7 @@ class UserController
             'products_questions_count' => $product->get_products_messages_count(),
             'user_messages_count' => $admin->get_user_messages_count()
         ];
+
 
         Functions::Layout([
             'layouts/html_header',
@@ -233,8 +230,6 @@ class UserController
     //Sign In
     public function login()
     {
-
-
         //Verifies if there's an open session
         if (Functions::user_logged()) {
             Functions::redirect();
@@ -255,9 +250,7 @@ class UserController
             !isset($_POST['login-password'])
 
         ) {
-
-            $_SESSION['error'] = "Empty fields!";
-
+            $_SESSION['error'] = "Campos vazios!";
             Functions::redirect('entrar');
             return;
         }
@@ -348,16 +341,18 @@ class UserController
 
 
 
-        //Verifies on DB if a client with same the email exists
+        //Verifies on DB if a client with same the email is active
         $users = new User();
 
-        if ($users->verify_email_exists($_POST['signup-email'])) {
+        if ($users->verify_email_is_active($_POST['signup-email'])) {
+
 
             $_SESSION['error'] = "Esse email já está sendo utilizado!";
             Functions::redirect('registrar');
             return;
         }
 
+        $results = $users->verify_email_is_active($_POST['signup-email']);
 
 
         //Register user on 'USERS' table & 'LOCATION' table
@@ -448,24 +443,28 @@ class UserController
         //Store message into database
         //Sends email to store's admin
 
-        $user_message = $_POST['user-message'];
-        $user_id = $_POST['user-id'];
-        $product_id = $_POST['product-id'];
+        if (!isset($_POST['user-message']) || empty(trim($_POST['user-message']))) {
+
+          
+            Functions::redirect('contatar-loja/' . intval($_POST['product-id']));
+            $_SESSION['error'] = 'Mensagem não pode estar vazia';
+            return;
+        }
+
 
         $user = new User();
-        $result = $user->contact_store($user_message, $user_id, $product_id);
-
+        $result = $user->contact_store();
 
 
         if (!$result) {
 
-            Functions::redirect('contatar-loja/' . $product_id);
+            Functions::redirect('contatar-loja/' . intval($_POST['product-id']));
             $_SESSION['error'] = 'Erro ao enviar mensagem';
 
             return;
         };
 
-        Functions::redirect('contatar-loja/' . $product_id);
+        Functions::redirect('contatar-loja/' . intval($_POST['product-id']));
         $_SESSION['success'] = 'Mensagem enviada com sucesso! Aguarde a loja responder.';
 
         return;
@@ -495,7 +494,7 @@ class UserController
 
         //Verifies if purl is valid
         if (strlen($purl) != 12) {
-  
+
             Functions::redirect('Invalid personal url');
             return;
         }
@@ -651,15 +650,18 @@ class UserController
             Functions::redirect('editar-conta');
             return;
         }
+
         //Verifies if there was a form submition
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             Functions::redirect('editar-conta');
             return;
         }
+
         //Checks for unset inputs 
         if (
             !isset($_POST['name']) ||
             !isset($_POST['email']) ||
+            !isset($_POST['old-password']) ||
             !isset($_POST['password']) ||
             !isset($_POST['repeat-password'])
         ) {
@@ -672,6 +674,7 @@ class UserController
         if (
             trim(empty($_POST['name'])) ||
             trim(empty($_POST['email'])) ||
+            trim(empty($_POST['old-password'])) ||
             trim(empty($_POST['password'])) ||
             trim(empty($_POST['repeat-password']))
         ) {
@@ -686,8 +689,9 @@ class UserController
             Functions::redirect('editar-conta');
             return;
         }
-
         //---------------------------------------------
+
+
         //Checks for valid email
         if (filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL) === false) {
             $_SESSION['error'] = "Invalid email!";
@@ -695,15 +699,23 @@ class UserController
             return;
         }
 
+
         //Verifies if new email is available to use
-        $check_email_available = $user->verify_available_email();
-
-
-        if (!$check_email_available) {
+        if (!$user->verify_available_email()) {
             $_SESSION['error'] = "Este email já está em uso. Por favor, escolha outro email";
-            Functions::redirect('minha-conta');
+            Functions::redirect('editar-conta');
             return;
         }
+
+
+        //Check if user password is correct
+        if (!$user->verify_old_password()) {
+            $_SESSION['error'] = "Senha antiga incorreta!";
+            Functions::redirect('editar-conta');
+            return;
+        }
+
+
 
 
         $result = $user->edit_account();
@@ -718,4 +730,6 @@ class UserController
         Functions::redirect('minha-conta');
     }
     //===================================================================
+
+
 }

@@ -1,35 +1,33 @@
-<div style="min-height: 100vh" class="container d-flex flex-column py-5 align-items-center">
+<div class="container row p-0 py-2 mx-auto">
 
 
+    <div class="col-md-6 col-sm-12 mx-auto py-0">
+
+        <h5>Editar produto</h5>
+
+        <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+        <div class="js-alert-error d-none alert alert-danger"></div>
 
 
-    <h2>Editar produto</h2>
+        <?php foreach ($data as $item) : ?>
 
-    <div class="d-flex justify-content-between py-5 w-50">
-        <div>
+            <div style="height: fit-content; width:fit-content;" class="border p-0 text-dark">
 
-            <?php foreach ($data as $item) : ?>
+                <img style="max-height:100px; max-width:100px" src="<?= $item['img_src']; ?>" class="img-fluid img-edit-preview">
 
+                <div class="p-2">
 
-
-                <div class="card text-dark">
-
-                    <img style="height:200px; width:200px" src="<?= $item['img_src']; ?>" class="card-img-top img-edit-preview">
-
-                    <div class="card-body p-3">
-
-                        <h5 class="card-title"><?= $item['name']; ?> </h5>
-                        <p class="card-title"></p><?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?> </p>
-                        <p class="card-title"><?= $item['description']; ?> </p>
-                        <p class="card-title d-none"><?= date('d/m/Y', strtotime($item['created_at'])) . ' às ' . date('H:i', strtotime($item['created_at'])) . 'h' ?> </p>
-
-                    </div>
+                    <h5 class="m-0"><?= $item['name']; ?> </h5>
+                    <p class="m-0"></p><?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?> </p>
+                    <p class="m-0"><?= $item['description']; ?> </p>
+                    <p class=" d-none"><?= date('d/m/Y', strtotime($item['created_at'])) . ' às ' . date('H:i', strtotime($item['created_at'])) . 'h' ?> </p>
 
                 </div>
 
-            <?php endforeach ?>
+            </div>
 
-        </div>
+        <?php endforeach ?>
+
 
         <form id="img-form" class="flex-column px-0 mt-1 py-1  " action="?a=edit_product" enctype="multipart/form-data" method="POST">
 
@@ -56,7 +54,7 @@
             <!-- Img name input trigger SHOWN-->
             <button class="btn btn-edit-img d-flex align-items-center border mb-3">
 
-                Escolher imagem
+                Nova imagem
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-image ms-2" viewBox="0 0 16 16">
                     <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
@@ -64,23 +62,23 @@
                 </svg>
 
             </button>
-                
+
 
             <!-- Product name-->
             <div class="mb-3">
 
-                <label for="input-img-name" class="form-label fw-bold ">Nome do produto</label>
+                <label for="input-img-name" class="form-label ">Nome do produto</label>
 
-                <input value="<?= $item['name']; ?>" id="input-img-name" type="text" class="form-control" name="product-name" placeholder="Nome do produto">
+                <input required value="<?= $item['name']; ?>" id="input-img-name" type="text" class="input-name form-control" name="product-name" placeholder="Nome do produto">
 
             </div>
 
             <!-- Product price-->
             <div class="mb-3">
 
-                <label for="input-img-name" class="form-label fw-bold ">Preço do produto</label>
+                <label for="input-img-name" class="form-label ">Preço do produto</label>
 
-                <input value="<?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?>" type="text" class="input-price form-control" name="product-price" placeholder="Preço do produto">
+                <input required value="<?= 'R$ ' . number_format($item['price'], 2, ',', '.'); ?>" type="text" class="input-price form-control" name="product-price" placeholder="Preço do produto">
 
             </div>
 
@@ -88,7 +86,7 @@
 
             <!-- Product description-->
             <div class="form-floating mb-3">
-                <textarea class="form-control" name="product-description" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"><?= htmlspecialchars($item['description']); ?></textarea>
+                <textarea required id="floatingTextarea2" style="height: 100px" class="input-description form-control" name="product-description"><?= htmlspecialchars($item['description']); ?></textarea>
                 <label for="floatingTextarea2">Descrição do produto</label>
             </div>
 
@@ -98,9 +96,9 @@
             <!-- Product link-->
             <div class="mb-3">
 
-                <label for="product-link" class="form-label fw-bold ">Link do produto</label>
+                <label for="link" class="form-label ">Link do produto</label>
 
-                <input value="<?= $item['link']; ?>" id="product-link" type="text" class="form-control" name="product-link" placeholder="Link do produto">
+                <input required value="<?= $item['link']; ?>" id="link" type="text" class="input-link form-control" name="product-link" placeholder="Link do produto">
 
             </div>
 
@@ -120,10 +118,12 @@
 
 
             <button id="btn-form-submit" type="submit" name="submit" class="btn btn-success mx-0 d-flex align-items-center justify-content-center" style="width: fit-content;">
+
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16">
                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
                     <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
                 </svg>
+
                 Editar</button>
 
 

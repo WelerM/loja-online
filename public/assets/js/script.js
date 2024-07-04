@@ -108,7 +108,6 @@ if (document.querySelector('.btn-add-img')) {
 }
 
 
-
 //Triigers input file in order to choose an image from the system
 if (document.querySelector('.btn-edit-img')) {
     document.querySelector('.btn-edit-img').addEventListener('click', (e) => {
@@ -141,6 +140,8 @@ if (document.querySelector('.btn-edit-img')) {
 }
 
 
+
+//DELETE btns
 if (document.querySelector('.btn-delete-product')) {
 
     document.querySelectorAll('.btn-delete-product').forEach((btn) => {
@@ -173,38 +174,14 @@ if (document.querySelector('.btn-delete-product')) {
     })
 
 }
-
-
-
-// create_product_page view
-if (document.querySelector('#btn-fake-add-img')) {
-    document.querySelector('#btn-fake-add-img').addEventListener('click', () => {
-        //let btn_real_add_img = 
-        document.querySelector('.btn-add-img').click()
-    })
-}
-
-
-
-if (document.querySelector('.chat-container')) {
-    let chat_container = document.querySelector('.chat-container')
-    chat_container.scrollTop = chat_container.scrollHeight;
-}
-
-
-
-
-//
+//Padronizar botoes DELETE que trigam links
 if (document.querySelector('.btn-delete-product-question')) {
 
     document.querySelectorAll('.btn-delete-product-question').forEach((btn) => {
 
-
-
         btn.addEventListener('click', (e) => {
 
             e.preventDefault();
-
 
             Swal.fire({
                 title: "Tem certeza que quer deletar esta mensagem?",
@@ -232,8 +209,30 @@ if (document.querySelector('.btn-delete-product-question')) {
     })
 }
 
-// Input mask for product price
 
+
+
+
+if (document.querySelector('#btn-fake-add-img')) {
+    document.querySelector('#btn-fake-add-img').addEventListener('click', () => {
+        //let btn_real_add_img = 
+        document.querySelector('.btn-add-img').click()
+    })
+}
+
+
+//Sets chat scroll Y to the bottom
+if (document.querySelector('.chat-container')) {
+    let chat_container = document.querySelector('.chat-container')
+    chat_container.scrollTop = chat_container.scrollHeight;
+}
+
+
+
+
+
+
+// Input mask for product price
 if (document.querySelector('.input-price')) {
     document.querySelectorAll('.input-price').forEach((btn) => {
 
@@ -248,76 +247,172 @@ if (document.querySelector('.input-price')) {
             e.target.value = formatted_input_value
         })
     })
-
 }
 
 
 
 
 
-//Input treatment for views "register", "login", "edit product"
-
+//TURNED Off
+//Input treatment for views "register", "login", "edit product", "edit account"
 
 if (document.querySelector('form')) {
-    
+
     const inputName = document.querySelector('.input-name');
     const inputEmail = document.querySelector('.input-email');
+    const inputOldPassword = document.querySelector('.input-old-password');
     const inputPassword = document.querySelector('.input-password');
     const inputRepeatPassword = document.querySelector('.input-repeat-password');
+
+    const inputPrice = document.querySelector('.input-price');
+    //
+    const inputDescription = document.querySelector('.input-description');//Talves apagar esse
+    const textarea = document.querySelector('textarea');
+    //
+    const inputLink = document.querySelector('.input-link');
+    const inputImg = document.querySelector('.input-img');
+
     const alertError = document.querySelector('.js-alert-error');
 
-    document.querySelector('form').addEventListener('submit', (event) => {
-        let hasError = false;
-        alertError.classList.add('d-none');
-        alertError.innerHTML = '';
+    //Validation here
+    document.querySelectorAll('form').forEach((form => {
 
-        // Validação do Nome
-        if (inputName.value.trim() === '') {
-            hasError = true;
-            showError(inputName, 'Por favor, insira seu nome completo.');
-        } else {
-            removeError(inputName);
-        }
+        form.addEventListener('submit', (event) => {
+        
 
-        // Validação do Email
-        if (inputEmail.value.trim() === '') {
-            hasError = true;
-            showError(inputEmail, 'Por favor, insira seu email.');
-        } else if (!validateEmail(inputEmail.value)) {
-            hasError = true;
-            showError(inputEmail, 'Por favor, insira um email válido.');
-        } else {
-            removeError(inputEmail);
-        }
+            let hasError = false;
+            alertError.classList.add('d-none');
+            alertError.innerHTML = '';
 
-        // Validação da Senha
-        if (inputPassword.value.trim() === '') {
-            hasError = true;
-            showError(inputPassword, 'Por favor, insira sua senha.');
-        } else if (inputPassword.value.length < 6) {
-            hasError = true;
-            showError(inputPassword, 'A senha deve ter pelo menos 6 caracteres.');
-        } else {
-            removeError(inputPassword);
-        }
+            // Validação do Nome
+            if (inputName) {
+                
+                if (inputName.value.trim() === '') {
+                    hasError = true;
+                    showError(inputName, 'Por favor, insira seu nome completo.');
+                } else {
+                    removeError(inputName);
+                }
+            }
 
-        // Validação da Repetição de Senha
-        if (inputRepeatPassword.value.trim() === '') {
-            hasError = true;
-            showError(inputRepeatPassword, 'Por favor, repita sua senha.');
-        } else if (inputRepeatPassword.value !== inputPassword.value) {
-            hasError = true;
-            showError(inputRepeatPassword, 'As senhas não coincidem.');
-        } else {
-            removeError(inputRepeatPassword);
-        }
+            // Validação do Email
+            if (inputEmail) {            
+                if (inputEmail.value.trim() === '') {
+                    hasError = true;
+                    showError(inputEmail, 'Por favor, insira seu email.');
+                } else if (!validateEmail(inputEmail.value)) {
+                    hasError = true;
+                    showError(inputEmail, 'Por favor, insira um email válido.');
+                } else {
+                    removeError(inputEmail);
+                }
+            }
 
-        if (hasError) {
-            event.preventDefault();
-            alertError.classList.remove('d-none');
-            alertError.innerHTML = 'Por favor, corrija os erros antes de continuar.';
-        }
-    });
+            if (inputOldPassword) {
+                if (inputOldPassword.value.trim() === '') {
+                    hasError = true;
+                    showError(inputOldPassword, 'Por favor, insira a senha antiga.');
+                } else {
+                    removeError(inputOldPassword);
+                }
+            }
+
+            // Validação da Senha
+            if (inputPassword) {                
+                if (inputPassword.value.trim() === '') {
+                    console.log('ffa');
+                    hasError = true;
+                    showError(inputPassword, 'Por favor, insira sua senha.');
+                } else if (inputPassword.value.length < 6) {
+                    hasError = true;
+                    showError(inputPassword, 'A senha deve ter pelo menos 6 caracteres.');
+                } else {
+                    removeError(inputPassword);
+                }
+            }
+
+            if (inputRepeatPassword) {
+                
+                // Validação da Repetição de Senha
+                if (inputRepeatPassword.value.trim() === '') {
+                    hasError = true;
+                    showError(inputRepeatPassword, 'Por favor, repita sua senha.');
+                } else if (inputRepeatPassword.value !== inputPassword.value) {
+                    hasError = true;
+                    showError(inputRepeatPassword, 'As senhas não coincidem.');
+                } else {
+                    removeError(inputRepeatPassword);
+                }
+            }
+
+
+            //Product inputs
+            // const inputPrice = document.querySelector('.input-price');
+            // const inputDescription = document.querySelector('.input-description');
+            // const inputLink = document.querySelector('.input-link');
+            // const inputImg = document.querySelector('.input-img');
+
+            //Price
+            if (inputPrice) {
+                if (inputPrice.value.trim() === '') {
+                    hasError = true;
+                    showError(inputPrice, 'Por favor, insira um preço ao produto.');
+                } else {
+                    removeError(inputPrice);
+                } 
+            }
+
+            // Description
+            if (inputDescription) {
+                if (inputDescription.value.trim() === '') {
+                    hasError = true;
+                    showError(inputDescription, 'Por favor, insira uma descrição ao produto.');
+                } else {
+                    removeError(inputDescription);
+                } 
+            }
+
+            //Textarea
+            if (textarea) {
+                if (textarea.value.trim() === '') {
+                    hasError = true;
+                    showError(textarea, 'Por favor, insira uma descrição ao produto.');
+                } else {
+                    removeError(textarea);
+                } 
+            }
+    
+            //Link
+            if (inputLink) {
+                if (inputLink.value.trim() === '') {
+                    hasError = true;
+                    showError(inputLink, 'Por favor, insira um link ao produto.');
+                } else {
+                    removeError(inputLink);
+                } 
+            }
+
+            //Img
+            if (inputImg) {
+                if (inputImg.value.trim() === '') {
+                    hasError = true;
+                    showError(inputImg, 'Por favor, insira uma image ao produto.');
+                } else {
+                    removeError(inputImg);
+                } 
+            }
+
+
+            if (hasError) {
+                console.log(hasError);
+                event.preventDefault();
+                alertError.classList.remove('d-none');
+                alertError.innerHTML = 'Por favor, corrija os erros antes de continuar.';
+            }
+
+
+        });
+    }))
 
     function showError(input, message) {
         const errorDiv = document.createElement('div');
@@ -342,3 +437,12 @@ if (document.querySelector('form')) {
         return re.test(String(email).toLowerCase());
     }
 }
+
+
+// const screenWidth = window.innerWidth;
+
+
+
+
+
+// alert('Current screen width: px');

@@ -78,16 +78,17 @@ class AdminController
             $data['filter'] = 'deletadas';
         }
 
-
-        // print_r($data);
-
+        // $admin->get_user_messages_count();
+        // die();
+        //  print_r($data);
+        
         //Header data
         $header_data = [
             'products_count' => $product->get_products_count(),
             'products_questions_count' => $product->get_products_messages_count(),
             'user_messages_count' => $admin->get_user_messages_count()
         ];
-        // print_r($header_data['user_messages_count']);
+        
         Functions::Layout([
             'layouts/html_header',
             'layouts/header',
@@ -111,6 +112,8 @@ class AdminController
 
         $data = $admin->get_user_message_information();
 
+
+    
         // print_r($data);
         //Header data
         $header_data = [
@@ -133,28 +136,30 @@ class AdminController
     public function answer_user_message()
     {
 
-        $user_id = $_GET['user_id'];
-        $product_id = $_GET['product-id'];
+        $user_id = $_POST['user-id'];
+        $product_id = $_POST['product-id'];
+
+
 
         //Check if inputs are coming filled
         if (!isset($_POST['answer']) || empty(trim($_POST['answer']))) {
             $_SESSION['error'] = 'É necessário escrever uma resposta';
-            Functions::redirect('responder-mensagem-de-usuario&user_id=' . $user_id . '&product-id=' . $product_id);
+            Functions::redirect('responder-mensagem-de-usuario&user_id=' . intval($_POST['user-id']) . '&product-id=' . intval($_POST['product-id']));
             return;
         }
         if (!isset($_POST['chat-message-id'])) {
             $_SESSION['error'] = 'Erro';
-            Functions::redirect('responder-mensagem-de-usuario&user_id=' . $user_id . '&product-id=' . $product_id);
+            Functions::redirect('responder-mensagem-de-usuario&user_id=' . intval($_POST['user-id']) . '&product-id=' . intval($_POST['product-id']));
             return;
         }
         if (!isset($_POST['product-id'])) {
             $_SESSION['error'] = 'Erro';
-            Functions::redirect('responder-mensagem-de-usuario&user_id=' . $user_id . '&product-id=' . $product_id);
+            Functions::redirect('responder-mensagem-de-usuario&user_id=' . intval($_POST['user-id']) . '&product-id=' . intval($_POST['product-id']));
             return;
         }
         if (!isset($_POST['user-id'])) {
             $_SESSION['error'] = 'Erro';
-            Functions::redirect('responder-mensagem-de-usuario&user_id=' . $user_id . '&product-id=' . $product_id);
+            Functions::redirect('responder-mensagem-de-usuario&user_id=' . intval($_POST['user-id']) . '&product-id=' . intval($_POST['product-id']));
             return;
         }
 
@@ -167,7 +172,7 @@ class AdminController
 
         if (!$result) {
             $_SESSION['error'] = 'Erro ao responder mensagem de usuário';
-            Functions::redirect('responder-mensagem-de-usuario&user_id=' . $user_id . '&product-id=' . $product_id);
+            Functions::redirect('responder-mensagem-de-usuario&user_id=' . intval($_POST['user-id']) . '&product-id=' . intval($_POST['product-id']));
             return;
         }
 

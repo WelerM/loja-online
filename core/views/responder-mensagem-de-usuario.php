@@ -3,7 +3,8 @@
     <div class="col-md-6 col-sm-12 mx-auto">
 
 
-    <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+        <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+        <div class="js-alert-error d-none alert alert-danger"></div>
 
 
         <h5>Responder mensagem do usuário</h5>
@@ -12,7 +13,7 @@
         <!-- In testes -->
         <div class="chat-container mb-2 " style="max-height:500px; overflow-y:scroll;">
 
-            <?php foreach ($data['user_chat_messages'] as $message): ?>
+            <?php foreach ($data['user_chat_messages'] as $message) : ?>
 
                 <!-- Question -->
                 <div class="">
@@ -37,15 +38,14 @@
                 </div>
 
             <?php endforeach ?>
-        
+
         </div>
 
-        <form action="?a=answer_user_message/<?= $message['chat_message_id'] ?>" method="POST">
+        <form action="?a=answer_user_message" method="POST">
 
             <div class="form-floating mb-3">
-                <textarea class="form-control bg-body-tertiary" name="answer" placeholder="Leave a comment here"
-                    id="floatingTextarea2" style="height: 100px"></textarea>
-                <label class="" for="floatingTextarea2">Resposta</label>
+                <textarea required id="floatingTextarea2" style="height: 100px" class="form-control bg-body-tertiary" name="answer" ></textarea>
+                <label for="floatingTextarea2">Resposta</label>
             </div>
 
             <!-- HIdden message id -->

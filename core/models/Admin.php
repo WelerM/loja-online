@@ -224,10 +224,15 @@ class Admin
              FROM
                  chat
             WHERE
-                 active = :active",
+                 chat.active = :active
+            AND
+                chat.answer_created_at IS NULL
+            AND 
+                chat.deleted_at IS NULL",
             $params
         );
 
+     
         $result = json_decode(json_encode($result[0]), true);
         return $result['user_messages_count'];
     }

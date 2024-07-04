@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\classes\Database;
 use core\classes\Functions;
+use core\classes\Log;
 use core\models\Image;
 use Exception;
 
@@ -73,7 +74,7 @@ class Product
             return false;
         }
     }
-   //===================================================
+    //===================================================
 
 
     public function list_products()
@@ -564,6 +565,7 @@ class Product
                 "UPDATE
                     products
                  SET
+                    img_src = 'assets/images/blank-image.jpg',
                     deleted_at = NOW()
                 WHERE
                     id = :id",
@@ -632,10 +634,17 @@ class Product
             "SELECT COUNT(*) AS products_messages_count 
              FROM
                  product_messages
+            JOIN
+                products
+            ON
+                product_messages.product_id = products.id
             WHERE
-                 active = :active
+                 product_messages.active = :active
             AND 
                 product_messages.deleted_at 
+            IS NULL
+            AND
+                products.deleted_at
             IS NULL",
             $params
         );

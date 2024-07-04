@@ -1,58 +1,51 @@
-<div style="min-height: 100vh;" class="container py-2 mx-auto ">
+<div class="container row py-2 mx-auto ">
 
     <div class="col-md-6 col-sm-12  mx-auto">
-        <div class="row">
-            <div class=" col-md-6 col=sm-12 ">
-
-            <?php include('components/alert.php');?>
 
 
-                <h5 class="mb-3">Minha conta</h5>
-
-                <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
-                <dl class="row">
+        <?php include('components/alert.php'); ?>
 
 
-                    <dt class="col-sm-3">Nome</dt>
-                    <dd class="col-sm-9"><?= $data['name'] ?></dd>
+        <h5 class="mb-3">Minha conta</h5>
 
-                    <dt class="col-sm-3">E-mail</dt>
-                    <dd class="col-sm-9"><?= $data['email'] ?></dd>
-
-                    <dt class="col-sm-3">Criado em</dt>
-                    <dd class="col-sm-9"><?= date('d/m/Y', strtotime($data['created_at'])) ?></dd>
+        <!-- <img class="w-50 mb-3" id="" src="assets/images/top/id_1_top_1708626416327.png" alt=""> -->
+        <dl class="row">
 
 
+            <dt class="col-sm-3">Nome</dt>
+            <dd class="col-sm-9"><?= $data['name'] ?></dd>
 
-                </dl>
+            <dt class="col-sm-3">E-mail</dt>
+            <dd class="col-sm-9"><?= $data['email'] ?></dd>
+
+            <dt class="col-sm-3">Criado em</dt>
+            <dd class="col-sm-9"><?= date('d/m/Y', strtotime($data['created_at'])) ?></dd>
 
 
-                <a href="?a=editar-conta" style="width: fit-content;" class="btn btn-warning btn-sm">Editar conta</a>
 
-                <!-- Add swal to this button -->
-                <a href="?a=delete_account" style="width: fit-content;" class="btn btn-danger btn-sm">Deletar conta</a>
+        </dl>
 
 
-                <form id="form-delete-account" class="d-none mt-3" action="?a=delete_account" method="POST">
+        <a href="?a=editar-conta" style="width: fit-content;" class="btn btn-warning btn-sm">Editar conta</a>
 
-                    <label class="form-label" for="password">Enter your password</label>
-                    <input id="password" class="form-control" name="password" type="password" placeholder="password">
+        <!-- Add swal to this button -->
+        <a href="?a=delete_account" style="width: fit-content;" class="btn btn-danger btn-sm">Deletar conta</a>
 
-                    <div class="mt-2 d-flex gap-2">
-                        <button class="btn btn-danger btn-sm " type="submit">Delete account</button>
-                        <button class="btn btn-success btn-sm">Cancel</button>
-                    </div>
-                </form>
 
+        <form id="form-delete-account" class="d-none mt-3" action="?a=delete_account" method="POST">
+
+            <label class="form-label" for="password">Enter your password</label>
+            <input id="password" class="form-control" name="password" type="password" placeholder="password">
+
+            <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-danger btn-sm " type="submit">Delete account</button>
+                <button class="btn btn-success btn-sm">Cancel</button>
             </div>
+            
+        </form>
 
 
-
-
-
-        </div>
     </div>
-
 
 
 </div>

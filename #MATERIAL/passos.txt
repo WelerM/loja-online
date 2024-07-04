@@ -1,31 +1,26 @@
 
-? Bug ao criar produto, se abro o file explorer
+#2 Bug ao criar produto, se abro o file explorer
 para add imagem mas dou um ESC antes de selecionar a imagem,
 fechando assim o file explorer, o programa dara um erro
 
-? Metodos register e update account estao com apenas um
-    tratamentos de input
-? Criar view para produto deletado (mais informações)
-? bloquear admin de fazer ações de clientes como mandar mensagem em produtos
-? implementar mudança de email na edição da conta
-? implementar deletar conta
-? checar a logica da columna " password_ reset token"
+#3 Criar view para produto deletado (mais informações)
+#4 implementar mudança de email na edição da conta
+#5 implementar deletar conta
+#6 checar a logica da columna " password_ reset token"
 
-? fazer tratamento input javascript (
-        registrar,
-        entrar,
-        editar produto,
-        editar conta
-    )
+#7 pente fino no html feito até mensagens-de-usuario
 
-? Fazer responsividade nas views
+#8 Fazer responsividade nas views 14 total ( faltam 7)
     OK ?a=mensagens-de-usuarios (admin)
-    ? ?a=criar-produto (admin) ( refazer layout, diminuir imagem)
-    ? ?a=meus-produtos (admin)
     OK ?a=contatar-loja (client)
     OK ?a=minha-conta (client)
+    OK ?a=criar-produto (admin) ( refazer layout, diminuir imagem)
+    OK ?a=meus-produtos (admin)
+    OK ?a=perguntas-em-produtos (admin)
+    OK ?a=editar-produto (admin)
 
-    ?  ?a=perguntas-em-produtos (admin)
+#9 implementar save the inputs por session
+
 
 
 Metodos prontos
@@ -37,3 +32,4 @@ Metodos prontos
 # Enviar email ao admin quando um usuario fizer pergunta
 do produto
 
+senha hospedagem : Ab12345.

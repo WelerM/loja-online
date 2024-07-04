@@ -11,6 +11,9 @@
 // $logger->logger('testando kk', 'warning');
    
 
+// $logger = new Log();
+        // $logger->logger('testando kk', 'warning');
+
 
 
 <!-- <?php if (isset($_SESSION['error'])): ?>

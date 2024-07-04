@@ -222,21 +222,30 @@ class User
 
 
 
-    public static function verify_email_exists($email)
+    public static function verify_email_is_active($email)
     {
 
+        //Verifies if there is a username registered with the same name
         $db = new Database();
         $params = [
-            ':e' => strtolower(trim($email))
+            ':email' => strtolower(trim($email)),
+            ':active' => 1
         ];
-        $results = $db->select("SELECT * FROM users WHERE email = :e", $params);
+        $results = $db->select(
+            "SELECT * FROM
+                users
+            WHERE
+                email = :email
+            AND
+                active = :active",
+            $params
+        );
 
-        //Verifies if there is a username registered with the same name
+
         if (count($results) != 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
     //============================================================
 
@@ -332,35 +341,13 @@ class User
     //============================================================
 
     //Sign Up
-    public static function register_user()
+    public function register_user()
     {
-
-
-
-        $db = new Database();
-
-        $params = [
-            ':email' => strtolower(trim($_POST['signup-email']))
-        ];
-
-        //Verifies on DB if a client with same the email exists
-        $result = $db->select(
-            "SELECT email FROM users WHERE email = :email",
-            $params
-        );
-
-
-        if (count($result) != 0) {
-            $_SESSION['error'] = "Email already exists!";
-            Functions::redirect('register_page');
-            exit();
-        }
-
-
 
         //Create personal url
         $purl = Functions::createHash();
 
+        $db = new Database();
 
         //User information is inserted to the "USERS" table
         $params = [
@@ -374,26 +361,26 @@ class User
 
         try {
 
-            $result = $db->insert(
+            $db->insert(
                 "INSERT INTO users VALUES(
-                                0,
-                                :name,
-                                :email,
-                                :user_type,
-                                :password,
-                                 NULL,
-                                DEFAULT,
-                                :purl,
-                                NOW(),
-                                NOW(),
-                                DEFAULT
-                            )",
+                    0,
+                    :name,
+                    :email,
+                    :user_type,
+                    :password,
+                    NULL,
+                    DEFAULT,
+                    :purl,
+                    NOW(),
+                    NOW(),
+                    DEFAULT
+                )",
                 $params
             );
 
-
             return $purl;
         } catch (Exception $e) {
+
             echo $e;
         }
     }
@@ -616,7 +603,7 @@ class User
 
 
 
-    public function contact_store($user_message, $user_id, $product_id)
+    public function contact_store()
     {
 
         //Store message into database
@@ -627,9 +614,9 @@ class User
 
         // Store message into database
         $params = [
-            ':user_id' => $user_id,
-            ':product_id' => $product_id,
-            ':message' => $user_message
+            ':user_id' => trim($_POST['user-id']),
+            ':product_id' => trim($_POST['product-id']),
+            ':message' => trim($_POST['user-message'])
         ];
 
         $insert_result = $db->insert(
@@ -656,12 +643,10 @@ class User
 
 
 
-
         //Sends email to store's admin
-
         //Gets user information
         $params = [
-            ':user_id' => $user_id
+            ':user_id' => trim($_POST['user-id'])
         ];
 
         $select_result = $db->select(
@@ -680,9 +665,10 @@ class User
 
         //Sends email to admin
         $email = new SendEmail();
-        $result = $email->send_email_to_admin($user_message, $user_name, $user_email, $product_id);
+        $result = $email->send_email_to_admin(trim($_POST['user-message']), $user_name, $user_email, trim($_POST['product-id']));
 
         return $result;
+
     }
     //===================================================================
 
@@ -729,6 +715,10 @@ class User
                     chat.product_id = products.id
                 WHERE 
                     chat.active = :active
+                AND
+                    chat.answer_created_at IS NULL
+                AND
+                    chat.deleted_at IS NULL
                 AND
                     products.deleted_at IS NULL
                 ORDER BY
@@ -865,4 +855,29 @@ class User
     }
     //=====================================
 
+
+    public function verify_old_password()
+    {
+        $db = new Database();
+
+        $params = [
+            ':email' => trim($_POST['email'])
+        ];
+
+        $results = $db->select(
+            "SELECT * FROM users 
+            WHERE email = :email
+            AND active = 1",
+            $params
+        );
+
+        $user = $results[0];
+
+        if (!password_verify(trim($_POST['old-password']), $user->password)) {
+
+            return false;
+        }
+
+        return true;
+    }
 }

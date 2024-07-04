@@ -1,5 +1,4 @@
-<div style="min-height:100vh" class="container mx-auto row py-5 ">
-
+<div class="container mx-auto row py-3 ">
 
     <div class="col-md-6 col-sm-12 mx-auto">
         <h5>Minhas mensagens</h5>

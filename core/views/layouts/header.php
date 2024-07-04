@@ -30,12 +30,7 @@ use core\classes\Functions;
                         </a>
                     </li>
 
-                    <!-- Sobre nós -->
-                    <li class="nav-item text-center p-0 ps-2  py-1   d-flex align-items-center ">
-                        <a class="nav-link p-0" href="#">
-                            Sobre nós
-                        </a>
-                    </li>
+         
                 </div>
 
 

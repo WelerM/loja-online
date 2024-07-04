@@ -7,6 +7,7 @@
             <p class="text-center text-success  fs-2 mb-4">Entrar</p>
 
             <?php require(APP_DOCUMENT_ROOT . '/core/views/components/alert.php'); ?>
+            <div class="js-alert-error d-none alert alert-danger"></div>
 
 
             <!-- Email  add 'required' attribute-->
@@ -14,7 +15,7 @@
 
                 <label for="login-email" class="form-label">Email</label>
 
-                <input  id="login-email" class="input-email form-control" value="welerson194@gmail.com" required type="email" name="login-email"  aria-describedby="emailHelp">
+                <input required  id="login-email" class="input-email form-control" value="welerson194@gmail.com"  type="email" name="login-email"  aria-describedby="emailHelp">
 
 
             </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
@@ -24,7 +25,7 @@
 
                 <label for="login-password" class="form-label">Senha</label>
 
-                <input id="login-password" class="form-control bg-transparent" type="password" name="login-password"  >
+                <input required id="login-password" class="input-password form-control bg-transparent" type="password" name="login-password"  >
 
             </div>
 
@@ -32,13 +33,12 @@
 
 
             <div class="mb-3 d-flex justify-content-between">
-                <div class='d-none alert js-alert-error alert-danger text-center'></div>
                 <a class="text-dark fs-6    " href="?a=recuperar-senha">Esqueceu sua senha?</a>
                 <a class="text-dark fs-6    " href="?a=registrar">Criar conta</a>
             </div>
 
 
-            <button type="submit" class="btn btn-login btn-success">Entrar</button>
+            <button type="submit" class="btn btn-success">Entrar</button>
 
         </form>
 

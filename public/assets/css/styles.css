@@ -162,6 +162,7 @@ h1 {}
 .container-mobile-links {
     display: flex;
     flex-direction: column;
+    min-width: 280px;
 }
 
 .container-nav-general-links, .container-auth-btns{
@@ -213,4 +214,16 @@ h1 {}
 
 }
 
+.product-card{
+    max-width: 200px;
+    background-color: '';
+}
 
+@media(max-width: 540px) {
+
+    .product-card{
+        max-width: 150px;
+    
+    }
+
+}

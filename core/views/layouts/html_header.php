@@ -16,4 +16,4 @@
 </head>
 </head>
 
-<body class="">
+<body style="min-height: 100vh;" class="container-fluid p-0 align-items-center">   
