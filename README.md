@@ -3,7 +3,7 @@
 Descrição ( Em desenvolvimento ) 
 
 Viso nesse projeto exercitar meus conhecimentos em PHP, por isso é um projeto em PHP puro, sem uso de frameworks. O projeto é uma loja online com autentificação,
-CRUD de produtos pelo usuário admin, rotas e feito no padrão MVC. O projeto se conecta com um banco de dados SQL e faz o uso das principais tecnologias web, como JavaSCript, Bootstrap e Axios.
+CRUD de produtos pelo usuário admin, rotas e feito no padrão MVC. O projeto se conecta com um banco de dados SQL e faz o uso das principais tecnologias web, como JavaSCript, Bootstrap e Axios, sendo um projeto responsível para dispositivos móveis.
 
 ![Badge](https://img.shields.io/badge/PHP-6D42E8)
 ![Badge](https://img.shields.io/badge/SQL-FFFFFF)
